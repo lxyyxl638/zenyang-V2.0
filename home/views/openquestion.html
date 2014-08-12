@@ -1,0 +1,46 @@
+<div ng-controller="oqCtrl">
+	<div class="col-md-9" role="main content">
+		<div>
+			<p><span class="fui-list-thumbnailed"></span> 问题广场</p><hr/>
+			<tabset>
+			<tab >
+			<tab-heading>
+				<span class="fui-tag"></span> 亟需回答的问题
+			</tab-heading>
+	      		<div ng-repeat="q in qList" class="zy-question-list">
+	      			<div class="zy-qlist zy-qlist-top">
+	      				<div class="avatar-tiny">
+	      					<a href="#/people/{{q.uid}}"><img ng-src={{q.location}} class="zy-qlist-avatar-tiny"></a>
+	      				</div>
+	      				<div class="title-beside-avatar">
+	      					<a href="#/people/{{q.uid}}">{{q.realname}} </a>提了一个问题
+	      					<span class="zy-time">{{q.date}}</span>
+	      				</div>
+	      			</div>
+	      			<div class="zy-qlist zy-qlist-title">
+	      				<a href="#/question/{{q.id}}" class="zy-question-link">{{q.title}}</a>
+	      			</div>
+	      			<div class="zy-qlist zy-qlist-content">
+	      				{{q.content}}
+	      			</div>
+	      			<div class="zy-qlist zy-qlist-answer">
+	      				<img ng-src={{myPic}} class="zy-qlist-avatar-small">
+	      				<a href="#/question/{{q.id}}"><input type="text" placeholder="{{q.follow_num}}人正在等待您的精彩回答" class="form-control zy-qlist-ready-to-answer" /></a>
+	      			</div>
+	      			<div class="zy-qlist zy-qlist-bottom">
+	      				<span class="btn-primary btn-wid zy-follow" ng-click="follow(q.id,$index)"><span ng-hide="q.follow">关注问题</span><span ng-show="q.follow">取消关注</span></span>
+	      			</div>
+	      		</div>
+	      		<button class="btn btn-primary zy-qlist-btn-more" ng-click="update()">
+  					加载更多
+				</button>
+			</tab>
+
+			</tabset>
+		</div>
+	</div>
+	<div class="col-md-1">
+	</div>
+	<div class="col-md-2" role="side bar">
+	</div>
+</div>

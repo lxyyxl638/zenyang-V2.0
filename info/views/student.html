@@ -1,0 +1,33 @@
+<div class="zy-info-position-wrap">
+	<div class="zy-info-position-inner zy-info-color" id="zy-student-inner" ng-controller="studentCtrl">
+<!--    		<div class="zy-province-container" ng-controller="collegeCtrl">
+			<h1 id="zy-province-title">大学</h1>
+			<typeahead items="items" prompt="请输入大学名称" title="name" subtitle="abbreviation" model="name"  on-select="onItemSelected()"/>
+   		</div>
+   		<div class="zy-province-container" ng-controller="majorCtrl">
+			<h1 id="zy-province-title">专业</h1>
+			<typeahead items="items" prompt="请输入专业名称" title="name" subtitle="abbreviation" model="name"  on-select="onItemSelected()"/>
+   		</div>
+   		<div class="zy-province-container" ng-controller="yearCtrl">
+			<h1 id="zy-province-title">入学年份</h1>
+			<typeahead items="items" prompt="请输入入学年份" title="name" subtitle="abbreviation" model="name"  on-select="onItemSelected()"/>
+   		</div> -->
+
+   		<div class="zy-province-container" >
+			<h1 id="zy-province-title">大学</h1>
+			<input type="text" class="form-control input-hg" placeholder="请输入大学名称" ng-model="s.college"/>
+   		</div>
+   		<div class="zy-province-container" >
+			<h1 id="zy-province-title">专业</h1>
+			<input type="text" class="form-control input-hg" placeholder="请输入专业名称" ng-model="s.major"/>
+   		</div>
+   		<div class="zy-province-container" >
+			<h1 id="zy-province-title">入学年份</h1>
+			<input type="text" class="form-control input-hg" placeholder="入学年份 eg: 2010" ng-model="s.year"/>
+   		</div>
+
+		<div class="zy-province-container">
+   		<button class="submit-btn" ng-click="studentSubmit(s)">完成</button>
+   		</div>
+	</div>
+</div>

@@ -1,0 +1,62 @@
+<div ng-controller="notificationCtrl">
+	<div class="col-md-9" role="main content">
+		<div>
+			<p><span class="fui-mail"></span> 我的通知</p><hr/>
+			<tabset>
+			<tab>
+			<tab-heading>
+				<span class="fui-list-bulleted"></span>
+			</tab-heading>
+	      		
+				<div class="zy-message-list" ng-repeat="m in MQnew">
+					<div class="zy-alist-main">
+						<div class="zy-msg-list-title">
+						</div>
+						<div class="zy-msg-list-content">
+							您提的问题<a href="#/question/{{m.qid}}" class="zy-talk-link">{{m.title}}</a>有了新回答
+						</div>
+					</div>
+	      		 </div>
+
+	      		 <div class="zy-message-list" ng-repeat="f in FQnew">
+					<div class="zy-alist-main">
+						<div class="zy-msg-list-title">
+						</div>
+						<div class="zy-msg-list-content">
+							您关注的问题<a href="#/question/{{f.qid}}" class="zy-talk-link">{{f.title}}</a>有了新回答
+						</div>
+					</div>
+	      		 </div>
+
+			</tab>
+			<tab>
+			<tab-heading>
+				<span class="fui-heart"></span>
+			</tab-heading>
+	      		
+	      		<div class="zy-message-list" ng-repeat="a in AGnew">
+					<div class="zy-alist-main">
+						<div class="zy-msg-list-title">
+						</div>
+						<div class="zy-msg-list-content">
+							您在问题<a href="#/question/{{a.qid}}" class="zy-talk-link">{{a.title}}</a>的回答获得了膜拜！
+						</div>
+					</div>
+	      		 </div>
+
+
+			</tab>
+<!-- 			<tab>
+			<tab-heading>
+				<span class="fui-myspace"></span>
+			</tab-heading>
+	      		Notifications for that i am followed.
+			</tab>
+ -->			</tabset>
+		</div>
+	</div>
+	<div class="col-md-1">
+	</div>
+	<div class="col-md-2" role="side bar">
+	</div>
+</div>

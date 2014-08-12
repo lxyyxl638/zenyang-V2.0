@@ -1,0 +1,37 @@
+<div class = "zy-loginBoxWrapper">
+    <div ng-controller = "signinCtrl" class="zy-loginBox">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#signin">登录怎样</a>
+            </li>
+            <li>
+                <a href="#signup">注册怎样</a>
+            </li>
+        </ul>
+        <form novalidate name="signinForm" >
+
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">邮箱</span>
+                    <input type="email" class="form-control" id="zy-test" ng-model="user.email" required/>
+                    <span class="input-icon fui-mail"></span>
+                </div>
+                <div class="zy-alert" role="alert" ng-show="alert.emailNotExist">邮箱未注册</div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">密码</span>
+                    <input type="password" class="form-control" ng-model="user.password" required/>
+                    <span class="input-icon fui-lock"></span>
+                </div> 
+                <div class="zy-alert" role="alert" ng-show="alert.passwordWrong">密码错误<a id="forgetPSW" href="#">忘记密码?</a></div>
+                <div class="zy-alert" role="alert" ng-show="alert.wait15Min">连续错误5次,请于15分钟后再尝试</div>
+                <div class="zy-alert" role="alert" ng-show="alert.passwordRequire">请填写密码</div>
+            </div>
+            
+            <div class="form-group">
+                <button class="btn btn-embossed btn-primary btn-full" ng-click="login(user)">登录怎样</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,292 @@
+<div ng-controller="peopleCtrl">
+    <div class="col-md-9" role="main content">
+        <div class="zy-people-profile-wrapper">
+            <div class="zy-people-profile-inner">
+                <div class="zy-people-profile-title" ng-init="editName = false" ng-mouseover="editName = true" ng-mouseout="editName = false" ng-init="modifyName=false">
+                        <span class="zy-people-profile-name" ng-hide="modifyName">
+                            {{realname}}
+                        </span>
+                            <span ng-show="modifyName">
+                                <input type="text" placeholder="请填写真实姓名" ng-model="w.realname" class="form-control profile-modify-input" />
+                                    <span class="btn btn-primary profile-edit-btn" ng-click="modifyNameFn(w)">确定</span>
+                            </span>
+                    <span ng-show="gender && !modifyName" class="gender-img-wrapper"><img ng-src="images/male.png" class="gender-img" g-show="gender"></span>
+                    <span ng-hide="gender && !modifyName" class="gender-img-wrapper"><img ng-src="images/female.png" class="gender-img" ng-hide="gender"></span>
+                    <span class="btn btn-primary profile-edit-btn" ng-show="isME.Show && editName && !modifyName" ng-click="modifyName = true">修改</span>
+                </div>
+
+                <div class="zy-people-profile-middle-section">
+                    <div class="profile-avatar" ng-mouseover="btnShow = true" ng-mouseout="btnShow = false">
+                        <img ng-src={{imgLoc}} alt={{realname}} class="profile-img" ng-init="btnShow = false" ng-mouseover="btnShow = true" ng-mouseout="btnShow = false">
+                        <button class="btn btn-default zy-profile-head-btn" ng-mouseover="btnShow = true" ng-mouseout="btnShow = false" ng-show="isME.Show && btnShow" ng-click="modifyImg()">
+                            修改头像
+                        </button>
+                    </div>
+
+                    <div class="profile-basic-info">
+
+                        <div class="profile-basic-group" ng-init="editShowType = false" ng-mouseover="editShowType = true" ng-mouseout="editShowType = false" ng-init="modifyType = false">
+                            <span ng-hide="modifyType" class="profile-modify-group">
+                                <span ng-show="isStudent">在校</span>
+                                <span ng-hide="isStudent">在职</span>
+                            </span>
+
+                            <span ng-show="modifyType">
+                               <label><input type="radio" name="occupation" ng-model="basic.occupation" value="S" checked="checked"/>学生</label>
+                <label><input type="radio" name="occupation" ng-model="basic.occupation" value="W" />在职</label>
+                            
+                            <span class="btn btn-primary profile-edit-btn" ng-click="modifyTypeFn(basic)">确定</span>
+                            </span>
+                             <span class="btn btn-primary profile-edit-btn" ng-show="isME.Show && editShowType && !modifyType" ng-click="modifyType = true">修改</span> 
+                        </div>
+
+                        <div class="profile-basic-group" ng-init="editShowPlace = false" ng-mouseover="editShowPlace = true" ng-mouseout="editShowPlace = false" ng-init="modifyPlace = false">
+                            <span ng-hide="modifyPlace" class="profile-modify-group">
+                                <span ng-show="isStudent">
+                                    大学: {{college}}
+                                </span>
+                                <span ng-hide="isStudent">
+                                    公司: {{company}}
+                                </span>
+                            </span>
+
+                            <span ng-show="modifyPlace">
+                                <input type="text" placeholder="请填写要修改的信息" ng-model="m.jobplace" class="form-control profile-modify-input" />
+                                <span class="btn btn-primary profile-edit-btn" ng-click="modifyPlaceFn(m)">确定</span>
+                            </span>
+
+                            <span class="btn btn-primary profile-edit-btn" ng-show="isME.Show && editShowPlace && !modifyPlace" ng-click="modifyPlace = true">修改</span> 
+                        </div>
+
+                        <div class="profile-basic-group" ng-init="editShowJob = false" ng-mouseover="editShowJob = true" ng-mouseout="editShowJob = false" ng-init="modifyJob = false">
+                            <span ng-hide="modifyJob" class="profile-modify-group">
+                                <span ng-show="isStudent">
+                                    专业: {{major}}
+                                </span>
+                                <span ng-hide="isStudent">
+                                    职位: {{position}}
+                                </span>
+                            </span>
+
+                            <span ng-show="modifyJob">
+                                <input type="text" placeholder="请填写要修改的信息" ng-model="j.job" class="form-control profile-modify-input" />
+                                <span class="btn btn-primary profile-edit-btn" ng-click="modifyJobFn(j)">确定</span>
+                            </span>
+
+                            <span class="btn btn-primary profile-edit-btn" ng-show="isME.Show && editShowJob && !modifyJob" ng-click="modifyJob = true">修改</span>
+
+                        </div>
+
+                        <div class="profile-basic-group profile-bio" ng-init="editBio = false" ng-mouseover="editBio = true" ng-mouseout="editBio = false" ng-init="modifyBio = false">
+                            <span ng-hide = "modifyBio" class="profile-modify-group">
+                                {{bio}}
+                            </span>
+                            <span ng-show="modifyBio">
+                                <input type="text" class="form-control profile-modify-input-bio" placeholder="一句话介绍" ng-model="b.bio">
+                                <span class="btn btn-primary profile-edit-btn" ng-click="modifyBioFn(b)">确定</span>
+                            </span>
+
+                            <span class="btn btn-primary profile-edit-btn" ng-show="isME.Show && editBio && !modifyBio" ng-click="modifyBio = true">修改</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="profile-bottom-panel">
+                    <div class="profile-bottom-right">
+                        <span class="btn btn-primary profile-bottom-right-btn" ng-hide="isME.Show" ng-click="sendMsg()">发送消息</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- modify picture -->
+
+<div class="img-dialog" ng-show="uploader.Show">
+    <div class="model-dialog-title">
+        <span class="model-dialog-title-text">修改头像</span>
+        <span class="model-dialog-title-close" id="img-dialog-title-close" ng-click="modifyImg()"></span>
+    </div>
+    <div class="model-dialog-content">
+        <div ng-controller="FileController" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter" >
+            <div class="container">
+                <div class="col-md-3">
+                    <div ng-show="uploader.isHTML5">
+                        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                                照片可以直接拖到这里来哦
+                        </div>
+                    </div>
+                    <input type="file" nv-file-select="" uploader="uploader" name="userfile"/>
+                </div>
+
+                <div class="col-md-9">
+                    <table class="table zy-table">
+                        <thead>
+                            <tr>
+                                <th width="50%">Name</th>
+                                <th ng-show="uploader.isHTML5">Size</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                         <tbody>
+                            <tr ng-repeat="item in uploader.queue">
+                                <td><strong>{{ item.file.name }}</strong></td>
+                                <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                <td class="text-center">
+                                    <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                    <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                    <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                </td>
+                                <td nowrap>
+                                    <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                        <span class="glyphicon glyphicon-upload"></span> Upload
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modify picture end-->
+
+<!-- send message -->
+ <div class="send-message-dialog" tabindex="0" role="dialog" ng-controller="talkCtrl" ng-show="send.Show">
+    <div class="model-dialog-title">
+        <span class="model-dialog-title-text">发送消息</span>
+        <span class="model-dialog-title-close" id="img-dialog-title-close" ng-click="sendMsg()"></span>
+    </div>
+    <div class="model-dialog-content">
+        <div class="zy-answer-dialog">
+            <form>
+                <textarea class="form-control" rows="5" placeholder="写消息..." ng-model="m.letter"></textarea>
+                <div class="zy-msg-send-btn-wrapper">
+                    <button type="button" class="btn btn-primary zy-msg-send-btn" ng-click="postMsg(m,transfer.uid)">发送</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- send message end -->
+
+        <!-- my question -->
+        <div class="zy-people-section-wrapper">
+            <div class="zy-section-head">
+                <span class="zy-profile-head-name">提问</span>
+            </div>
+            <div class="zy-section-list">
+                <div class="zy-section-item" ng-repeat="q in myquestion">
+                    <span class="zy-profile-view-count">
+                        <span class="zy-profile-view-num">{{q.view_num}}</span>
+                        <span class="zy-profile-view-type">浏览</span>
+                    </span>
+                    <div class="zy-profile-question-item-main">
+                        <div class="zy-qlist zy-profile-qlist-title">
+                            <a href="#/question/{{q.id}}" class="zy-question-link">{{q.title}}</a>
+                        </div>
+                        <div class="zy-qlist zy-grey">
+                            {{q.answer_num}}个回答 ∙ {{q.follow_num}}人关注
+                            <span class="zy-modify-question-btn" ng-click="modifyQuestionOpen('lg',$index)">
+                                修改问题
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary zy-qlist-btn-more" ng-click="updateMyQ()">
+  加载更多
+</button>
+            </div>
+        </div>
+           
+        <!-- my answer -->
+        <div class="zy-people-section-wrapper">
+            <div class="zy-section-head">
+                <span class="zy-profile-head-name">回答</span>
+            </div>
+            <div class="zy-section-list">
+                <div class="zy-section-item" ng-repeat="a in myanswer">
+                    <span class="zy-profile-view-count">
+                        <span class="zy-profile-view-num">{{a.good}}</span>
+                        <span class="zy-profile-view-type">膜拜</span>
+                    </span>
+                    <div class="zy-profile-answer-item-main">
+                        <div class="zy-qlist zy-profile-alist-title">
+                            <a href="#/question/{{a.qid}}" class="zy-question-link">{{a.title}}</a>
+                        </div>
+                        <div class="zy-qlist zy-profile-alist-answer">
+                            {{a.content}}                            
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary zy-qlist-btn-more" ng-click="updateMyA()">
+  加载更多
+</button>
+            </div>
+        </div>
+
+        <!-- my follow -->
+        <div class="zy-people-section-wrapper">
+            <div class="zy-section-head">
+                <span class="zy-profile-head-name">关注</span>
+            </div>
+            <div class="zy-section-list">
+                <div class="zy-section-item" ng-repeat="f in myfollow">
+                    <span class="zy-profile-view-count">
+                        <span class="zy-profile-view-num">{{f.answer_num}}</span>
+                        <span class="zy-profile-view-type">回答</span>
+                    </span>
+                    <div class="zy-profile-answer-item-main">
+                        <div class="zy-qlist zy-profile-alist-title">
+                            <a href="#/question/{{f.id}}" class="zy-question-link">{{f.title}}</a>
+                        </div>
+                        <div class="zy-qlist zy-grey">
+                            {{f.follow_num}}人关注
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary zy-qlist-btn-more" ng-click="updateMyF()">
+  加载更多
+</button>
+            </div>
+
+        </div>
+
+    </div>
+
+            <script type="text/ng-template" id="modifyQuestion.html">
+        <div class="modal-header">
+            <h3 class="modal-title">修改问题</h3>
+        </div>
+        <div class="modal-body">
+          <form>
+            <textarea class="form-control" rows="1"  ng-model="modify.title"></textarea>
+            <div class="zy-alert" role="alert" ng-show="alert.titleRequire">提问中必须包含您的问题</div>
+            <div class="zy-alert" role="alert" ng-show="alert.titleLength">问题长度请控制在6~40字</div>
+            <div class="zy-alert" role="alert" ng-show="alert.timeInterval">您修改提问得太频繁啦,请1分钟后再尝试</div>
+            <div class="modal-ask-middle-title">问题说明:</div>
+            <textarea class="form-control" rows="3" ng-model="modify.content">{{q.content}}</textarea>
+            <div class="zy-alert" role="alert" ng-show="alert.contentLength">问题描述的长度请控制在200字以内</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+            <button type="button" class="btn btn-primary" ng-click="postQuestionModify(modify)">提交修改</button>
+          </form>
+        </div>
+    </script>
+
+    <div class="col-md-1">
+    </div>
+
+    <div class="col-md-2" role="side bar">
+    </div>
+
+</div>

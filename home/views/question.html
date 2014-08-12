@@ -1,0 +1,62 @@
+<div ng-controller="questionCtrl">
+	<div class="col-md-9" role="main content">
+		<div>
+			<div class="zy-question-title">
+				<span class="fui-book"> </span>{{question.title}}
+			</div>
+			<div class="zy-question-detail">
+				{{question.content}}
+			</div>
+				<div class="zy-question-bottom">
+					<span class="zy-bottom-sec">
+						<span class="fui-eye"></span> {{question.follow_num}}人关注
+					</span>
+					<span class="zy-bottom-sec">
+						<span class="fui-new"></span> {{question.answer_num}}个回答
+					</span>
+				</div>
+				<div class="zy-alist-feed">
+					<div ng-repeat="a in answers" class="zy-answer-item">
+						<div class="zy-alist-avatar">
+							<a href="#/people/{{a.uid}}"><img ng-src={{a.location}} class="zy-avatar-img"></a>
+						</div>
+						<div class="zy-alist-main">
+							<div class="zy-alist-title">
+								<a href="#/people/{{a.uid}}">{{a.realname}}</a>
+								<span class="zy-time">{{a.date}}</span>
+							</div>
+							<div class="zy-alist-content">
+								{{a.content}}
+							</div>
+							<div class="zy-alist-panel">
+								<span class="btn-primary btn-wid zy-like" ng-click="like(a.id,$index)" ng-show="a.like"><strong>膜拜</strong></span>
+								<span class="btn-primary btn-wid zy-like" ng-click="like(a.id,$index)" ng-show="a.cancellike"><strong>取消膜拜</strong></span>
+
+								<span class="btn-default btn-wid zy-like" ng-click="dislike(a.id,$index)" ng-show="a.dislike"><strong >呵呵...</strong></span>
+								<span class="btn-default btn-wid zy-like" ng-click="dislike(a.id,$index)" ng-show="a.canceldislike"><strong>取消呵呵</strong></span>
+
+								<div class="zy-result">
+									<span class="label label-primary zy-result-label">{{a.good}}</span>
+									<span class="label label-default zy-result-label">{{a.bad}}</span>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			<div class="zy-answer-dialog" ng-controller="answerCtrl">
+				<form>
+            		<textarea class="form-control" rows="5" placeholder="写回答..." ng-model="a.content"></textarea>
+            		<button type="button" class="btn btn-primary zy-answer-btn" ng-click="answerquestion(a,question.id)">发布回答</button>
+          		</form>
+          		<div class="zy-alert" role="alert" ng-show="alert.contentLength">回答字数最少6个字符</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="col-md-1">
+	</div>
+	<div class="col-md-2" role="side bar">
+	</div>
+</div>

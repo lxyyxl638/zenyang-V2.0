@@ -1,0 +1,25 @@
+<div class="zy-info-position-wrap" ng-controller="infoCtrl">
+	<div class="zy-info-position-inner info-form-size">
+		<h2 class="info-title">完善您的基本资料</h2>
+			<form novalidate class="infoForm">
+
+				<div >
+				性别:  
+				<input type="radio" name="gender" ng-model="basic.gender" value="M" checked="checked"/>男<!-- <img src="images/boy.jpg" width="30%" alt="" id="malepic"> -->
+				<input type="radio" name="gender" ng-model="basic.gender" value="F" />女<!-- <img src="images/girl.jpg" width="30%" alt=""> -->
+				</div>
+				<div class="zy-alert" role="alert" ng-show="alert.genderRequire">请选择性别</div>
+				<div >
+				职业:  
+				<label><input type="radio" name="occupation" ng-model="basic.occupation" value="S" checked="checked"/>学生</label>
+				<label><input type="radio" name="occupation" ng-model="basic.occupation" value="W" />在职</label><br>
+				</div>
+				<div class="zy-alert" role="alert" ng-show="alert.occupationRequire">请选择职业</div>
+				<input type="text" ng-model="basic.bio" placeholder="个人一句话介绍" class="form-control" id="info-btn-group">
+				<div class="zy-alert" role="alert" ng-show="alert.bioLength">个人介绍不超过40字</div>
+				<div class="zy-alert" role="alert" ng-show="alert.bioInvalid">个人介绍只包含中文,字母和常用标点</div>
+
+				<button class="info-btn" ng-click="basicSubmit(basic)">下一步</button>
+			</form>
+	</div>
+</div>

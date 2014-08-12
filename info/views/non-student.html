@@ -1,0 +1,18 @@
+<div class="zy-info-position-wrap">
+	<div class="zy-info-position-inner zy-info-color" id="zy-student-inner" ng-controller="nonstudentCtrl">
+	<form>
+   		<div class="zy-province-container" >
+			<h1 id="zy-province-title">公司</h1>
+			<input type="text" class="form-control input-hg" placeholder="请输入公司名称" ng-model="n.company"/>
+   		</div>
+   		<div class="zy-province-container" >
+			<h1 id="zy-province-title">职位</h1>
+			<input type="text" class="form-control input-hg" placeholder="请输入职位名称" ng-model="n.position"/>
+   		</div>
+
+		<div class="zy-province-container">
+   		<button class="submit-btn" ng-click="nonstudentSubmit(n)">完成</button>
+   	</form>
+   		</div>
+	</div>
+</div>

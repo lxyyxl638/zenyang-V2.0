@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <meta name="description" content="挂科,失恋,求职无门,又怎样" />
+  <meta name="keywords" content="怎样, 问答, 求职, 大学, 学生"/>
+  <title>怎样</title>
+  <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.css" />
+  <link rel="stylesheet" href="../vendor/bootstrap/css/prettify.css" />
+  <link rel="stylesheet" href="../vendor/css/flat-ui.css" />
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body ng-app="mainApp" ng-controller="navCtrl">
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01"><span class="sr-only">Toggle navigation</span></button>
+      <a href="#" class="zy-top-link-logo">怎样</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-collapse-01">
+      <ul class="nav navbar-nav">
+        <li ng-class="{'active': nav.atHome}"><a href="#/"><i class="fui-home"></i> 首页</a></li>
+        <li ng-class="{'active': nav.atQuestion}"><a href="#/open-question"><i class="fui-list-thumbnailed"></i> 问题</a></li>
+        <li ng-class="{'active': nav.atNotify}"><a href="#/notification"><i class="fui-mail"></i> 通知<span class="navbar-new" ng-show="notify.show">{{notify.totalNum}}</span></a></li>
+        <li>
+        <form class="navbar-form navbar-right" action="#" role="search">
+          <div class="form-group">
+            <div class="input-group">
+              <input class="form-control" id="navbarInput-01" type="search" placeholder="搜索问题..."/>
+              <span class="input-group-btn"><button type="submit" class="btn"><span class="fui-search"></span></button></span>
+            </div>
+          </div>
+        </form>
+        </li>
+        <li>
+          <a ng-click="open()" id="nav-btn-link"><span class="btn btn-embossed btn-primary nav-btn"><img src="images/ask.png" class="nav-ask-icon">提问</span></a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right nav-dropdown">
+        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><img ng-src={{pic}} class="zy-nav-pic">{{realname}}<span class="navbar-unread" ng-show="msg.show"></span><b class="caret"></b></a><span class="dropdown-arrow"></span>
+        <ul class="dropdown-menu">
+          <li><a href="#/people/{{uid}}"><i class="fui-user"></i> 个人中心</a></li>
+          <li><a href="#/message"><i class="fui-chat"></i> 消息<span class="navbar-unread" ng-show="msg.show"></span></a></li>
+
+<!--           <li><a href="#/setting"><i class="fui-gear"></i> 设置</a></li> -->
+
+          <li class="divider"></li>
+          <li><a ng-click=logout()><i class="fui-power"></i> 退出</a></li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="zy-main">
+    <div class="container">
+      <div ng-view></div>
+    </div>
+  </div>
+
+  <div class="advise-btn-wrapper">
+    <div class="advise-btn">
+      <p data-toggle="tooltip" data-tooltip-style="light" data-placement="bottom"  title="提供您的宝贵建议，参与怎样的开发，见证怎样的成长"><img ng-src="images/Bulb.png" ng-click="adviseopen()"></p>
+    </div>
+  </div>
+
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">提问</h3>
+        </div>
+        <div class="modal-body">
+          <form>
+            <textarea class="form-control" rows="1" placeholder="请写下您的问题" ng-model="q.title"></textarea>
+            <div class="zy-alert" role="alert" ng-show="alert.titleRequire">提问中必须包含您的问题</div>
+            <div class="zy-alert" role="alert" ng-show="alert.titleLength">问题长度请控制在6~40字</div>
+            <div class="zy-alert" role="alert" ng-show="alert.timeInterval">您提问得太快啦,请1分钟后再尝试</div>
+            <div class="modal-ask-middle-title">问题说明:</div>
+            <textarea class="form-control" rows="3" placeholder="问题的背景、详细信息等" ng-model="q.content"></textarea>
+            <div class="zy-alert" role="alert" ng-show="alert.contentLength">问题描述的长度请控制在200字以内</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+            <button type="button" class="btn btn-primary" ng-click="askquestion(q)">发布</button>
+          </form>
+        </div>
+    </script>
+
+        <script type="text/ng-template" id="advise.html">
+        <div class="modal-header">
+            <h3 class="modal-title">反馈建议</h3>
+        </div>
+        <div class="modal-body">
+          <form>
+            <textarea class="form-control" rows="5" placeholder="感谢您提供的宝贵建议..." ng-model="a.letter"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+            <button type="button" class="btn btn-primary" ng-click="postAdvice(a)">提交</button>
+          </form>
+        </div>
+    </script>
+
+  <div class="bottom-menu bottom-menu-inverse">
+    <div class="container">
+      <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col-md-1 navbar-brand">
+            怎样
+          </div>
+
+          <div class="col-md-8">
+            <ul class="bottom-links">
+              <li><a href="#">怎样指南</a></li>
+              <li><a href="#">加入怎样</a></li>
+              <li><a href="#">怎样协议</a></li>
+              <li><a href="#">建议反馈</a></li>
+              <li><a href="#">移动应用</a></li>
+              <li><a href="#">© 2014 怎样</a></li>
+            </ul>
+          </div>
+
+          <div class="col-md-2">
+            <ul class="bottom-icons">
+              <li>All rights reserved.</li>
+            </ul>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <script src="../vendor/js/jquery-1.8.3.min.js"></script>
+  <script src="../vendor/js/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="../vendor/js/jquery.ui.touch-punch.min.js"></script>
+  <script src="../vendor/angular.min.js"></script>
+  <script src="../vendor/angular-route.js"></script>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/services.js"></script>
+  <script src="scripts/controllers.js"></script>
+  <script src="scripts/filters.js"></script>
+  <script src="scripts/directives.js"></script>
+  <script src="scripts/angular-file-upload.js"></script>
+
+
+  <!-- Load JS here for greater good =============================-->
+  
+  <script src="../vendor/js/bootstrap.min.js"></script>
+  <script src="../vendor/js/bootstrap-select.js"></script>
+  <script src="../vendor/js/bootstrap-switch.js"></script>
+  <script src="../vendor/js/flatui-checkbox.js"></script>
+  <script src="../vendor/js/flatui-radio.js"></script>
+  <script src="../vendor/js/flatui-fileinput.js"></script>
+  <script src="../vendor/js/jquery.tagsinput.js"></script>
+  <script src="../vendor/js/jquery.placeholder.js"></script>
+  <script src="../vendor/js/typeahead.js"></script>
+  <script src="../vendor/js/holder.js"></script>
+  <script src="../vendor/js/application.js"></script>
+  <script src="../vendor/js/ui-bootstrap-tpls-0.11.0.min.js"></script>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-53725483-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<div ng-controller="talkCtrl">
+	<div class="col-md-9" role="main content">
+		<div>
+			<p><span class="fui-chat"></span> 我的消息</p><hr/>
+			<tabset>
+			<tab>
+			<tab-heading>
+				与{{other.realname}}的对话
+			</tab-heading>     		
+				<div ng-repeat="talk in myTalk" class="zy-message-list">
+					<div ng-show="talk.dir">
+						<div class="zy-alist-avatar">
+							<a href="#/people/{{uid}}"><img ng-src={{other.img}} class="zy-avatar-img"></a>
+						</div>
+						<div class="zy-alist-main">
+							<div class="zy-msg-list-title">
+								<a href="#/people/{{uid}}">{{other.realname}}</a>
+							</div>
+							<div class="zy-msg-list-content">
+								<span>{{talk.message}}</span>
+							</div>
+						</div>
+					</div>
+					<div ng-hide="talk.dir">
+						<div class="zy-alist-avatar">
+							<a href="#/people/{{myuid}}"><img ng-src={{myimg}} class="zy-avatar-img"></a>
+						</div>
+						<div class="zy-alist-main">
+							<div class="zy-msg-list-title">
+								<a href="#/people/{{myuid}}">{{myrealname}}</a>
+							</div>
+							<div class="zy-msg-list-content">
+								<span>{{talk.message}}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</tab>
+			</tabset>
+
+			<!-- send message -->
+ <div class="send-message-dialog talk-dialog" tabindex="0" role="dialog">
+    <div class="model-dialog-title">
+        <span class="model-dialog-title-text">发送消息</span>
+        <span class="model-dialog-title-close" id="img-dialog-title-close" ng-click="sendMsg()"></span>
+    </div>
+    <div class="model-dialog-content">
+        <div class="zy-answer-dialog">
+            <form>
+                <textarea class="form-control" rows="5" placeholder="写消息..." ng-model="m.letter"></textarea>
+                <div class="zy-msg-send-btn-wrapper">
+                    <button type="button" class="btn btn-primary zy-msg-send-btn" ng-click="postMsg(m,uid)">发送</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- send message end -->
+		</div>
+	</div>
+	<div class="col-md-1">
+	</div>
+	<div class="col-md-2" role="side bar">
+	</div>
+</div>

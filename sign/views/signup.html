@@ -1,0 +1,63 @@
+<div class = "zy-loginBoxWrapper">
+    <div ng-controller = "signupCtrl" class="zy-loginBox">
+        <ul class="nav nav-tabs">
+            <li>
+                <a href="#signin">登录怎样</a>
+            </li>
+            <li class="active">
+                <a href="#signup">注册怎样</a>
+            </li>
+        </ul>
+		<form novalidate name="signupForm" >
+			
+			<div class="form-group" >
+                <div class="input-group" id="lastname-group">
+                    <span class="input-group-addon">姓</span>
+                    <input type="text" class="form-control" ng-model="user.lastname" required/>
+                </div>  
+                <div class="input-group">
+                    <span class="input-group-addon">名</span>
+                    <input type="text" class="form-control" ng-model="user.firstname" required/>
+                    <span class="input-icon fui-user"></span>
+                </div>  
+                <div class="zy-alert" role="alert" ng-show="alert.lastnameLength">姓氏应少于4个汉字</div>
+                <div class="zy-alert" role="alert" ng-show="alert.lastnameRequire">请填写您的姓氏</div>
+                <div class="zy-alert" role="alert" ng-show="alert.firstnameLength">名字应少于4个汉字</div>
+                <div class="zy-alert" role="alert" ng-show="alert.firstnameRequire">请填写您的名字</div>
+                <div class="zy-alert" role="alert" ng-show="alert.firstnameInvalid">请填写您的真实名字</div>
+                <div class="zy-alert" role="alert" ng-show="alert.lastnameInvalid">请填写您的真实名字</div>
+            </div>
+			<div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">邮 箱</span>
+                    <input type="email" class="form-control" ng-model="user.email" required/>
+                    <span class="input-icon fui-mail"></span>
+                </div>  
+                <div class="zy-alert" role="alert" ng-show="alert.emailInvalid">请填写正确邮箱地址</div>
+                <div class="zy-alert" role="alert" ng-show="alert.emailOccupied">该邮箱已注册<a href="#signin">登录</a></div>
+                <div class="zy-alert" role="alert" ng-show="alert.emailRequire">请填写正确邮箱地址</div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">密 码</span>
+                    <input type="password" class="form-control" ng-model="user.password" required/>
+                    <span class="input-icon fui-lock"></span>
+                </div>  
+                <div class="zy-alert" role="alert" ng-show="alert.passwordRequire">请填写密码</div>
+                <div class="zy-alert" role="alert" ng-show="alert.passwordInvalid">密码由字母,数字和下划线组成</div>
+                <div class="zy-alert" role="alert" ng-show="alert.passwordLength">密码长度为6-16位</div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">邀 请</span>
+                    <input type="text" class="form-control" ng-model="user.CDK" required/>
+                    <span class="input-icon fui-heart"></span>
+                </div>  
+                <div class="zy-alert" role="alert" ng-show="alert.CDKInvalid">怎样正在内测中,敬请期待</div>
+            </div>
+			<div class="form-group">
+                <button class="btn btn-embossed btn-primary btn-full" ng-click="register(user)">注册怎样</button>
+            </div>
+		</form>
+	</div>
+</div>

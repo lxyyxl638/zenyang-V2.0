@@ -1,0 +1,21 @@
+<div class = "testWrapper" ng-controller="testCtrl">
+	<div class = "PostTest">
+		<input class="urlBox" type="text" placeholder="API-URL" ng-model="p.APIURL" required/>
+		<form class="PostTestForm">
+			<div class="editor-field-wrap">
+			<textarea class="jsonBox" ng-model="p.postContent" placeholder="Post Content in Json" contenteditable="true"></textarea>
+			</div>
+			<button class="tButton" ng-click="postTest(p)">Post</button>
+		</form>
+		<div class="editor-field-wrap">
+		<textarea class="resultBox" ng-model="postResult" contenteditable="false" placeholder="Post result will be shown here">{{postResult}}</textarea>
+		</div>
+	</div>
+	<div class = "GetTest">
+		<input class="urlBox" type="text" placeholder="API-URL" ng-model="g.APIURL" required/>
+		<button class="tButton" ng-click="getTest(g)">Get</button>
+		<div class="editor-field-wrap">
+		<textarea class="resultBox" ng-model="getResult" contenteditable="false" placeholder="Get result will be shown here">{{getResult}}</textarea>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,134 @@
+div{
+	display: block;
+}
+
+.zy-sign-background{
+	background-image: url(../images/bg-2.jpg);
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-size: cover;
+	background-repeat: no-repeat;
+	z-index: 1;
+}
+
+.zy-sign-logo-wrapper{
+	width: 100%;
+	height: 24%;
+	padding: 6% 27% 0 33%;
+}
+
+.zy-sign-logo{
+	background-image: url(../images/logo.png);
+	background-repeat: no-repeat;
+	background-size: auto 100%;
+	color: #fff;
+	display: block;
+	width: 242px;
+	height: 130px;
+	background-position: 8px 0;
+	z-index: 100;
+}
+
+.zy-sign-slogan-wrapper{
+	width: 100%;
+	height: 7%;
+	padding: 0 10% 2% 10%;
+}
+
+.zy-sign-slogan{
+	text-align: center;
+	font-size: 1.2em;
+	font-weight: 700;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus{
+	background-color: #1ABC9C;
+	opacity: 0.9;
+	color: #fff;
+	font-size: 18px;
+	letter-spacing:4px;
+	cursor: pointer;
+}
+
+.nav-tabs.nav-justified > .active > a, .nav-tabs.nav-justified > .active > a:hover, .nav-tabs.nav-justified > .active > a:focus{
+	border: 1px #1ABC9C solid;
+}
+
+.nav-tabs > li > a{
+	background-color: #34495E;
+	opacity: 0.7;
+	cursor: pointer;
+	color: #fff;
+}
+
+.zy-sign-main{
+	width: 606px;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.floater{
+	position: relative;
+	float: left;
+	height: 50%;
+	margin-bottom: -384px;
+}
+
+.zy-sign-inner{
+	height: 768px;
+	width: 100%;
+	clear: both;
+	position: relative;
+}
+
+.tab-content{
+	background-color: rgba(255,255,255,.7);
+}
+
+.zy-loginBoxWrapper{
+	position: relative;
+	margin: 0 auto;
+	width: 70%;
+	height: 70%;
+}
+
+.zy-loginBox{
+	background-color: #transparent;
+	opacity: 1;
+	border-radius: 6px;
+	padding: 20px;
+	position: relative;
+}
+
+
+#lastname-group{
+	width: 48%;
+	float: left;
+	margin-right: 4%;
+}
+
+.btn-full{
+	width: 100%;
+}
+
+.zy-alert{
+	color:#a94442;
+	background-color: #f2dede;
+	border-color: #ebccd1;
+	padding: 15px;
+	border:solid 1px transparent;
+	border-radius: 4px;
+	display: block;
+	height: 30px;
+	line-height: 0.3;
+	text-align: center;
+}
+
+#forgetPSW{
+	font-size: 90%;
+}

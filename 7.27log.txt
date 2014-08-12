@@ -1,0 +1,2 @@
+1.signup/login 改成邮箱登陆  done
+2.profile数据表设计和添加

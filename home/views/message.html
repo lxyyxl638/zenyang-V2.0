@@ -1,0 +1,32 @@
+<div ng-controller="messageCtrl">
+	<div class="col-md-9" role="main content">
+		<div>
+			<p><span class="fui-chat"></span> 我的消息</p><hr/>
+			<tabset>
+			<tab>
+			<tab-heading>
+				消息列表
+			</tab-heading>
+	      		 <div class="zy-message-list" ng-repeat="m in msgList">
+	      		 	<div class="zy-alist-avatar">
+						<a href="#/people/{{m.uid}}"><img ng-src={{m.location}} class="zy-avatar-img"></a>
+					</div>
+					<div class="zy-alist-main">
+						<div class="zy-msg-list-title">
+							与{{m.realname}}的对话
+							<span class="zy-time">最近消息时间 {{m.date}}</span>
+						</div>
+						<div class="zy-msg-list-content">
+							<a href="#/talk/{{m.uid}}" class="zy-talk-link">共{{m.msg_total}}条信息,其中{{m.msg_unread}}条未读,点击查看</a>
+						</div>
+					</div>
+	      		 </div>
+			</tab>
+			</tabset>
+		</div>
+	</div>
+	<div class="col-md-1">
+	</div>
+	<div class="col-md-2" role="side bar">
+	</div>
+</div>
