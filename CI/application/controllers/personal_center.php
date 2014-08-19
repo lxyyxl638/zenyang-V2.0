@@ -68,6 +68,7 @@ class personal_center extends REST_Controller
             }
             else
             {
+               $message['state'] = "success";
                $this->response($message,200);
             }
         }

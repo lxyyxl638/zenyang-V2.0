@@ -4,21 +4,10 @@ class QA_center_model extends CI_Model
    function __construct()
    {
      parent::__construct();
-	 $this->load->database();
-	 $this->load->library('session');
+	   $this->load->database();
+	   $this->load->library('session');
    } 
 
- 
- // function initial()
- //    {
- //         $xml = file_get_contents('php://input');
- //         $xml = simplexml_load_string($xml);
- //         foreach($xml->children() as $child)
- //         { 
- //             $_POST[$child->getName()] = "$child";
- //         }
- //         return $_POST;
- //    }
 
  function ask(&$message)
   {
@@ -47,8 +36,7 @@ class QA_center_model extends CI_Model
                 $this->db->where('id',$_POST['qid']);
                 $this->db->update('q2a_question',$data);
                 return TRUE;
-            }
-         
+            }      
      }
 	   $datetime = time();
      $this->db->select('lastask');
@@ -56,7 +44,7 @@ class QA_center_model extends CI_Model
 	   $row = $query->row_array();
      $lastask = $row['lastask'];
 	   $lastask = strtotime($lastask);
-  	  
+
 	   if (!isset($lastask) || ($datetime - $lastask) > 60)
         {	
           if ($this->form_validation->run('ask') == FALSE)
@@ -85,8 +73,8 @@ class QA_center_model extends CI_Model
           {
             $data['content'] = "";
           }
-
-	        if ($this->db->insert('q2a_question',$data))
+          $this->db->set($data,FALSE);
+	        if ($this->db->insert('q2a_question'))
 	   	       {
 	   	      	   $this->db->select('id');
 	   	      	   $this->db->order_by("id","desc");
@@ -95,13 +83,40 @@ class QA_center_model extends CI_Model
                  $qid = $row['id'];
                  $message['qid'] = $qid;
 	   	           $data = array(
-	   	    	                  'lastask' => date('Y-m-d H:i:s',$datetime)
+	   	    	                    'lastask' => date('Y-m-d H:i:s',$datetime)
 	   	    	                  );
 	   	    	     $this->db->update('user_profile',$data,array('uid' => $uid));
-	   	          
+                 // $tag = $this->input->post('tag');
+                 // foreach ($tag as $key => $value)
+                 // {
+                 //    $tagname = $tag[$key]['tagname'];
+                 //    $tagid = $tag[$key]['tagid'];
+                 //    $tagabbr = strtolower($tag[$key]['tagabbr']);
+                 //    if ($tagid == 0)
+                 //    {
+                 //        $tmp = array(
+                 //                      'tagname' => $tagname,
+                 //                      'tagabbr' => $tagabbr,
+                 //                      'review' => 'N',
+                 //                    );
+                 //        $this->db->insert('tag_type',$tmp);
+                 //        $this->db->select('tagid');
+                 //        $this->db->where('tagname',$tagname);
+                 //        $query = $this->db->get('tag_type');
+                 //        $row = $query->row_array();
+                 //        $tagid = $row['tagid'];
+                 //    }
+                 //    $tmp = array(
+                 //                   'qid' => $qid,
+                 //                   'tagid' => $tagid,
+                 //                   'tagname' => $tagname
+                 //                );
+                 //    $this->db->insert('question_tag',$tmp);
+                 // }
+
+	              return TRUE;
              }
-	        return TRUE;
-	     }
+	      }
 	   else 
        {
            $message['detail'] = "timeInterval";
@@ -109,32 +124,6 @@ class QA_center_model extends CI_Model
        }	
   }
 
-	function tag($qid)
-	{
-		$data = '';
-		$data['tag1'] = $this->input->post("tag1");
-	    $data['tag2'] = $this->input->post("tag2");
-	    $data['tag3'] = $this->input->post("tag3");
-	    $data['tag4'] = $this->input->post("tag4");
-	    $data['tag5'] = $this->input->post("tag5");
-	    foreach ($data as $key => $value)
-	    {
-	    	if (!empty($data[$key]))
-	    	{
-		    	$this->db->select('id');
-		        $query = $this->db->get_where('tag',array('tag' => $value));
-		        if ($query->num_rows() == 0)
-		        {
-		            $this->db->insert('tag',array('tag' => $value));
-		            $this->db->select('id');
-		            $query = $this->db->get_where('tag',array('tag' => $value));
-		        }
-		        $row = $query-> row_array();
-		        $tid = $row['id'];
-		        $this->db->insert('tag_question',array('tid' => $tid,'qid' => $qid));
-	        }
-	    }
-	}
 
 	function answer(&$message,$qid)
 	{
@@ -287,7 +276,8 @@ class QA_center_model extends CI_Model
 		  	$data = array(
 		  		            'uid' => $uid,
 		  		            'qid' => $qid,
-		  		            'date' => date('Y-m-d H:i:s',time())
+		  		            'date' => date('Y-m-d H:i:s',time()),
+                      'flushtime_of_new_answer' => date('Y-m-d H:i:s',time())
 		  		         );
 		  	if (!$this->db->insert('user_question',$data))
 		  	{
@@ -321,7 +311,12 @@ class QA_center_model extends CI_Model
              $row = $query->row_array();
              $message = $query->row_array();
              $message['location'] = $this->public_model->middle_photo_get($message['uid']);
-            
+             $message['follow'] = $this->get_follow($qid);
+             // $this->db->select('tagname,tagid');
+             // $this->db->where('qid',$qid);
+             // $query = $this->db->get('question_tag');
+             // $message['tag'] = $query->result_array();
+             
              /*如果关注过问题则清空关注通知*/
              $uid = $this->session->userdata('uid');
              $qid = $row['id'];
@@ -361,6 +356,20 @@ class QA_center_model extends CI_Model
                             );
                  $this->db->update('q2a_question',$data);
              }
+
+             $this->db->where('qid',$qid);
+             $this->db->where('uid',$uid);
+             $this->db->from('q2a_answer');
+             $num = $this->db->count_all_results();
+             if ($num > 0)
+             {
+                $message['answerdeny'] = 'Y';
+             }
+             else
+             {
+                $message['answerdeny'] = 'N';
+             }
+             return TRUE;
         }
         else
         {
@@ -370,7 +379,7 @@ class QA_center_model extends CI_Model
        return TRUE;
    }
 
-   function view_answer_get(& $message,$qid = 0,$aid = 0,$limit = 10,$offset = 0)
+   function view_answer_get(&$message,$qid = 0,$aid = 0,$limit = 10,$offset = 0)
    {
        if ($aid == 0)
         {
@@ -394,7 +403,7 @@ class QA_center_model extends CI_Model
             {
                $message = $query->row_array();
                $message['mygood'] = $this->qa_center_model->get_mygood($aid);
-               $uid = $this->session->userdata('uid');
+               $uid = $message['uid']; 
                $message['location'] = $this->public_model->middle_photo_get($uid);
                return TRUE;
             }
@@ -405,6 +414,7 @@ class QA_center_model extends CI_Model
             }
         }
    }
+
    /*检测当前用户是否关注此问题*/
 	function get_follow($qid)
 	{

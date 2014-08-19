@@ -1,0 +1,62 @@
+<div ng-controller="searchCtrl">
+	<div class="col-md-9" role="main content">
+		<div>
+			<p><span class="fui-search"></span> 搜索结果</p><hr/>
+			<tabset>
+			<tab>
+			<tab-heading>
+				<span class="fui-bubble"></span> 问题
+			</tab-heading>
+	      		<div class="zy-message-list" ng-repeat="q in questionResult">
+	      			<div class="zy-alist-main">
+	      				<a href="#/question/{{q.id}}" class="zy-question-link">{{q.title}}</a>
+	      			</div>
+	      		</div>
+			</tab>
+
+<!-- 			<tab>
+			<tab-heading>
+				<span class="fui-new"></span> 回答
+			</tab-heading>
+	      		
+	      		
+			</tab> -->
+
+			<tab>
+			<tab-heading>
+				<span class="fui-user"></span> 用户
+			</tab-heading>
+	      		<div class="zy-message-list" ng-repeat="u in userResult">
+	      			<div class="zy-alist-main">
+	      				<a href="#/people/{{u.uid}}" class="zy-question-link">{{u.realname}}</a>
+	      			</div>
+	      		</div>
+			</tab>
+			
+<!-- 			<tab>
+			<tab-heading>
+				<span class="fui-tag"></span> 标签
+			</tab-heading>
+	      		
+	      		<div class="zy-message-list" ng-repeat="a in AGnew">
+					<div class="zy-alist-main">
+						<div class="zy-msg-list-title">
+						</div>
+						<div class="zy-msg-list-content">
+							您在问题<a href="#/question/{{a.qid}}" class="zy-talk-link">{{a.title}}</a>的回答获得了膜拜！
+						</div>
+					</div>
+	      		 </div>
+
+			</tab> -->
+
+			
+
+			</tabset>
+		</div>
+	</div>
+	<div class="col-md-1">
+	</div>
+	<div class="col-md-2" role="side bar">
+	</div>
+</div>

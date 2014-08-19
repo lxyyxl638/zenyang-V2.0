@@ -14,6 +14,14 @@ div{
 	display: block;
 }
 
+p{
+	font-size: 16px;
+}
+
+blockquote p{
+	font-size: 16px;
+}
+
 .zy-top-link-logo{
 	background-image: url(../images/logo.png);
 	background-repeat: no-repeat;
@@ -105,10 +113,10 @@ div{
 
 .zy-main{
 	width: 960px;
-	min-height: 480px;
+	min-height: 800px;
 	padding: 75px 0 50px;
 	position: relative;
-	z-index: 2;
+	z-index: 0;
 	margin: 0 auto;
 	display: block;
 	font-family: 'Helvetica Neue',Helvetica,Arial,Sans-serif;
@@ -602,11 +610,6 @@ tab-heading{
 	padding-bottom: 5px;
 }
 
-.zy-profile-alist-title{
-	font-size: 18px;
-	font-weight: 400;
-}
-
 .zy-profile-alist-answer{
 	font-size: 16px;
 	font-size: 600;
@@ -628,8 +631,9 @@ tab-heading{
 .advise-btn-wrapper{
 	display: block;
 	position: absolute;
-	top:100px;
+	top:300px;
 	right: 100px;
+	z-index: 5;
 }
 
 .advise-btn{
@@ -664,4 +668,90 @@ tab-heading{
 .zy-modify-question-btn{
 	cursor: pointer;
 	margin-left: 20px;
+}
+
+.zy-modify-answer-btn{
+	cursor: pointer;
+	float: right;
+}
+
+.tab-content{
+	min-height: 600px;
+}
+
+.update-bar{
+	width: 200px;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+}
+
+.update-bar-title{
+	font-size: 14px;
+	font-weight: 400;
+	display: block;
+	border-bottom: 1px solid #ddd;
+	text-align: center;
+}
+
+.update-bar-content{
+	margin: 10px 0;
+}
+
+.update-bar-date{
+	font-size: 12px;
+	font-weight: 400;
+	display: inline-block;
+	margin-right: 20px;
+}
+
+.update-bar-item{
+	font-size: 12px;
+}
+
+.tagsinput{
+	border:none;
+}
+
+.tagsinput .tag{
+	padding: 8px 14px;
+}
+
+.tagsinput{
+	background: none;
+}
+
+.ta-editor {
+    min-height: 300px;
+    height: auto;
+    overflow: auto;
+    font-family: inherit;
+    font-size: 100%;
+    margin:20px 0;
+}
+
+.ta-root.focussed .ta-scroll-window.form-control{
+	border-color: #1ABC9C;
+	-webkit-box-shadow:none;
+}
+
+.link-modal{
+	padding: 20px;
+}
+
+.link-btn-wrap{
+	margin-top: 10px;
+	width: 100%;
+	height: 30px;
+}
+
+.btn-link{
+	color:#fff;
+	float: right;
+}
+
+.modify-btn-wrap{
+	margin: 0 auto 20px;
+	width: 100%;
+	height: 30px;
 }

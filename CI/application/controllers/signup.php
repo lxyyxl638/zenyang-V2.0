@@ -135,71 +135,64 @@ class Signup extends REST_Controller
        $this->response($message,200);
     }
 
-    function provincelist_get()
-    {
-       $this->db->select('province');
-       $query = $this->db->get('user_province');
-       $data = $query->result_array();
-       $num = $query->num_rows();
-       for ($i = 0; $i < $num; $i++)
-       {
-         $message[$i] = $data[$i]['province'];
-       }
-       $this->response($message,200);
-    }
+    // function provincelist_post()
+    // {
+    //    $this->db->select('province');
+    //    $query = $this->db->get('user_province');
+    //    $data = $query->result_array();
+    //    $num = $query->num_rows();
+    //    for ($i = 0; $i < $num; $i++)
+    //    {
+    //      $message[$i] = $data[$i]['province'];
+    //    }
+    //    $this->response($message,200);
+    // }
 
-    function collegelist_get($province)
+    function collegelist_post()
     {
+       $college = $this->input->post('college');
        $this->db->select('college');
-       $this->db->where('province',$province);
+       $this->db->like('college',$college,'after');
+       $this->db->or_like('abbreviation',$college,'after');
+       $this->db->limit(5,0);
        $query = $this->db->get('user_college');
-       $data = $query->result_array();
-       $num = $query->num_rows();
-       for ($i = 0; $i < $num; $i++)
-       {
-          $message[$i] = $data[$i]['college'];
-       }
+       $message = $query->result_array();
        $this->response($message,200);
     }
 
-    function majorlist_get($college)
+    function majorlist_post()
     {
+       $major = $this->input->post('major');
        $this->db->select('major');
-       $this->db->where('college',$college);
+       $this->db->like('major',$major,'after');
+       $this->db->or_like('abbreviation',$major,'after');
+       $this->db->limit(5,0);
        $query = $this->db->get('user_major');
-       $data = $query->result_array();
-       $num = $query->num_rows();
-       for ($i = 0; $i < $num; $i++)
-       {
-          $message[$i] = $data[$i]['major'];
-       }
+       $message = $query->result_array();
        $this->response($message,200);
     }
 
-    function companylist_get($province)
+    function companylist_post()
     {
+       $company = $this->input->post('company');
        $this->db->select('company');
-       $this->db->where('province',$province);
+       $this->db->like('company',$company,'after');
+       $this->db->or_like('abbreviation',$company,'after');
+       $this->db->limit(5,0);
        $query = $this->db->get('user_company');
-       $data = $query->result_array();
-       $num = $query->num_rows();
-       for ($i = 0; $i < $num; $i++)
-       {
-          $message[$i] = $data[$i]['company'];
-       }
+       $message = $query->result_array();
        $this->response($message,200);
     }
     
-    function positionlist_get()
+    function positionlist_post()
     {
+       $position = $this->input->post('position');
        $this->db->select('position');
+       $this->db->like('position',$position,'after');
+       $this->db->or_like('abbreviation',$position,'after');
+       $this->db->limit(5,0);
        $query = $this->db->get('user_position');
-       $data = $query->result_array();
-       $num = $query->num_rows();
-       for ($i = 0; $i < $num; $i++)
-       {
-          $message[$i] = $data[$i]['position'];
-       }
+       $message = $query->result_array();
        $this->response($message,200);
     }
 

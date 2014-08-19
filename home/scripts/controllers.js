@@ -7,6 +7,12 @@ var mainControllers = angular.module('mainControllers',[]);
 mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$http','notifyFactory','$location','$modal','msgFactory',
 	function($scope,$interval,publicFactory,$http,notifyFactory,$location,$modal,msgFactory){
 		
+		$scope.updates = [];
+		$http.get('../CI/index.php/update/message/format/json').success(function(response){
+			$scope.updates = response;
+			});
+
+
 		// Notification Defines
 		$scope.notify = {};
 		$scope.notify.show = false;
@@ -54,7 +60,7 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 
 		// Notification routine
 		checkNotifyRoutine();
-		var checkNotify = $interval(checkNotifyRoutine,60000,0,false);
+		var checkNotify = $interval(checkNotifyRoutine,5000,0,false);
 
 		// Logout function
 		$scope.logout = function(){
@@ -138,6 +144,8 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 	  	  $scope.alert.titleLength = false;
 	  	  $scope.alert.contentLength = false;
 	  	  $scope.alert.unlogin = false;
+	  	  $scope.tagSelected = [];
+	  	  $scope.tag = {};
 
 	  	  $scope.postAdvice = function(a){
 			console.log("THIS");
@@ -159,6 +167,7 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 
 		  $scope.askquestion = function(q){
 			var url = '../CI/index.php/qa_center/question_ask/format/json/';
+			q.tag = $scope.tagSelected;
 			$http({
 				method: 'POST',
 				url: url,
@@ -194,6 +203,45 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
             })
 		};
 
+		// add tags when post a question
+
+		$scope.onselectTag = function($item, $model, $label){
+			if ($item.tagid == 0){
+				var temp = {};
+				temp.tagname = $item.tagValue;
+				temp.tagid = $item.tagid;
+				temp.tagabbr = pinyin.getFullChars(temp.tagname);
+				$scope.tagSelected.push(temp);
+			}
+			else{
+				$item.tagabbr = pinyin.getFullChars($item.tagname);
+				$scope.tagSelected.push($item);
+			}
+			$scope.tag.keyword = "";
+		}
+
+		$scope.getTags = function($viewValue){
+			var val = {};
+			var url = "../CI/index.php/tag_system/tag_search/format/json";
+			val.keyword = $viewValue;
+			return $http({
+				method:'POST',
+				url:url,
+				data:val,
+			}).then(function(res){
+				var Results = res.data;
+				if(Results.length == 0){
+					var temp = {};
+					temp.tagname = "添加标签 " + $viewValue;
+					temp.tagValue = $viewValue;
+					temp.tagid = 0; 
+					Results.push(temp);
+				}
+
+				return Results;
+			})
+		}
+
 		  $scope.cancel = function () {
 		    $modalInstance.dismiss('cancel');
 		  };
@@ -207,7 +255,114 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 		$scope.peoplePathRecord.currentPath = $location.path();
 		$scope.peoplePathRecord.lastPath = $location.path();
 
+		$scope.search = {};
+		$scope.search.keyword = "";
+		$scope.search.viewValue = "";
+
+		// Search Function
+		$scope.onselectSearch = function($item, $model, $label){
+			if($item.type == "user"){
+				window.location.assign("#/people/"+$item.id);
+			}	
+			else if ($item.type == "question"){
+				window.location.assign("#/question/"+$item.id);
+			}
+			else if ($item.type == "more"){
+				window.location.assign("#/search");
+			}
+			$scope.search.keyword = "";
+		}
+
+		$scope.getSearch = function($viewValue){
+			$scope.search.viewValue = $viewValue;
+			var url = "../CI/index.php/search_system/search/3/format/json";
+			var val = {};
+			val.keyword = $viewValue;
+			return $http({
+				method: 'POST',
+				url: url,
+				data: val,
+			}).then(function(res){
+				var Results = [];
+				var question = res.data.question;
+				var user = res.data.user;
+				var tag = res.data.tag;
+
+				angular.forEach(user,function(u){
+					var temp = {};
+					temp.disp = u.realname + "（用户）";
+					temp.id = u.uid;
+					temp.type = 'user';
+					Results.push(temp);
+				});
+
+				angular.forEach(question,function(q){
+					var temp = {};
+					temp.disp = q.title;
+					temp.id = q.id;
+					temp.type = 'question';
+					Results.push(temp);
+				});
+
+				
+
+				// tag to be added
+
+				if(Results.length == 0){
+					var temp = {};
+					temp.disp = "没有找到相关的结果...";
+					temp.id = 'none';
+					temp.type = 'none';
+					Results.push(temp);
+				}
+				else{
+					var temp = {};
+					temp.disp = "查看更多...";
+					temp.type = 'more';
+					temp.id = 'more';
+					Results.push(temp);
+				}
+
+				return Results;
+			});
+		};
+
 	}]);
+
+
+mainControllers.controller('searchCtrl', ['$scope','$http',
+	function($scope,$http){
+		var postData = {};
+		postData.keyword = $scope.search.viewValue;
+		postData.limit = 100;
+		postData.offset = 0;
+
+		if (postData.keyword != ""){
+			var urlQ = '../CI/index.php/search_system/search_question/format/json';
+				$http({
+					method: 'POST',
+					url:urlQ,
+					data:postData,
+				}).success(function(response){
+	                $scope.questionResult = response;
+	            }).error(function(response){
+	                alert("Error!");
+	            })
+
+
+			var urlU = '../CI/index.php/search_system/search_user/format/json/';
+				$http({
+					method: 'POST',
+					url: urlU,
+					data: postData,
+				}).success(function(response){
+	                $scope.userResult = response;
+	            }).error(function(response){
+	                alert("Error!");
+	            })
+	        }
+
+}]);
 
 mainControllers.controller('mainCtrl',['$scope','$http',
 	function($scope,$http){
@@ -419,6 +574,24 @@ mainControllers.controller('peopleCtrl',['$scope','$http','$routeParams','people
 		    });
 	  	}
 
+	  	// $scope.modifyAnswerOpen = function(size,$index){
+
+	  	// 	var modalInstance = $modal.open({
+	  	// 		templateUrl: 'modifyAnswer.html',
+	  	// 		controller: ModalInstanceCtrlA,
+	  	// 		size: size,
+	  	// 		resolve: {
+	  	// 			a_original:function(){
+	  	// 				return $scope.myanswer[$index];
+	  	// 			}
+	  	// 		}
+	  	// 	});
+
+	  	// 	modalInstance.result.then(function () {
+		  //     console.log('Modal dismissed at: ' + new Date());
+		  //   });
+	  	// }
+
 	  	var ModalInstanceCtrlQ = function ($scope, $modalInstance,q_original) {
 
 	  	  $scope.alert = {};
@@ -476,6 +649,43 @@ mainControllers.controller('peopleCtrl',['$scope','$http','$routeParams','people
 		    $modalInstance.dismiss('cancel');
 		  };
 		};
+
+		// var ModalInstanceCtrlA = function ($scope, $modalInstance,a_original) {
+
+	 //  	$scope.alert = {};
+		// $scope.alert.contentLength = false;
+
+		// $scope.modifyA={};
+	 //  	$scope.qid_original = a_original.qid;
+	 //  	$scope.modifyA.aid = a_original.id;
+	 //  	$scope.modifyA.content = a_original.content;
+	 //  	$scope.title_original = a_original.title;
+
+		// $scope.answerquestion = function(modifyA){
+		// 	$scope.alert.contentLength = false;
+		// 	modifyA.aid = $scope.modifyA.aid;
+		// 	var url = '../CI/index.php/qa_center/question_answer/'+$scope.qid_original+'/format/json/';
+		// 	$http({
+		// 		method: 'POST',
+		// 		url: url,
+		// 		data: modifyA,
+		// 	}).success(function(response){
+  //               if(response.state == "success")
+  //               {
+  //               	window.location.reload();
+  //               }
+  //               else{
+  //               	$scope.alert.contentLength = true;
+  //               }
+  //           }).error(function(response){
+  //               alert("Error!");
+  //           });
+		// }
+
+		//   $scope.cancel = function () {
+		//     $modalInstance.dismiss('cancel');
+		//   };
+		// };
 
 	}]);
 
@@ -550,15 +760,28 @@ mainControllers.controller('settingCtrl',['$scope','$http',
 		// 	});
 	}]);
 
-mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aListFactory','$location',
-	function($scope,$http,$routeParams,aListFactory,$location){
+mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aListFactory','$location','publicFactory',
+	function($scope,$http,$routeParams,aListFactory,$location,publicFactory){
 		$scope.question = {};
 		$scope.answers = [];
 		$scope.qid = $routeParams.id;
+		$scope.myuid = publicFactory.getSelfid();
 
 		aListFactory.refreshQuestion($scope.qid).then(function(){
 			$scope.question = aListFactory.getQuestion();
 		});
+
+		if($scope.question.answerdeny == 'Y'){
+			$scope.myanswer = "";
+			$scope.modifyAnswer = false;
+		}
+
+		$scope.alert = {};
+		$scope.alert.contentLength = false;
+
+		$scope.beginmodify = function(){
+			$scope.modifyAnswer = true;
+		}
 
 		var updateAnswer = function(){
 			$scope.pathRecord.currentPath = $location.path();
@@ -635,6 +858,31 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aLis
 				}
 			});
 		}
+
+
+		$scope.modifyquestion = function(answer,id,qid){
+			console.log("hahaha");
+			$scope.alert.contentLength = false;
+			var postData = {};
+			postData.content = answer;
+			postData.aid = id;
+			var url = '../CI/index.php/qa_center/question_answer/'+qid+'/format/json/';
+			$http({
+				method: 'POST',
+				url: url,
+				data: postData,
+			}).success(function(response){
+                if(response.state == "success")
+                {
+                	window.location.reload();
+                }
+                else{
+                	$scope.alert.contentLength = true;
+                }
+            }).error(function(response){
+                alert("Error!");
+            });
+        };
 	}]);
 
 mainControllers.controller('answerCtrl',['$scope','$http',

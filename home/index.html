@@ -7,6 +7,7 @@
   <meta name="description" content="挂科,失恋,求职无门,又怎样" />
   <meta name="keywords" content="怎样, 问答, 求职, 大学, 学生"/>
   <title>怎样</title>
+  <link rel="stylesheet" href="../vendor/css/css/font-awesome.min.css" />
   <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.css" />
   <link rel="stylesheet" href="../vendor/bootstrap/css/prettify.css" />
   <link rel="stylesheet" href="../vendor/css/flat-ui.css" />
@@ -27,8 +28,9 @@
         <form class="navbar-form navbar-right" action="#" role="search">
           <div class="form-group">
             <div class="input-group">
-              <input class="form-control" id="navbarInput-01" type="search" placeholder="搜索问题..."/>
-              <span class="input-group-btn"><button type="submit" class="btn"><span class="fui-search"></span></button></span>
+              <input class="form-control" ng-model="search.keyword" type="search" placeholder="搜索问题或用户……" typeahead="Results.disp for Results in getSearch($viewValue)" typeahead-on-select="onselectSearch($item, $model, $label
+              )"/>
+              <span class="input-group-btn"><a href="#/search"><button type="submit" class="btn"><span class="fui-search"></span></a></button></span>
             </div>
           </div>
         </form>
@@ -61,7 +63,16 @@
 
   <div class="advise-btn-wrapper">
     <div class="advise-btn">
-      <p data-toggle="tooltip" data-tooltip-style="light" data-placement="bottom"  title="提供您的宝贵建议，参与怎样的开发，见证怎样的成长"><img ng-src="images/Bulb.png" ng-click="adviseopen()"></p>
+      <p data-toggle="tooltip" data-tooltip-style="light" data-placement="top"  title="提供您的宝贵建议，参与怎样的开发，见证怎样的成长"><img ng-src="images/Bulb.png" ng-click="adviseopen()"></p>
+    </div>
+    <div class="update-bar">
+      <div class="update-bar-title">
+        「怎样」在成长
+      </div>
+<!--       <div ng-repeat="update in updates" class="update-bar-content">
+        <span class="update-bar-date">{{update.date}}</span><br/>
+        <span class="update-bar-item">{{update.update}}<span>
+      </div> -->
     </div>
   </div>
 
@@ -78,6 +89,11 @@
             <div class="modal-ask-middle-title">问题说明:</div>
             <textarea class="form-control" rows="3" placeholder="问题的背景、详细信息等" ng-model="q.content"></textarea>
             <div class="zy-alert" role="alert" ng-show="alert.contentLength">问题描述的长度请控制在200字以内</div>
+            <div class="modal-ask-middle-title">添加标签:</div>
+            <span ng-repeat="tag in tagSelected" class="tagsinput tagsinput-primary">
+              <span class="tag">{{tag.tagname}}<a class="tagsinput-remove-link" ng-click="tagSelected.splice($index,1)"></a></span>
+            </span>
+            <input class="form-control" ng-model="tag.keyword" type="text" placeholder="请输入标签..." typeahead="Results.tagname for Results in getTags($viewValue)" typeahead-on-select="onselectTag($item, $model, $label)"/>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
@@ -155,16 +171,12 @@
   <script src="../vendor/js/typeahead.js"></script>
   <script src="../vendor/js/holder.js"></script>
   <script src="../vendor/js/application.js"></script>
+  <script src="../vendor/js/pinyin.js"></script>
   <script src="../vendor/js/ui-bootstrap-tpls-0.11.0.min.js"></script>
-  <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  <script src="../vendor/js/textAngular-sanitize.min.js"></script>
+  <script src="../vendor/js/textAngular.min.js"></script>
+  <script src='../vendor/js/rangy-core.js'></script>
+  <script src='../vendor/js/rangy-selectionsaverestore.js'></script>
 
-  ga('create', 'UA-53725483-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 // 	'signControllers'
 // 	]);
 
-var infoApp = angular.module('infoApp', ['ngRoute',
+var infoApp = angular.module('infoApp', ['ngRoute','ui.bootstrap',
 	'infoControllers'], function($httpProvider) {
   // Use x-www-form-urlencoded Content-Type
   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';

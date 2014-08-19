@@ -35,61 +35,34 @@ class home extends REST_Controller
 /*显示一个月内的提问*/
 	function question_date_list_get($limit = 10,$offset = 0)
     {
-        $status = $this->session->userdata('status');
-
-        if (isset($status) && $status === 'OK')
-        {
-           if (!$this->home_model->question_date_get($message,$limit,$offset))
-           {
-               $message['state'] = "fail";
-               $this->response($message,200);
-           }
-           else
-           {
-               $this->response($message,200);
-           }
-        }
-        else
-        {
-          $message['state'] = "fail";
-          $message['detail'] = "Unlogin";
-          $this->response($message,200);
-        }
+       if (!$this->home_model->question_date_get($message,$limit,$offset))
+       {
+           $message['state'] = "fail";
+           $this->response($message,200);
+       }
+       else
+       {
+           $this->response($message,200);
+       }     
     }
 
 /*显示用户关注的话题*/ 
-  function question_focus_list_get($limit = 10,$offset = 0)  
-    {
-        $status = $this->session->userdata('status');
-
-        if (isset($status) && $status === 'OK')
-        {
-           if (!$this->home_model->question_focus_get($message,$limit,$offset))
-           {
-               $message['state'] = "fail";
-               $this->response($message,200);
-           }
-           else
-           {
-               $this->response($message,200);
-           }
-        }
-        else
-        {
+  function user_tag_list_get($limit = 10,$offset = 0)  
+    {    
+       if (!$this->home_model->question_focus_get($message,$limit,$offset))
+       {
            $message['state'] = "fail";
-           $message['detail'] = "Unlogin";
            $this->response($message,200);
-        }
-        
+       }
+       else
+       {
+           $this->response($message,200);
+       }
     }
 
 /*显示当日最多浏览*/
   function question_day_list_get($limit = 10,$offset = 0)
    {
-     $status = $this->session->userdata('status');
-
-     if (isset($status) && $status === 'OK')
-     {
         if (!$this->home_model->question_day_get($message,$limit,$offset))
            {
                $message['state'] = "fail";
@@ -99,13 +72,6 @@ class home extends REST_Controller
            {
                $this->response($message,200);
            }
-     }
-     else
-     {
-        $message['state'] = "fail";
-        $message['detail'] = "Unlogin";
-        $this->response($message,200);
-     }
    }
 
    /*亟待解决的问题*/ 

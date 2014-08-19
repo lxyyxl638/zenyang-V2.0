@@ -53,7 +53,6 @@ class qa_center extends REST_Controller
            $message = '';
            if ($this->qa_center_model->ask($message,$qid))
             {
-                 $this->qa_center_model->tag($qid);
                  $message['state'] = "success";
                  $this->response($message,200);
             }
@@ -73,29 +72,17 @@ class qa_center extends REST_Controller
 
   /*查看问题内容*/
   function view_question_get($qid)
-    {
-        $status = $this->session->userdata('status');
-
-        if (isset($status) && $status === 'OK')
-        {
-           $message = '';
-           if ($this->qa_center_model->view_question_get($message,$qid))
-             {  
-                $message['state'] = "success";
-                $this->response($message,200);
-             }
-           else
-             {
-                $message['state'] = "fail";
-                $this->response($message,200);
-             }  
-        }
-        else
-        {
-          $message['state'] = "fail";
-          $message['detail'] = "Unlogin";
-          $this->response($message,200);
-        }
+    {  
+       if ($this->qa_center_model->view_question_get($message,$qid))
+         {  
+            $message['state'] = "success";
+            $this->response($message,200);
+         }
+       else
+         {
+            $message['state'] = "fail";
+            $this->response($message,200);
+         }  
     }
 
 /*查看问题回答*/

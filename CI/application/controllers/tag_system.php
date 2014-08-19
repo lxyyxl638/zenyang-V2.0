@@ -28,16 +28,42 @@ class tag_system extends REST_Controller
         $this->load->model('public_model');
         $this->load->library('form_validation');
         $this->load->helper('form');
+        $this->load->helper('url');
         $this->form_validation->set_error_delimiters('','');
     }
     
     function tag_show_get()
     {
+        $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+           $message = '';
+           if ($this->tag_system_model->tag_show($message))
+           {
+              $this->response($message,200);
+           }
+           else
+           {
+              $message['state'] = "fail";
+              $this->response($message,200);
+           }
+        }    
+        else
+        {
+            $message['state'] = "fail";
+            $message['detail'] = "Unlogin";
+            $this->response($message,200);    
+        }
+    }
+
+    function tag_search_post()
+    {
     	$status = $this->session->userdata('status');
 
         if (isset($status) && $status === 'OK')
         {
-           if ($this->tag_system_model->tag_show($message))
+           $message = '';
+           if ($this->tag_system_model->tag_search($message))
            {
            	  $this->response($message,200);
            }
@@ -82,7 +108,7 @@ class tag_system extends REST_Controller
 
     function question_set_tag_post($qid)
     {
-    	$status = $this->session->userdata('status');
+    	  $status = $this->session->userdata('status');
 
         if (isset($status) && $status === 'OK')
         {
@@ -103,5 +129,71 @@ class tag_system extends REST_Controller
             $message['detail'] = "Unlogin";
             $this->response($message,200);    
         }
+    }
+
+
+    function tag_question_list_get($tagid)
+    {
+       $message = '';
+       if ($this->tag_system_model->tag_question_list($message,$tagid))
+        {
+            $this->response($message,200);
+        }
+       else
+       {
+           $message['state'] = "fail";
+           $this->response($message,200); 
+       }
+    }
+
+    function tag_modify_post()
+    {
+        $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+           $message['state'] = "success";
+           if ($this->tag_system_model->tag_modify($message))
+           {
+               $this->response($message,200);
+           }
+           else
+           {
+              $message['state'] = "fail";
+              $this->response($message,200);
+           }
+        }    
+        else
+        {
+            $message['state'] = "fail";
+            $message['detail'] = "Unlogin";
+            $this->response($message,200);    
+        }
+    }
+
+    function tag_info_get($tagid)
+    {
+       if ($this->tag_system_model->tag_info($message,$tagid))
+       {
+          $message['state'] = "success";
+          $this->response($message,200);
+       }
+       else
+       {
+          $message['state'] = "fail";
+          $this->response($message,200);
+       }
+    }
+
+    function tag_hot_question_list_get($tagid)
+    {
+       if (tag_hot_question_list_get($message,$tagid))
+       {
+           $this->response($message,200);
+       }
+       else
+       {
+           $message['state'] = "fail";
+           $this->response($message,200);
+       }
     }
 }

@@ -36,7 +36,7 @@
 }
 
 #zy-student-inner{
-  top:-70%;
+  top:-50%;
 }
 
 .zy-info-color{
@@ -118,7 +118,7 @@ a:link{
   font-family: 'Open Sans', sans-serif;
 }
 
-#zy-province-title{
+.zy-info-title{
   font-size: 20px;
   color: #fff;
 }

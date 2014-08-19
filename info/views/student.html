@@ -1,30 +1,18 @@
 <div class="zy-info-position-wrap">
 	<div class="zy-info-position-inner zy-info-color" id="zy-student-inner" ng-controller="studentCtrl">
-<!--    		<div class="zy-province-container" ng-controller="collegeCtrl">
-			<h1 id="zy-province-title">大学</h1>
-			<typeahead items="items" prompt="请输入大学名称" title="name" subtitle="abbreviation" model="name"  on-select="onItemSelected()"/>
-   		</div>
-   		<div class="zy-province-container" ng-controller="majorCtrl">
-			<h1 id="zy-province-title">专业</h1>
-			<typeahead items="items" prompt="请输入专业名称" title="name" subtitle="abbreviation" model="name"  on-select="onItemSelected()"/>
-   		</div>
-   		<div class="zy-province-container" ng-controller="yearCtrl">
-			<h1 id="zy-province-title">入学年份</h1>
-			<typeahead items="items" prompt="请输入入学年份" title="name" subtitle="abbreviation" model="name"  on-select="onItemSelected()"/>
-   		</div> -->
 
-   		<div class="zy-province-container" >
-			<h1 id="zy-province-title">大学</h1>
-			<input type="text" class="form-control input-hg" placeholder="请输入大学名称" ng-model="s.college"/>
-   		</div>
-   		<div class="zy-province-container" >
-			<h1 id="zy-province-title">专业</h1>
-			<input type="text" class="form-control input-hg" placeholder="请输入专业名称" ng-model="s.major"/>
-   		</div>
-   		<div class="zy-province-container" >
-			<h1 id="zy-province-title">入学年份</h1>
-			<input type="text" class="form-control input-hg" placeholder="入学年份 eg: 2010" ng-model="s.year"/>
-   		</div>
+   		<h4 class="zy-info-title">大学</h4>
+   		<input type="text" ng-model="s.college" placeholder="请输入大学名称" typeahead="college for college in getCollege($viewValue)" typeahead-loading="loadingProcess" typeahead-on-select="onselectCollege($item, $model, $label)" class="form-control">
+         <div class="zy-alert" role="alert" ng-show="alert.collegeRequire">请输入大学名称</div>
+
+         <h4 class="zy-info-title">专业</h4>
+         <input type="text" ng-model="s.major" placeholder="请输入专业名称" typeahead="major for major in getMajor($viewValue)" typeahead-loading="loadingProcess" typeahead-on-select="onselectMajor($item, $model, $label)" class="form-control">
+         <div class="zy-alert" role="alert" ng-show="alert.majorRequire">请输入专业名称</div>
+
+         <h4 class="zy-info-title">入学年份</h4>
+         <input type="text" ng-model="s.year" placeholder="请输入入学年份" typeahead="year for year in years| filter:$viewValue | limitTo:10" typeahead-loading="loadingProcess" class="form-control">
+         <div class="zy-alert" role="alert" ng-show="alert.yearInvalid">请输入正确年份,如:2012</div>
+         <div class="zy-alert" role="alert" ng-show="alert.yearRequire">请输入入学年份</div>
 
 		<div class="zy-province-container">
    		<button class="submit-btn" ng-click="studentSubmit(s)">完成</button>

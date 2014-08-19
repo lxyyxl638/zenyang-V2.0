@@ -26,14 +26,27 @@
 								<span class="zy-time">{{a.date}}</span>
 							</div>
 							<div class="zy-alist-content">
-								{{a.content}}
+								<div ta-bind ng-model="a.content" ng-hide="(a.uid == myuid) && modifyAnswer"></div>
+								<div ng-if="(a.uid == myuid) && modifyAnswer" ng-init="myanswer = a.content">
+									<div class="zy-answer-dialog">
+										<form>
+            								<div text-angular ta-toolbar-button-class="btn btn-primary" ng-model="myanswer"></div>
+											<div class="modify-btn-wrap">
+            								<button type="button" class="btn btn-primary zy-answer-btn" ng-click="modifyquestion(myanswer,a.id,question.id)">修改回答</button>
+            								</div>
+          								</form>
+          								<div class="zy-alert" role="alert" ng-show="alert.contentLength">回答字数最少6个字符</div>
+									</div>
+								</div>
 							</div>
-							<div class="zy-alist-panel">
+							<div class="zy-alist-panel" ng-hide="modifyAnswer">
 								<span class="btn-primary btn-wid zy-like" ng-click="like(a.id,$index)" ng-show="a.like"><strong>膜拜</strong></span>
 								<span class="btn-primary btn-wid zy-like" ng-click="like(a.id,$index)" ng-show="a.cancellike"><strong>取消膜拜</strong></span>
 
 								<span class="btn-default btn-wid zy-like" ng-click="dislike(a.id,$index)" ng-show="a.dislike"><strong >呵呵...</strong></span>
 								<span class="btn-default btn-wid zy-like" ng-click="dislike(a.id,$index)" ng-show="a.canceldislike"><strong>取消呵呵</strong></span>
+
+								<span ng-if="a.uid == myuid" class="btn-default btn-wid zy-like" ng-hide="modifyAnswer" ng-click="beginmodify()">修改回答</span>
 
 								<div class="zy-result">
 									<span class="label label-primary zy-result-label">{{a.good}}</span>
@@ -45,9 +58,9 @@
 					</div>
 				</div>
 
-			<div class="zy-answer-dialog" ng-controller="answerCtrl">
+			<div class="zy-answer-dialog" ng-controller="answerCtrl" ng-hide="question.answerdeny">
 				<form>
-            		<textarea class="form-control" rows="5" placeholder="写回答..." ng-model="a.content"></textarea>
+            		<div text-angular ta-toolbar-button-class="btn btn-primary" ng-model="a.content" placeholder="写回答..."></div>
             		<button type="button" class="btn btn-primary zy-answer-btn" ng-click="answerquestion(a,question.id)">发布回答</button>
           		</form>
           		<div class="zy-alert" role="alert" ng-show="alert.contentLength">回答字数最少6个字符</div>

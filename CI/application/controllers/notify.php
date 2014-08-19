@@ -221,7 +221,7 @@ class Notify extends REST_Controller
              $this->notify_model->follow_new_answer($message,$num_1,0,0);
              $this->notify_model->myquestion_new_answer($message,$num_1,0,0);
              $this->notify_model->myanswer_get_good($message,$num_2,0,0);
-             $this->notify_model->followed($message,$num_3,0,0);
+             //$this->notify_model->followed($message,$num_3,0,0);
              $message = '';
              $num = $num_1 + $num_2 + $num_3;
              $message['num'] = $num;
@@ -238,4 +238,22 @@ class Notify extends REST_Controller
         }  
    }
 
+/*通知历史*/
+  function notify_his($uid,$type,$limit,$offset)
+  {
+     $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            if ($this->notify_model->notify_his($message,$uid,$type,$limit,$offset))
+            {
+                $this->response($message,200);  
+            } 
+        }
+        else
+        {
+            $message['state'] = "fail";
+            $message['detail'] = "Unlogin";
+            $this->response($message,200);
+        }  
+  }
 }

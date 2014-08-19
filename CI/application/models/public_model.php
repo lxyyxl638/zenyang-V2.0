@@ -8,6 +8,14 @@
       $this->load->helper('url');
    }
 
+   function get_realname($uid)
+   {
+     $this->db->select('realname');
+     $this->db->where('uid',$uid);
+     $query = $this->db->get('user_profile');
+     $row = $query->row_array();
+     return $row['realname'];
+   }
    function getid($email)
    {
    	$this->db->select('id');
@@ -110,5 +118,38 @@
            }
          return base_url("$location");
     }  
+
+    function upload(&$message)
+    {
+        $config['upload_path'] = 'answerpic';
+        $config['allowed_types'] = 'jpg|png';
+        $config['file_name'] = $this->session->userdata('uid');
+        $config['max_size'] = 4096;
+        $config['overwrite'] = FALSE;
+        $config['remove_spaces'] = TRUE;
+        $this->load->library('upload',$config);
+        $this->upload->initialize($config);
+        $userfile = 'userfile';
+        if (!$this->upload->do_upload($userfile))
+         {
+            $message['detail'] = "uploaddeny";
+            return FALSE;
+         }
+       
+        $data = $this->upload->data();
+
+        $config = '';
+        $config['image_library'] = 'gd2';
+        $config['source_image'] = $data['full_path'];
+        $config['maintain_ratio'] = TRUE;
+        $config['width'] = 200;
+        $config['height'] = 200;
+        $this->load->library('image_lib',$config);
+        $this->image_lib->resize();
+        $message = "http://121.40.146.229/CI/answerpic/".$data['file_name'];
+        return  TRUE;
+    }
+
+    
 };
 ?>

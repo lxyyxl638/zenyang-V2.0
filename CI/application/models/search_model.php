@@ -17,25 +17,26 @@
    	  $query = $this->db->get('user_profile');
    	  $message['user'] = $query->result_array();
 
-      $this->db->select('id,title');
-      $this->db->like('title',$keyword);
-      $this->db->limit(3,0);
-      $query = $this->db->get('q2a_question');
-      $message['question'] = $query->result_array();
+        $this->db->select('id,title');
+        $this->db->like('title',$keyword);
+        $this->db->limit(6,0);
+        $query = $this->db->get('q2a_question');
+        $message['question'] = $query->result_array();
 
-      $this->db->select('id,tag');
-      $this->db->like('tag',$keyword);
-      $this->db->limit(3,0);
-      $query = $this->db->get('tag_type');
-      $message['tag'] = $query->result_array();
-
-      return TRUE;      
+        // $this->db->select('tagid,tagname');
+        // $this->db->like('tagname',$keyword);
+        // $this->db->limit(3,0);
+        // $query = $this->db->get('tag_type');
+        // $message['tag'] = $query->result_array();
+        return TRUE;      
    }
 
-   function search_user(&$message,$limit,$offset)
+   function search_user(&$message)
    {
    	  $keyword = $this->input->post('keyword');
-      $this->db->select('uid,realname');
+        $limit = $this->input->post('limit');
+        $offset = $this->input->post('offset');
+        $this->db->select('uid,realname');
    	  $this->db->like('realname',$keyword);
    	  $this->db->limit($limit,$offset);
    	  $query = $this->db->get('user_profile');
@@ -43,9 +44,11 @@
    	  return TRUE;
    }
 
-   function search_question(&$message,$limit,$offset)
+   function search_question(&$message)
    {
    	  $keyword = $this->input->post('keyword');
+        $limit = $this->input->post('limit');
+        $offset = $this->input->post('offset');
       $this->db->select('id,title');
       $this->db->like('title',$keyword);
       $this->db->limit($limit,$offset);
@@ -57,9 +60,9 @@
    function search_tag(&$message,$limit,$offset)
    {
    	  $keyword = $this->input->post('keyword');
-      $this->db->select('id,tag');
-      $this->db->like('tag',$keyword);
-      $this->db->limit($limit,$offset);
+       $this->db->select('id,tag');
+       $this->db->like('tag',$keyword);
+       $this->db->limit($limit,$offset);
       $query = $this->db->get('tag_type');
       $message = $query->result_array();
    	  return TRUE;

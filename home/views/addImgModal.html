@@ -1,0 +1,55 @@
+<div class="model-dialog-title">
+        <span class="model-dialog-title-text">插入图片</span>
+        <span class="model-dialog-title-close" id="img-dialog-title-close" ng-click="cancel()"></span>
+    </div>
+    <div class="model-dialog-content">
+        <div nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter" >
+            <div class="container">
+                <div class="col-md-3">
+                    <div ng-show="uploader.isHTML5">
+                        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                                图片可以直接拖到这里来哦
+                        </div>
+                    </div>
+                    <input type="file" nv-file-select="" uploader="uploader" name="userfile"/>
+                </div>
+
+                <div class="col-md-9">
+                    <table class="table zy-table">
+                        <thead>
+                            <tr>
+                                <th width="50%">Name</th>
+                                <th ng-show="uploader.isHTML5">Size</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                         <tbody>
+                            <tr ng-repeat="item in uploader.queue">
+                                <td><strong>{{ item.file.name }}</strong></td>
+                                <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                <td class="text-center">
+                                    <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                    <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                    <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                </td>
+                                <td nowrap>
+                                    <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                        <span class="glyphicon glyphicon-upload"></span> Upload
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                        </div>
+                    </div>
+
+                    <div class="link-btn-wrap"><button class="btn btn-primary btn-link" ng-click="submit()">确定</button></div>
+                </div>
+            </div>
+        </div>
+    </div>

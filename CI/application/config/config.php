@@ -15,7 +15,7 @@
 |
 */
 //$config['base_url']	= '121.40.92.145/CI';
-$config['base_url']	= 'http://121.40.92.145/zenyang2/CI/';
+$config['base_url']	= 'http://localhost/zenyang/CI/';
 /*
 |--------------------------------------------------------------------------
 | Index File

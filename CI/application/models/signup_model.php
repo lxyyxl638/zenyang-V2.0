@@ -87,35 +87,43 @@ class signup_model extends CI_Model{
               }
               else
               {
-                  $province = $this->input->post('province');
                   $college = $this->input->post('college');
                   $major = $this->input->post('major');
                   $year = $this->input->post('year');
-                  $query = $this->db->get_where('user_major',array('major' => $major));
+                  $collegeextra = $this->input->post('collegeextra');
+                  $majorextra = $this->input->post('majorextra');
+
+            
+                  if ($collegeextra == "true")
+                  {
+                     $abbreviation = $this->input->post('collegeabbr');
+                     $abbreviation = strtolower($abbreviation);
+                     $tmp = array(
+                                     'college' => $college,
+                                     'abbreviation' => $abbreviation
+                                 );
+                     $this->db->insert('college_check',$tmp);
+                  }
+                  if ($majorextra == "true")
+                  {
+                     $abbreviation = $this->input->post('majorabbr');
+                     $abbreviation = strtolower($abbreviation);
+                     $tmp = array(
+                                   'major' => $major,
+                                   'abbreviation' => $abbreviation
+                                 );
+                     $this->db->insert('major_check',$tmp);
+                  }
+                  
                   $data = array(
-                                 'province' => $province,
+                                // 'province' => $province,
+                                 'job' => $major,
                                  'jobplace' => $college,
                                  'jobtime' => $year,
                                );
-                  if ($query->num_rows() === 0) 
-                  {
-                     $tmp = array(
-                                   'major' => $major
-                                 );
-                     if (!$this->db->insert('user_major',$tmp))
-                        {
-                          $message['detail'] = "insert major fails";
-                          return FALSE;
-                        }
-                  }
-       
-                  $data['job'] = $major;
+                  
                   $this->db->where('uid',$uid);
-                  if (!$this->db->update('user_profile',$data))
-                  {
-                    $message['detail'] = "update fails";
-                    return FALSE; 
-                  }
+                  $this->db->update('user_profile',$data);
                   return TRUE; 
               }
            }
@@ -137,33 +145,41 @@ class signup_model extends CI_Model{
              }
              else
              {
-                   $province = $this->input->post('province');
                    $company = $this->input->post('company');
                    $position = $this->input->post('position');
-                   $query = $this->db->get_where('user_position',array('position' => $position));
-                   $data = array(
-                                  'province' => $province,
-                                  'jobplace' => $company,
-                                );
-                   if ($query->num_rows() === 0) 
+                   $companyextra = $this->input->post('companyextra');
+                   $positionextra = $this->input->post('positionextra');
+
+                   if ($companyextra == "true") 
                    {
+                      $abbreviation = $this->input->post('companyabbr');
+                      $abbreviation = strtolower($abbreviation);
                       $tmp = array(
-                                    'position' => $position
+                                    'company' => $company,
+                                    'abbreviation' => $abbreviation
                                   );
-                      if (!$this->db->insert('user_position',$tmp))
-                         {
-                           $message['detail'] = "insert position fails";
-                           return FALSE;
-                         }
+                      $this->db->insert('company_check',$tmp);
                    }
-        
-                   $data['job'] = $position;
-                   $this->db->where('uid',$uid);
-                   if (!$this->db->update('user_profile',$data))
+                   
+                   if ($positionextra == "true") 
                    {
-                     $message['detail'] = "update fails";
-                     return FALSE; 
-                   }
+                      $abbreviation = $this->input->post('positionabbr');
+                      $abbreviation = strtolower($abbreviation);
+                      $tmp = array(
+                                    'position' => $position,
+                                    'abbreviation' => $abbreviation
+                                  );
+                      $this->db->insert('position_check',$tmp);
+                   } 
+
+                   $data = array(
+                                   'job' => $position,
+                                   'jobplace' => $company
+                                );
+                
+                   $this->db->where('uid',$uid);
+                   $this->db->update('user_profile',$data);
+                   
                    return TRUE; 
               }
            }

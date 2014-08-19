@@ -32,7 +32,8 @@ signControllers.controller('signupCtrl',['$scope','$http',
         $scope.alert.firstnameRequire=false;
         $scope.alert.lastnameLength=false;
         $scope.alert.lastnameRequire=false;
-        $scope.alert.nameInvalid=false;
+        $scope.alert.firstnameInvalid=false;
+        $scope.alert.lastnameInvalid=false;
         $scope.alert.CDKInvalid=false;
 
 
@@ -51,7 +52,7 @@ signControllers.controller('signupCtrl',['$scope','$http',
 						url: url,
 						data: user,
 					}).success(function(response){
-                		window.location.replace("/zenyang/info");
+                		window.location.replace("/info");
                 	})
                 }
                 else if(response.state == "fail")
@@ -83,9 +84,10 @@ signControllers.controller('signinCtrl',['$scope','$http',
 				url: url,
 				data: user,
 			}).success(function(response){
+                console.log(response);
                 if (response.state == "success")
                 {
-                	window.location.replace("/zenyang/home");
+                	window.location.replace("/home");
                 }
                 else if(response.state == "root")
                 {
@@ -93,6 +95,7 @@ signControllers.controller('signinCtrl',['$scope','$http',
                 }
                 else if(response.state == "fail")
                 {
+                    console.log(response.detail == "passwordRequire");
                     $scope.alert.emailNotExist = false;
                     $scope.alert.passwordWrong = false;
                     $scope.alert.wait15Min = false;

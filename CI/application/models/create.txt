@@ -1,3 +1,59 @@
+create table notify_history
+(
+  id int not null primary key auto_increment,
+  myuid int not null default 0,
+  type enum('1','2','3','4') default '1',
+  qid int not null default 0,
+  title varchar(255) not null default "",
+  uid int not null default 0,
+  realname varchar(64) default "",
+  index(uid)
+) default charset utf8;
+create table tag_type
+(
+  id int not null primary key auto_increment,
+  tag varchar(128) default "",
+  abbr varchar(128) default "",
+  index(tag),
+  index(abbr)
+) default charset utf8;
+
+create table user_tag(
+  id int not null primary key auto_increment,
+  uid int not null default 0,
+  tag varchar(128) default "",
+  index(uid),
+  index(tag)  
+)default charset utf8;
+
+create table question_tag(
+  id int not null primary key auto_increment,
+  qid int not null default 0,
+  tag varchar(128) default "",
+  index(qid),
+  index(tag)
+) default charset utf8;
+
+create table college_check(
+  id int not null primary key auto_increment,
+  college varchar(255) default "",
+) default charset utf8;
+
+create table major_check(
+  id int not null primary key auto_increment,
+  major varchar(255) default ""
+) default charset utf8;
+
+create table company_check(
+  id int not null primary key auto_increment,
+  company varchar(255) default ""
+) default charset utf8;
+
+create table position_check(
+  id int not null primary key auto_increment,
+  position varchar(255) default ""
+) default charset utf8;
+
 create table answer_vote(
   uid int not null default 0,
   id int not null primary key auto_increment,

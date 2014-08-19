@@ -58,97 +58,84 @@ infoControllers.controller('infoCtrl',['$scope','$http',
 		};
 	}]);
 
-infoControllers.controller('provinceCtrl',['$scope','$http','dataFactory',
-	function($scope,$http,dataFactory){
-
-		dataFactory.get('province.json').then(function(data){
-			$scope.items=data;
-		});
-		$scope.name="";
-		$scope.onItemSelected=function(){
-			$scope.submit.province = $scope.name;
-			console.log('selected='+$scope.name);
-	}
-
-	}]);
-
-infoControllers.controller('collegeCtrl',['$scope','$http','dataFactory',
-	function($scope,$http,dataFactory){
-
-		dataFactory.get('college.json').then(function(data){
-			$scope.items=data;
-		});
-		$scope.name="";
-		$scope.onItemSelected=function(){
-			$scope.submit.college = $scope.name;
-			console.log('selected='+$scope.name);
-	}
-	
-	}]);
-
-infoControllers.controller('majorCtrl',['$scope','$http','dataFactory',
-	function($scope,$http,dataFactory){
-
-		dataFactory.get('major.json').then(function(data){
-			$scope.items=data;
-		});
-		$scope.name="";
-		$scope.onItemSelected=function(){
-			$scope.submit.major = $scope.name;
-			console.log('selected='+$scope.name);
-	}
-	
-	}]);
-
-infoControllers.controller('yearCtrl',['$scope','$http','dataFactory',
-	function($scope,$http,dataFactory){
-		$scope.items=[];
-		for(var i=2000; i<2100; i++){
-			$scope.items[i-2000]={};
-			$scope.items[i-2000].name=i;
-		}
-
-		$scope.name="";
-		$scope.onItemSelected=function(){
-			$scope.submit.year = $scope.name;
-			console.log('selected='+$scope.name);
-	}
-	
-	}]);
-
-infoControllers.controller('companyCtrl',['$scope','$http','dataFactory',
-	function($scope,$http,dataFactory){
-
-		dataFactory.get('major.json').then(function(data){
-			$scope.items=data;
-		});
-		$scope.name="";
-		$scope.onItemSelected=function(){
-			$scope.submit.company = $scope.name;
-			console.log('selected='+$scope.name);
-	}
-	
-	}]);
-
-infoControllers.controller('positionCtrl',['$scope','$http','dataFactory',
-	function($scope,$http,dataFactory){
-
-		dataFactory.get('major.json').then(function(data){
-			$scope.items=data;
-		});
-		$scope.name="";
-		$scope.onItemSelected=function(){
-			$scope.submit.position = $scope.name;
-			console.log('selected='+$scope.name);
-	}
-	
-	}]);
 
 infoControllers.controller('studentCtrl',['$scope','$http',
-	function($scope,$http,dataFactory){
-		$scope.submit = {};
+	function($scope,$http){
+		$scope.collegeextra = true;
+		$scope.majorextra = true;
+
+		$scope.alert = {};
+		var alertMap = [
+					"yearRequire",
+					"yearInvalid",
+					"collegeRequire",
+					"majorRequire"
+		]
+
+		$scope.alert.yearRequire = false;
+		$scope.alert.yearInvalid = false;
+		$scope.alert.collegeRequire = false;
+		$scope.alert.majorRequire = false;
+
+		$scope.onselectCollege = function($item, $model, $label){
+			$scope.collegeextra = false;
+		}
+
+		$scope.onselectMajor = function($item, $model, $label){
+			$scope.majorextra = false;
+		}
+
+		$scope.getCollege = function($viewValue){
+			$scope.collegeextra = true;
+			var url = "../CI/index.php/signup/collegelist/format/json";
+			var val = {};
+			val.college = $viewValue;
+			return $http({
+				method: 'POST',
+				url: url,
+				data: val,
+			}).then(function(res){
+				var colleges = [];
+				angular.forEach(res.data,function(item){
+					colleges.push(item.college);
+				});
+				return colleges;
+			});
+		};
+
+		$scope.getMajor = function($viewValue){
+			$scope.majorextra = true;
+			var url = "../CI/index.php/signup/majorlist/format/json";
+			var val = {};
+			val.major = $viewValue;
+			return $http({
+				method: 'POST',
+				url: url,
+				data: val,
+			}).then(function(res){
+				var majors = [];
+				angular.forEach(res.data,function(item){
+					majors.push(item.major);
+				});
+				return majors;
+			});
+		};
+
+		$scope.years=[];
+		for(var i=1900; i<2100; i++){
+			$scope.years.push(i);
+		}
+
 		$scope.studentSubmit = function(s){
 			var url = '../CI/index.php/signup/more/format/json/';
+			s.collegeextra = $scope.collegeextra;
+			s.majorextra = $scope.majorextra;
+			if(s.collegeextra){
+				s.collegeabbr = pinyin.getFullChars(s.college);
+			}
+			if(s.majorextra){
+				s.majorabbr = pinyin.getFullChars(s.major);
+			}
 			$http({
 				method: 'POST',
 				url: url,
@@ -157,6 +144,14 @@ infoControllers.controller('studentCtrl',['$scope','$http',
                 if(response.state == "success")
                 {
 					window.location.replace("../home");                	
+                }
+                else if (response.state == "fail"){
+                	for (var al in alertMap){
+                        if (response.detail == alertMap[al])
+                            $scope.alert[alertMap[al]] = true;
+                        else
+                            $scope.alert[alertMap[al]] = false;
+                    }
                 }
             }).error(function(response){
                 alert("Error!");
@@ -167,17 +162,92 @@ infoControllers.controller('studentCtrl',['$scope','$http',
 
 infoControllers.controller('nonstudentCtrl',['$scope','$http',
 	function($scope,$http){
-		$scope.submit = {};
+		$scope.companyextra = true;
+		$scope.positionextra = true;
+
+		$scope.alert = {};
+		var alertMap = [
+					"companyRequire",
+					"positionRequire"
+		]
+
+		$scope.alert.yearRequire = false;
+		$scope.alert.yearInvalid = false;
+		$scope.alert.collegeRequire = false;
+		$scope.alert.majorRequire = false;
+
+		$scope.onselectCompany = function($item, $model, $label){
+			$scope.companyextra = false;
+		}
+
+		$scope.onselectPosition = function($item, $model, $label){
+			$scope.positionextra = false;
+		}
+
+		
+		$scope.getCompany = function($viewValue){
+			$scope.companyextra = true;
+			var url = "../CI/index.php/signup/companylist/format/json";
+			var val = {};
+			val.company = $viewValue;
+			return $http({
+				method: 'POST',
+				url: url,
+				data: val,
+			}).then(function(res){
+				var companys = [];
+				angular.forEach(res.data,function(item){
+					companys.push(item.company);
+				});
+				return companys;
+			});
+		};
+
+		$scope.getPosition = function($viewValue){
+			$scope.positionextra = true;
+			var url = "../CI/index.php/signup/positionlist/format/json";
+			var val = {};
+			val.position = $viewValue;
+			return $http({
+				method: 'POST',
+				url: url,
+				data: val,
+			}).then(function(res){
+				var positions = [];
+				angular.forEach(res.data,function(item){
+					positions.push(item.position);
+				});
+				return positions;
+			});
+		};
+
+
 		$scope.nonstudentSubmit = function(n){
 			var url = '../CI/index.php/signup/more/format/json/';
+			n.companyextra = $scope.companyextra;
+			n.positionextra = $scope.positionextra;
+			if(n.companyextra){
+				n.companyabbr = pinyin.getFullChars(n.company);
+			}
+			if(n.positionextra){
+				n.positionabbr = pinyin.getFullChars(n.position);
+			}
 			$http({
 				method: 'POST',
 				url: url,
-				data: n ,
+				data: n,
 			}).success(function(response){
                 if(response.state == "success")
                 {
-					window.location.replace("../home");
+					window.location.replace("../home");                	
+                }
+                else if (response.state == "fail"){
+                	for (var al in alertMap){
+                        if (response.detail == alertMap[al])
+                            $scope.alert[alertMap[al]] = true;
+                        else
+                            $scope.alert[alertMap[al]] = false;
+                    }
                 }
             }).error(function(response){
                 alert("Error!");

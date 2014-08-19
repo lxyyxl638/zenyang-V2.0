@@ -55,13 +55,13 @@ class Search_system extends REST_Controller
         }
    }
 
-   function search_user_get($keyword,$limit,$offset)
+   function search_user_post()
    {
       $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         {
            $message = '';
-           if ($this->search_model->search_user($message,$limit,$offset))
+           if ($this->search_model->search_user($message))
             {
                 $this->response($message,200);
             }
@@ -79,13 +79,13 @@ class Search_system extends REST_Controller
         }
    }
 
-   function search_question_get($keyword,$limit,$offset)
+   function search_question_post()
    {
       $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         {
            $message = '';
-           if ($this->search_model->search_question($message,$limit,$offset))
+           if ($this->search_model->search_question($message))
             {
                 $this->response($message,200);
             }

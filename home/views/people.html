@@ -219,11 +219,12 @@
                         <span class="zy-profile-view-type">膜拜</span>
                     </span>
                     <div class="zy-profile-answer-item-main">
-                        <div class="zy-qlist zy-profile-alist-title">
+                        <div class="zy-qlist zy-profile-qlist-title">
                             <a href="#/question/{{a.qid}}" class="zy-question-link">{{a.title}}</a>
+<!--                             <span class="zy-modify-answer-btn zy-grey" ng-click="modifyAnswerOpen('lg',$index)">修改回答</span> -->
                         </div>
-                        <div class="zy-qlist zy-profile-alist-answer">
-                            {{a.content}}                            
+                        <div class="zy-qlist zy-profile-alist-answer" ng-click>
+                        <div ta-bind ng-model="a.content"></div>                
                         </div>
                     </div>
                 </div>
@@ -245,7 +246,7 @@
                         <span class="zy-profile-view-type">回答</span>
                     </span>
                     <div class="zy-profile-answer-item-main">
-                        <div class="zy-qlist zy-profile-alist-title">
+                        <div class="zy-qlist zy-profile-qlist-title">
                             <a href="#/question/{{f.id}}" class="zy-question-link">{{f.title}}</a>
                         </div>
                         <div class="zy-qlist zy-grey">
@@ -282,6 +283,25 @@
           </form>
         </div>
     </script>
+
+<!--     <script type="text/ng-template" id="modifyAnswer.html">
+        <div class="modal-header">
+            <h3 class="modal-title">修改回答</h3>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="zy-qlist zy-profile-qlist-title">
+            {{title_original}}
+        </div><br/>
+                    <textarea class="form-control" rows="5"  ng-model="modifyA.content"></textarea>
+                    <div class="zy-alert" role="alert" ng-show="alert.contentLength">回答字数最少6个字符</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+                    <button type="button" class="btn btn-primary" ng-click="answerquestion(modifyA)">提交修改</button>
+                </form>
+                </div>
+        </div>
+    </script> -->
 
     <div class="col-md-1">
     </div>

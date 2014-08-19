@@ -52,6 +52,7 @@
                                 </div> 
                                 <div class="zy-alert" role="alert" ng-show="alert.passwordWrong">密码错误<a id="forgetPSW" href="#">忘记密码?</a></div>
                                 <div class="zy-alert" role="alert" ng-show="alert.wait15Min">连续错误5次,请于15分钟后再尝试</div>
+                                <div class="zy-alert" role="alert" ng-show="alert.passwordRequire">请填写密码</div>
                             </div>
                             
                             <div class="form-group">
@@ -84,7 +85,8 @@
                                 <div class="zy-alert" role="alert" ng-show="alert.lastnameRequire">请填写您的姓氏</div>
                                 <div class="zy-alert" role="alert" ng-show="alert.firstnameLength">名字应少于4个汉字</div>
                                 <div class="zy-alert" role="alert" ng-show="alert.firstnameRequire">请填写您的名字</div>
-                                <div class="zy-alert" role="alert" ng-show="alert.nameInvalid">请填写您的真实名字</div>
+                                <div class="zy-alert" role="alert" ng-show="alert.firstnameInvalid">请填写您的真实名字</div>
+                                <div class="zy-alert" role="alert" ng-show="alert.lastnameInvalid">请填写您的真实名字</div>
                             </div>
                       <div class="form-group">
                                 <div class="input-group">
@@ -105,6 +107,7 @@
                                 <div class="zy-alert" role="alert" ng-show="alert.passwordRequire">请填写密码</div>
                                 <div class="zy-alert" role="alert" ng-show="alert.passwordInvalid">密码由字母,数字和下划线组成</div>
                                 <div class="zy-alert" role="alert" ng-show="alert.passwordLength">密码长度为6-16位</div>
+
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
@@ -151,15 +154,6 @@
   <script src="vendor/js/holder.js"></script>
   <script src="vendor/js/application.js"></script>
   <script src="vendor/js/ui-bootstrap-tpls-0.11.0.min.js"></script>
-  <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-53725483-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
 </body>
 </html>
