@@ -1,13 +1,34 @@
 <div ng-controller="questionCtrl">
 	<div class="col-md-9" role="main content">
 		<div>
+			<div class="zy-question-tag" ng-init="modifyTag=false">
+				<div ng-hide="modifyTag">
+					<span ng-repeat="tag in question.tag" class="tagsinput tagsinput-primary">
+	              		<a href="#/tag/{{tag.tagid}}"><span class="tag">{{tag.tagname}}</span></a>
+	            	</span>
+	            </div>
+	            <div ng-if="myuid==question.uid">
+	            	<div class="modify-tag-wrap">
+	            		<span class="zy-modify-tag-btn zy-follow btn-default" ng-hide="modifyTag" ng-click="beginmodifyTag()">修改标签</span>
+		            </div>
+	            	<div ng-show="modifyTag">
+            			<span ng-repeat="tag in question.tag" class="tagsinput tagsinput-primary">
+              				<span class="tag">{{tag.tagname}}<a class="tagsinput-remove-link" ng-click="question.tag.splice($index,1)"></a></span>
+            			</span>
+            				<input class="form-control" ng-model="tag.keyword" type="text" placeholder="请输入标签..." typeahead="Results.tagname for Results in getModifyTags($viewValue)" typeahead-on-select="onmodifyTag($item, $model, $label)"/>
+            				<div class="zy-alert" role="alert" ng-show="alert.tagNum">请添加一至五个标签</div>
+            				<div class="link-btn-wrap"><button class="btn btn-primary btn-link" ng-click="modifyTagSubmit()">确定</button></div>
+	            	</div>
+	            </div>
+			</div>
 			<div class="zy-question-title">
-				<span class="fui-book"> </span>{{question.title}}
+				<span class="fui-book"></span>{{question.title}}
 			</div>
 			<div class="zy-question-detail">
 				{{question.content}}
 			</div>
 				<div class="zy-question-bottom">
+					<span class="btn-primary zy-follow" ng-click="follow(question.id)"><span ng-hide="question.follow">关注问题</span><span ng-show="question.follow">取消关注</span></span>
 					<span class="zy-bottom-sec">
 						<span class="fui-eye"></span> {{question.follow_num}}人关注
 					</span>
@@ -16,46 +37,59 @@
 					</span>
 				</div>
 				<div class="zy-alist-feed">
-					<div ng-repeat="a in answers" class="zy-answer-item">
-						<div class="zy-alist-avatar">
-							<a href="#/people/{{a.uid}}"><img ng-src={{a.location}} class="zy-avatar-img"></a>
+
+				<div ng-repeat="a in answers" class="zy-TA-list">
+					<div class="zy-TA-left">
+						<div class="zy-TA-avatar-wrap">
+							<a href="#/people/{{a.uid}}" target="_blank"><img ng-src={{a.location}} class="zy-TA-avatar"></a>
 						</div>
-						<div class="zy-alist-main">
-							<div class="zy-alist-title">
-								<a href="#/people/{{a.uid}}">{{a.realname}}</a>
-								<span class="zy-time">{{a.date}}</span>
-							</div>
-							<div class="zy-alist-content">
-								<div ta-bind ng-model="a.content" ng-hide="(a.uid == myuid) && modifyAnswer"></div>
-								<div ng-if="(a.uid == myuid) && modifyAnswer" ng-init="myanswer = a.content">
+						<div class="zy-TA-state-wrap">
+							<span class="zy-TA-good-count">
+								<span class="zy-TA-good-num">{{a.good}}</span>
+								<span class="zy-TA-good-type">膜拜</span>
+							</span>
+							<span class="zy-TA-bad-count">
+								<span class="zy-TA-bad-num">{{a.bad}}</span>
+							</span>
+						</div>
+					</div>
+					<div class="zy-TA-main">
+						<div class="zy-TA-top">
+							<a href="#people/{{a.uid}}" target="_blank">{{a.realname}}</a>
+							<span class="zy-time">{{a.date}}</span>
+						</div>
+						<div class="zy-TA-content">
+							<div ta-bind ng-model="a.content" ng-hide="(a.uid == myuid) && modifyAnswer"></div>
+							<div ng-if="(a.uid == myuid) && modifyAnswer" ng-init="myanswer = a.content">
 									<div class="zy-answer-dialog">
 										<form>
             								<div text-angular ta-toolbar-button-class="btn btn-primary" ng-model="myanswer"></div>
 											<div class="modify-btn-wrap">
-            								<button type="button" class="btn btn-primary zy-answer-btn" ng-click="modifyquestion(myanswer,a.id,question.id)">修改回答</button>
+            								<button type="button" class="btn btn-primary zy-answer-btn" ng-click="modifyquestion(myanswer,a.id,question.id,$index)">修改回答</button>
             								</div>
           								</form>
           								<div class="zy-alert" role="alert" ng-show="alert.contentLength">回答字数最少6个字符</div>
 									</div>
 								</div>
-							</div>
-							<div class="zy-alist-panel" ng-hide="modifyAnswer">
-								<span class="btn-primary btn-wid zy-like" ng-click="like(a.id,$index)" ng-show="a.like"><strong>膜拜</strong></span>
-								<span class="btn-primary btn-wid zy-like" ng-click="like(a.id,$index)" ng-show="a.cancellike"><strong>取消膜拜</strong></span>
+						</div>
+						<div class="zy-TA-bottom-panel" ng-hide="modifyAnswer">
 
-								<span class="btn-default btn-wid zy-like" ng-click="dislike(a.id,$index)" ng-show="a.dislike"><strong >呵呵...</strong></span>
-								<span class="btn-default btn-wid zy-like" ng-click="dislike(a.id,$index)" ng-show="a.canceldislike"><strong>取消呵呵</strong></span>
+							<span class="btn-primary zy-like" ng-click="like(a.id,$index)" ng-show="a.like">膜拜</span>
+							<span class="btn-primary zy-like" ng-click="like(a.id,$index)" ng-show="a.cancellike">取消膜拜</span>
 
-								<span ng-if="a.uid == myuid" class="btn-default btn-wid zy-like" ng-hide="modifyAnswer" ng-click="beginmodify()">修改回答</span>
+							<span class="btn-default zy-like" ng-click="dislike(a.id,$index)" ng-show="a.dislike">呵呵...</span>
+							<span class="btn-default zy-like" ng-click="dislike(a.id,$index)" ng-show="a.canceldislike">取消呵呵</span>
 
-								<div class="zy-result">
-									<span class="label label-primary zy-result-label">{{a.good}}</span>
-									<span class="label label-default zy-result-label">{{a.bad}}</span>
-								</div>
-
-							</div>
+							<span ng-if="a.uid == myuid" class="btn-default zy-like zy-float-right" ng-hide="modifyAnswer" ng-click="beginmodify()">修改回答</span>
 						</div>
 					</div>
+				</div>
+
+					      		<button class="btn btn-primary zy-qlist-btn-more" ng-click="updateAnswer()" ng-show="moreanswer">
+  					加载更多
+				</button>
+				<span class="btn btn-default zy-qlist-btn-more" ng-hide="moreanswer">木有更多回答了……你也来分享一下你的想法吧！</span>
+
 				</div>
 
 			<div class="zy-answer-dialog" ng-controller="answerCtrl" ng-hide="question.answerdeny">

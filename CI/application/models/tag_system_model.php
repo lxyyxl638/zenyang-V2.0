@@ -17,8 +17,9 @@ class tag_system_model extends CI_model
         $result = $query->result_array();
         foreach ($result as $key => $value)
           {
-          	 $tmp = "tagpic/".$value['tagid']."jpg";
+          	 $tmp = "tagpic/".$value['tagid'].".jpg";
           	 $value['tagpic'] = base_url($tmp);
+             $message[$key] = $value;
           }
         return TRUE;
 	}
@@ -121,9 +122,9 @@ class tag_system_model extends CI_model
          return TRUE;
 	}
 
-	function tag_question_list(&$message,$tagid)
+	function tag_question_list(&$message,$tagid,$limit,$offset)
 	{
-        $query = "select id,title,uid,realname,follow_num,answer_num,view_num,date from q2a_question where id in (select qid from question_tag where tagid = $tagid) order by id desc";
+        $query = "select id,title,uid,realname,follow_num,answer_num,view_num,date from q2a_question where id in (select qid from question_tag where tagid = $tagid) order by id desc limit $offset,$limit";
         $query = $this->db->query($query);
         $result = $query->result_array();
          foreach ($result as $key => $value)
@@ -137,18 +138,17 @@ class tag_system_model extends CI_model
 	}
    
 
-    function tag_hot_question_list(&$message,$tagid)
+    function tag_hot_question_list(&$message,$tagid,$limit,$offset)
     {
-        $query = "select id,title,uid,realname,follow_num,answer_num,view_num,date from q2a_question where id in (select qid from question_tag where tagid = $tagid) order by follow_num desc,answer_num desc,id desc";
+        $query = "select id,title,uid,realname,follow_num,answer_num,view_num,date from q2a_question where id in (select qid from question_tag where tagid = $tagid) order by follow_num desc,answer_num desc,id desc limit $offset,$limit";
         $query = $this->db->query($query);
         $result = $query->result_array();
          foreach ($result as $key => $value)
            {
-             $uid = $value['uid'];
-             $value['location'] = $this->public_model->middle_photo_get($uid);
-             $value['best_answer'] = $this->home_model->get_best_answer($value['id']);
-             $value['follow'] = $this->qa_center_model->get_follow($value['id']);
-             $message[$key] = $value;
+             $message[$key] = $this->home_model->get_best_answer($value['id']);
+             $message[$key]['follow'] = $this->qa_center_model->get_follow($value['id']);
+             $message[$key]['title'] = $value['title'];
+             $message[$key]['qid'] = $value['id'];
            }
         return TRUE;
     }

@@ -8,6 +8,7 @@
      	$this->load->library('upload');
      	$this->load->library('session');
         $this->load->model('public_model');
+        $this->load->library('encrypt');
      }
      
      function profile_get(& $message,$uid)
@@ -76,9 +77,16 @@
         {
             return FALSE;
         }
+
+        $this->db->select('photo_id');
+        $this->db->where('uid',$uid);
+        $query = $this->db->get('user_profile');
+        $row = $query->row_array();
+        $photo_id = 1 - $row['photo_id'];
+
         $config['upload_path'] = 'uploads';
         $config['allowed_types'] = 'jpg|png';
-        $config['file_name'] = "'$uid'.jpg";
+        $config['file_name'] = $uid."_".$photo_id."_large.jpg";
         $config['overwrite'] = TRUE;
         $this->load->library('upload',$config);
         $this->upload->initialize($config);
@@ -86,50 +94,47 @@
         $userfile = 'userfile';
         if (!$this->upload->do_upload($userfile))
          {
+             $message['detail'] = $this->upload->display_errors;
+             return FALSE;
          }
          else
          {
-            $data = array(
-                            'photo_upload' => 'Y' 
-                         );
-            $this->db->where('uid',$uid);
-            $this->db->update('user_profile',$data);
-         	$data = $this->upload->data();
-            $config = '';
-         	$config['image_library'] = 'gd2';
-         	$config['source_image'] = $data['full_path'];
-            $config['new_image'] = $data['file_path'].$uid."_large".$data['file_ext'];
-         	//$config['create_thumb'] = TRUE;
-            $config['maintain_ratio'] = TRUE;
-            $config['width'] = 100;
-            $config['height'] = 100;
-            $this->load->library('image_lib',$config);
-            $this->image_lib->resize();
-            
-            // $message = $data;
-            // return TRUE;
-            $config['new_image'] = $data['file_path'].$uid."_middle".$data['file_ext'];
-            $config['width'] = 38;
-            $config['height'] = 38;
-            // $message = $config;
-            // return TRUE;
-            $this->image_lib->initialize($config);
-            $this->image_lib->resize();
-
-            $config['new_image'] = $data['file_path'].$uid."_small".$data['file_ext'];
-            $config['width'] = 27;
-            $config['height'] = 27;
-            // $message = $config;
-            // return TRUE;
-            $this->image_lib->initialize($config);
-            $this->image_lib->resize();
-
-            $config['new_image'] = $data['file_path'].$uid."_tiny".$data['file_ext'];
-            $config['width'] = 16;
-            $config['height'] = 16;
-            $this->load->library('image_lib',$config);
-            $this->image_lib->initialize($config);
-            $this->image_lib->resize();
+         	    $data = $this->upload->data();
+              $config = '';
+         	    $config['image_library'] = 'gd2';
+         	    $config['source_image'] = $data['full_path'];
+             // $config['new_image'] = $data['file_path'].$uid."_large".$data['file_ext'];
+         	  //$config['create_thumb'] = TRUE;
+              $config['maintain_ratio'] = TRUE;
+              $config['width'] = 100;
+              $config['height'] = 100;
+              $this->load->library('image_lib',$config);
+              $this->image_lib->resize();
+              
+              // $message = $data;
+              // return TRUE;
+              $config['new_image'] = $data['file_path'].$uid."_".$photo_id."_middle".$data['file_ext'];
+              $config['width'] = 38;
+              $config['height'] = 38;
+              // $message = $config;
+              // return TRUE;
+              $this->image_lib->initialize($config);
+              $this->image_lib->resize();
+  
+              $config['new_image'] = $data['file_path'].$uid."_".$photo_id."_small".$data['file_ext'];
+              $config['width'] = 27;
+              $config['height'] = 27;
+              // $message = $config;
+              // return TRUE;
+              $this->image_lib->initialize($config);
+              $this->image_lib->resize();
+  
+              $data = array(
+                              'photo_upload' => 'Y',
+                              'photo_id' => $photo_id 
+                           );
+              $this->db->where('uid',$uid);
+              $this->db->update('user_profile',$data);
          }
         // $query = $this->db->get_where('user_profile',array('uid' => $uid));
         // $message = $query->row_array();
@@ -250,6 +255,47 @@
                 $message['follow'] = 'N';
                 return TRUE;   
             }
+        }
+    }
+
+    function change_password(& $message)
+    {
+        $uid = $this->session->userdata('uid');
+        $oldpassword = $this->input->post('oldpassword');
+        $newpassword = $this->input->post('newpassword');
+        $passwordconf = $this->input->post('passwordconf');
+        
+        $this->db->select('password');
+        $this->db->where('id',$uid);
+        $query = $this->db->get('user');
+        $row = $query->row_array();
+        $password = $row['password'];
+        if ($oldpassword == $this->encrypt->decode($password))
+        {
+            if (strlen($newpassword) < 6|| strlen($newpassword) >16)
+            {
+                $message['detail'] = "passwordLength";
+                return FALSE;
+            }
+            if ($newpassword == $passwordconf)
+            {
+                $data = array(
+                                'password' => $this->encrypt->encode($newpassword)
+                              );
+                $this->db->where('id',$uid);
+                $this->db->update('user',$data);
+                return TRUE;
+            } 
+            else
+            {
+               $message['detail'] = "inconformity";
+               return FALSE;
+            }
+        }
+        else
+        {
+           $message['detail'] = "passwordInvalid";
+           return FALSE;
         }
     }
 

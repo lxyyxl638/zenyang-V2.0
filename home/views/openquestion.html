@@ -3,38 +3,82 @@
 		<div>
 			<p><span class="fui-list-thumbnailed"></span> 问题广场</p><hr/>
 			<tabset>
-			<tab >
-			<tab-heading>
-				<span class="fui-tag"></span> 亟需回答的问题
-			</tab-heading>
-	      		<div ng-repeat="q in qList" class="zy-question-list">
+
+			<tab>
+				<tab-heading>
+					话题动态
+				</tab-heading>
+				
+				<div ng-repeat="q in qListT" class="zy-question-list">
 	      			<div class="zy-qlist zy-qlist-top">
 	      				<div class="avatar-tiny">
-	      					<a href="#/people/{{q.uid}}"><img ng-src={{q.location}} class="zy-qlist-avatar-tiny"></a>
+	      					<a href="#/people/{{q.uid}}" target="_blank"><img ng-src={{q.location}} class="zy-qlist-avatar-tiny"></a>
 	      				</div>
 	      				<div class="title-beside-avatar">
-	      					<a href="#/people/{{q.uid}}">{{q.realname}} </a>提了一个问题
+	      					<a href="#/people/{{q.uid}}" target="_blank">{{q.realname}} </a>提了一个问题
 	      					<span class="zy-time">{{q.date}}</span>
 	      				</div>
 	      			</div>
 	      			<div class="zy-qlist zy-qlist-title">
-	      				<a href="#/question/{{q.id}}" class="zy-question-link">{{q.title}}</a>
+	      				<a href="#/question/{{q.id}}" target="_blank" class="zy-question-link">{{q.title}}</a>
 	      			</div>
 	      			<div class="zy-qlist zy-qlist-content">
 	      				{{q.content}}
 	      			</div>
-	      			<div class="zy-qlist zy-qlist-answer">
-	      				<img ng-src={{myPic}} class="zy-qlist-avatar-small">
-	      				<a href="#/question/{{q.id}}"><input type="text" placeholder="{{q.follow_num}}人正在等待您的精彩回答" class="form-control zy-qlist-ready-to-answer" /></a>
-	      			</div>
 	      			<div class="zy-qlist zy-qlist-bottom">
-	      				<span class="btn-primary btn-wid zy-follow" ng-click="follow(q.id,$index)"><span ng-hide="q.follow">关注问题</span><span ng-show="q.follow">取消关注</span></span>
+	      				<span class="btn-primary zy-follow" ng-click="followT(q.id,$index)"><span ng-hide="q.follow">关注问题</span><span ng-show="q.follow">取消关注</span></span>
+	      				<a class="btn-success zy-follow btn-wait" href="#/question/{{q.id}}">{{q.follow_num}}人正等待你的回答</a>
+	      				<span class="bottom-state">
+	      					<span class="zy-follow btn-default">{{q.view_num}} 浏览</span>
+	      					<span class="zy-follow btn-default">{{q.answer_num}} 回答</span>
+	      				</span>
 	      			</div>
 	      		</div>
-	      		<button class="btn btn-primary zy-qlist-btn-more" ng-click="update()">
+
+	      		<button class="btn btn-primary zy-qlist-btn-more" ng-click="updateT()" ng-show="moreT">
   					加载更多
 				</button>
+				<span class="btn btn-default zy-qlist-btn-more" ng-hide="moreT">木有了……快去关注更多话题吧！</span>
+
 			</tab>
+
+			<tab>
+				<tab-heading>
+					全部动态
+				</tab-heading>
+				
+					<div ng-repeat="q in qListA" class="zy-question-list">
+	      			<div class="zy-qlist zy-qlist-top">
+	      				<div class="avatar-tiny">
+	      					<a href="#/people/{{q.uid}}" target="_blank"><img ng-src={{q.location}} class="zy-qlist-avatar-tiny"></a>
+	      				</div>
+	      				<div class="title-beside-avatar">
+	      					<a href="#/people/{{q.uid}}" target="_blank">{{q.realname}} </a>提了一个问题
+	      					<span class="zy-time">{{q.date}}</span>
+	      				</div>
+	      			</div>
+	      			<div class="zy-qlist zy-qlist-title">
+	      				<a href="#/question/{{q.id}}" target="_blank" class="zy-question-link">{{q.title}}</a>
+	      			</div>
+	      			<div class="zy-qlist zy-qlist-content">
+	      				{{q.content}}
+	      			</div>
+	      			<div class="zy-qlist zy-qlist-bottom">
+	      				<span class="btn-primary zy-follow" ng-click="followA(q.id,$index)"><span ng-hide="q.follow">关注问题</span><span ng-show="q.follow">取消关注</span></span>
+	      				<a class="btn-success zy-follow btn-wait" href="#/question/{{q.id}}">{{q.follow_num}}人等待你的回答</a>
+	      				<span class="bottom-state">
+	      					<span class="zy-follow btn-default">{{q.view_num}} 浏览</span>
+	      					<span class="zy-follow btn-default">{{q.answer_num}} 回答</span>
+	      				</span>
+	      			</div>
+	      		</div>
+
+	      		<button class="btn btn-primary zy-qlist-btn-more" ng-click="updateA()" ng-show="moreA">
+  					加载更多
+				</button>
+				<span class="btn btn-default zy-qlist-btn-more" ng-hide="moreA">木有了……</span>
+			</tab>
+
 
 			</tabset>
 		</div>

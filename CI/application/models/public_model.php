@@ -7,6 +7,51 @@
    	  $this->load->database();
       $this->load->helper('url');
    }
+   
+
+   function set_notify_good($uid,$qid,$aid)
+   {
+      $data = array(
+                      'type' => 3,
+                      'myuid' => $this->get_aid_uid($aid),
+                      'qid' => $qid,
+                      'title' => $this->get_qtitle($qid),
+                      'uid' => $uid,
+                      'realname' => $this->get_realname($uid),
+                      'read' => 0,
+                      'date' => date('Y-m-d H:i:s',time())
+                   );
+      $this->db->insert('notify_history',$data);
+      return TRUE;
+   }
+   
+   function unset_notify_good($uid,$qid,$aid)
+   {
+      $notify_host = $this->get_aid_uid($aid);
+      $this->db->where('uid',$uid);
+      $this->db->where('myuid',$notify_host);
+      $this->db->where('qid',$qid);
+      $this->db->where('type',3);
+      $this->db->delete('notify_history');
+      return TRUE;
+   }
+
+   function get_aid_uid($aid)
+   {
+      $this->db->select('uid');
+      $this->db->where('id',$aid);
+      $query = $this->db->get('q2a_answer');
+      $row = $query->row_array();
+      return $row['uid'];
+   }
+   function get_aid_realname($aid)
+   {
+      $this->db->select('realname');
+      $this->db->where('id',$aid);
+      $query = $this->db->get('q2a_answer');
+      $row = $query->row_array();
+      return $row['realname'];
+   }
 
    function get_realname($uid)
    {
@@ -50,13 +95,24 @@
       $row = $query->row_array();
       return $row['title'];
    }
+
+   function get_quid($qid)
+   {
+      $this->db->select('uid');
+      $this->db->where('id',$qid);
+      $query = $this->db->get('q2a_question');
+      $row = $query->row_array();
+      return $row['uid'];
+   }
+   
    /*判断是否有照片*/
-     function get_photo($uid)
+     function get_photo($uid,&$photo_id)
      {
-         $this->db->select('photo_upload');
+         $this->db->select('photo_upload,photo_id');
          $this->db->where('uid',$uid);
          $query = $this->db->get('user_profile');
          $row = $query->row_array();
+         $photo_id = $row['photo_id'];
          if (isset($row['photo_upload']) && $row['photo_upload'] == 'Y') 
             {
                 return TRUE;
@@ -66,55 +122,56 @@
                 return FALSE;
             }
      }
+   
 
    function large_photo_get($uid)
     {   
-         if (!$this->get_photo($uid))
+         if (!$this->get_photo($uid,$photo_id))
            {
                $location = "uploads/default_large.jpg";
            }
            else
            {
-               $location = "uploads/".$uid."_large.jpg";
+               $location = "uploads/".$uid."_".$photo_id."_large.jpg";
            }
          return base_url("$location");
     } 
 
    function middle_photo_get($uid)
     {   
-         if (!$this->get_photo($uid))
+         if (!$this->get_photo($uid,$photo_id))
            {
                $location = "uploads/default_middle.jpg";
            }
            else
            {
-               $location = "uploads/".$uid."_middle.jpg";
+               $location = "uploads/".$uid."_".$photo_id."_middle.jpg";
            }
          return base_url("$location");
     } 
 
     function small_photo_get($uid)
     {   
-         if (!$this->get_photo($uid))
+         if (!$this->get_photo($uid,$photo_id))
            {
                $location = "uploads/default_small.jpg";
            }
            else
            {
-               $location = "uploads/".$uid."_small.jpg";
+               $location = "uploads/".$uid."_".$photo_id."_small.jpg";
            }
          return base_url("$location");
     }
 
     function tiny_photo_get($uid)
     {   
-         if (!$this->get_photo($uid))
+         if (!$this->get_photo($uid,$photo_id))
            {
                $location = "uploads/default_tiny.jpg";
            }
            else
            {
-               $location = "uploads/".$uid."_tiny.jpg";
+               $location = "uploads/".$uid."_".$photo_id."_tiny.jpg";
            }
          return base_url("$location");
     }  

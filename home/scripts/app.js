@@ -121,7 +121,6 @@ mainApp.config(['$provide',
                   uploader.onSuccessItem = function(fileItem, response, status, headers) {
                     $scope.img.url = response;
                     $scope.img.url = $scope.img.url.replace(/\"/g, "");
-                    console.log($scope.img.url);
                   };
 
                   $scope.submit = function() {
@@ -183,6 +182,9 @@ mainApp.config(['$routeProvider',
     }).
     when('/search',{
       templateUrl:'views/search.html'
+    }).
+    when('/tag/:tagid',{
+      templateUrl:'views/tag.html'
     }).
 		otherwise({
 			redirectTo: '/'

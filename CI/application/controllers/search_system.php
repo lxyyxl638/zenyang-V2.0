@@ -103,13 +103,13 @@ class Search_system extends REST_Controller
         }
    }
 
-   function search_tag_get($keyword,$limit,$offset)
+   function search_tag_post()
    {
       $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         {
            $message = '';
-           if ($this->search_model->search_tag($message,$limit,$offset))
+           if ($this->search_model->search_tag($message))
             {
                 $this->response($message,200);
             }

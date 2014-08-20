@@ -132,10 +132,10 @@ class tag_system extends REST_Controller
     }
 
 
-    function tag_question_list_get($tagid)
+    function tag_question_list_get($tagid,$limit,$offset)
     {
        $message = '';
-       if ($this->tag_system_model->tag_question_list($message,$tagid))
+       if ($this->tag_system_model->tag_question_list($message,$tagid,$limit,$offset))
         {
             $this->response($message,200);
         }
@@ -184,9 +184,9 @@ class tag_system extends REST_Controller
        }
     }
 
-    function tag_hot_question_list_get($tagid)
+    function tag_hot_question_list_get($tagid,$limit,$offset)
     {
-       if (tag_hot_question_list_get($message,$tagid))
+       if ($this->tag_system_model->tag_hot_question_list($message,$tagid,$limit,$offset))
        {
            $this->response($message,200);
        }

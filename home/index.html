@@ -94,6 +94,7 @@
               <span class="tag">{{tag.tagname}}<a class="tagsinput-remove-link" ng-click="tagSelected.splice($index,1)"></a></span>
             </span>
             <input class="form-control" ng-model="tag.keyword" type="text" placeholder="请输入标签..." typeahead="Results.tagname for Results in getTags($viewValue)" typeahead-on-select="onselectTag($item, $model, $label)"/>
+            <div class="zy-alert" role="alert" ng-show="alert.tagNum">请添加一至五个标签</div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>

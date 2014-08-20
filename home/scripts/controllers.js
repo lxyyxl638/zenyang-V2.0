@@ -144,6 +144,7 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 	  	  $scope.alert.titleLength = false;
 	  	  $scope.alert.contentLength = false;
 	  	  $scope.alert.unlogin = false;
+	  	  $scope.alert.tagNum = false;
 	  	  $scope.tagSelected = [];
 	  	  $scope.tag = {};
 
@@ -168,39 +169,45 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 		  $scope.askquestion = function(q){
 			var url = '../CI/index.php/qa_center/question_ask/format/json/';
 			q.tag = $scope.tagSelected;
-			$http({
-				method: 'POST',
-				url: url,
-				data: q,
-			}).success(function(response){
-                if (response.state == "success")
-                {
-                	$modalInstance.close();
-                	window.location.replace("../home/#/question/"+response.qid);
-                }
-                else if (response.state == "fail")
-                {
-                	$scope.alert.timeInterval = false;
-			  	    $scope.alert.titleRequire = false;
-			  	    $scope.alert.titleLength = false;
-			  	    $scope.alert.contentLength = false;
-			  	    $scope.alert.unlogin = false;
-                	if (response.detail == "timeInterval"){
-                		$scope.alert.timeInterval = true;
-                	}
-                	else if (response.detail == "titleRequire"){
-                		$scope.alert.titleRequire = true;
-                	}
-                	else if (response.detail == "titleLength"){
-                		$scope.alert.titleLength = true;
-                	}
-                	else if (response.detail == "contentLength"){
-                		$scope.alert.contentLength = true;
-                	}
-                }
-            }).error(function(response){
-                alert("Error!");
-            })
+			if (q.tag.length == 0 || q.tag.length>5){
+				$scope.alert.tagNum = true;
+			}
+			else{
+				$http({
+					method: 'POST',
+					url: url,
+					data: q,
+				}).success(function(response){
+	                if (response.state == "success")
+	                {
+	                	$modalInstance.close();
+	                	window.location.replace("../home/#/question/"+response.qid);
+	                }
+	                else if (response.state == "fail")
+	                {
+	                	$scope.alert.timeInterval = false;
+				  	    $scope.alert.titleRequire = false;
+				  	    $scope.alert.titleLength = false;
+				  	    $scope.alert.contentLength = false;
+				  	    $scope.alert.unlogin = false;
+				  	    $scope.alert.tagNum = false;
+	                	if (response.detail == "timeInterval"){
+	                		$scope.alert.timeInterval = true;
+	                	}
+	                	else if (response.detail == "titleRequire"){
+	                		$scope.alert.titleRequire = true;
+	                	}
+	                	else if (response.detail == "titleLength"){
+	                		$scope.alert.titleLength = true;
+	                	}
+	                	else if (response.detail == "contentLength"){
+	                		$scope.alert.contentLength = true;
+	                	}
+	                }
+	            }).error(function(response){
+	                alert("Error!");
+	            })
+	        }
 		};
 
 		// add tags when post a question
@@ -364,49 +371,194 @@ mainControllers.controller('searchCtrl', ['$scope','$http',
 
 }]);
 
-mainControllers.controller('mainCtrl',['$scope','$http',
-	function($scope,$http){
-		// $scope.qList={};
-		// if($.isEmptyObject($scope.qList))
-		// {
-		// 	$http.get('../CI/index.php/QA_center/question_date/format/json').success(function(data){
-		// 		$scope.qList = data;
-		// 	});
-		// }
-		// $scope.questionByDate = function() {
-		// 	$http.get('../CI/index.php/QA_center/question_date/format/json').success(function(data){
-		// 		$scope.qList = data;
-		// 	});
-		// }
-		// $scope.questionByUser = function() {
-		// 	$http.get('../CI/index.php/QA_center/question_focus/format/json').success(function(data){
-		// 		if (typeof(data) == typeof("string"))
-		// 		{
-		// 			$scope.qList = {};
-		// 		}
-		// 		else
-		// 		{
-		// 			$scope.qList = data;
-		// 		}
-		// 	});
-		// }
-		// $scope.questionByDay = function() {
-		// 	$http.get('../CI/index.php/QA_center/question_day/format/json').success(function(data){
-		// 		$scope.qList = data;
-		// 	});
-		// }
-		// $scope.follow = function(id,$index){
-		// 	$http.get('../CI/index.php/QA_center/question_attention/'+id+'/format/json').success(function(data){
-		// 		if(data.follow == 0)
-		// 		{
-		// 			$scope.qList[$index].follow = 0;
-		// 		}
-		// 		else if (data.follow == 1)
-		// 		{
-		// 			$scope.qList[$index].follow = 1;
-		// 		}
-		// 	});
-		// }
+mainControllers.controller('mainCtrl',['$scope','$http','homeFeedFactory','publicFactory',
+	function($scope,$http,homeFeedFactory,publicFactory){
+		$scope.tagTAL = [];
+		$scope.allTAL = [];
+		$scope.myuid = publicFactory.getSelfid();
+		$scope.viewmoreTag = false;
+		$scope.viewmoreAll = false;
+		var limit = 10;
+
+		var updateTagTAL = function(){
+			homeFeedFactory.getTagTAL().then(function(){
+				var oldLength = $scope.tagTAL.length;
+				$scope.tagTAL = homeFeedFactory.tagTopAnswerList();
+				var newLength = $scope.tagTAL.length;
+				if ((newLength - oldLength) < limit){
+					$scope.viewmoreTag = false;
+				}
+				else{
+					$scope.viewmoreTag = true;
+				}
+			});
+		}
+
+		var updateAllTAL = function(){
+			homeFeedFactory.getAllTAL().then(function(){
+				var oldLength = $scope.allTAL.length;
+				$scope.allTAL = homeFeedFactory.allTopAnswerList();
+				var newLength = $scope.allTAL.length;
+				if ((newLength - oldLength) < limit){
+					$scope.viewmoreAll = false;
+				}
+				else{
+					$scope.viewmoreAll = true;
+				}
+			});
+		}
+
+		$scope.updateTagTAL = updateTagTAL;
+		$scope.updateAllTAL = updateAllTAL;
+
+		updateTagTAL();
+		updateAllTAL();
+
+		$scope.afollow = function(id,$index){
+			$http.get('../CI/index.php/qa_center/question_follow/'+id+'/format/json').success(function(data){
+				if(data.follow == 'N')
+				{
+					$scope.allTAL[$index].follow = 'N';
+				}
+				else if (data.follow == 'Y')
+				{
+					$scope.allTAL[$index].follow = 'Y';
+				}
+			});
+		}
+
+		$scope.tfollow = function(id,$index){
+			$http.get('../CI/index.php/qa_center/question_follow/'+id+'/format/json').success(function(data){
+				if(data.follow == 'N')
+				{
+					$scope.tagTAL[$index].follow = 'N';
+				}
+				else if (data.follow == 'Y')
+				{
+					$scope.tagTAL[$index].follow = 'Y';
+				}
+			});
+		}
+
+		$scope.alike = function(qid,aid,$index){
+
+			$http.get('../CI/index.php/qa_center/good/'+qid+'/'+aid+'/format/json').success(function(data){
+				if(data.mygood == 1){
+					$scope.allTAL[$index].like = false;
+					$scope.allTAL[$index].cancellike = true;
+					$scope.allTAL[$index].dislike = false;
+					$scope.allTAL[$index].canceldislike = false;
+					$scope.allTAL[$index].good = data.good;
+					$scope.allTAL[$index].bad = data.bad;
+				}
+				else if(data.mygood == 0){
+					$scope.allTAL[$index].like = true;
+					$scope.allTAL[$index].cancellike = false;
+					$scope.allTAL[$index].dislike = true;
+					$scope.allTAL[$index].canceldislike = false;
+					$scope.allTAL[$index].good = data.good;
+					$scope.allTAL[$index].bad = data.bad;
+				}
+				else if(data.mygood == -1){
+					$scope.allTAL[$index].like = false;
+					$scope.allTAL[$index].cancellike = false;
+					$scope.allTAL[$index].dislike = false;
+					$scope.allTAL[$index].canceldislike = true;
+					$scope.allTAL[$index].good = data.good;
+					$scope.allTAL[$index].bad = data.bad;
+				}
+			});
+		}
+
+		$scope.adislike = function(qid,aid,$index){
+			$http.get('../CI/index.php/qa_center/bad/'+qid+'/'+aid+'/format/json').success(function(data){
+				if(data.mygood == 1){
+					$scope.allTAL[$index].like = false;
+					$scope.allTAL[$index].cancellike = true;
+					$scope.allTAL[$index].dislike = false;
+					$scope.allTAL[$index].canceldislike = false;
+					$scope.allTAL[$index].good = data.good;
+					$scope.allTAL[$index].bad = data.bad;
+				}
+				else if(data.mygood == 0){
+					$scope.allTAL[$index].like = true;
+					$scope.allTAL[$index].cancellike = false;
+					$scope.allTAL[$index].dislike = true;
+					$scope.allTAL[$index].canceldislike = false;
+					$scope.allTAL[$index].good = data.good;
+					$scope.allTAL[$index].bad = data.bad;
+				}
+				else if(data.mygood == -1){
+					$scope.allTAL[$index].like = false;
+					$scope.allTAL[$index].cancellike = false;
+					$scope.allTAL[$index].dislike = false;
+					$scope.allTAL[$index].canceldislike = true;
+					$scope.allTAL[$index].good = data.good;
+					$scope.allTAL[$index].bad = data.bad;
+				}
+			});
+		}
+
+		$scope.tlike = function(qid,aid,$index){
+
+			$http.get('../CI/index.php/qa_center/good/'+qid+'/'+aid+'/format/json').success(function(data){
+				if(data.mygood == 1){
+					$scope.tagTAL[$index].like = false;
+					$scope.tagTAL[$index].cancellike = true;
+					$scope.tagTAL[$index].dislike = false;
+					$scope.tagTAL[$index].canceldislike = false;
+					$scope.tagTAL[$index].good = data.good;
+					$scope.tagTAL[$index].bad = data.bad;
+				}
+				else if(data.mygood == 0){
+					$scope.tagTAL[$index].like = true;
+					$scope.tagTAL[$index].cancellike = false;
+					$scope.tagTAL[$index].dislike = true;
+					$scope.tagTAL[$index].canceldislike = false;
+					$scope.tagTAL[$index].good = data.good;
+					$scope.tagTAL[$index].bad = data.bad;
+				}
+				else if(data.mygood == -1){
+					$scope.tagTAL[$index].like = false;
+					$scope.tagTAL[$index].cancellike = false;
+					$scope.tagTAL[$index].dislike = false;
+					$scope.tagTAL[$index].canceldislike = true;
+					$scope.tagTAL[$index].good = data.good;
+					$scope.tagTAL[$index].bad = data.bad;
+				}
+			});
+		}
+
+		$scope.tdislike = function(qid,aid,$index){
+			$http.get('../CI/index.php/qa_center/bad/'+qid+'/'+aid+'/format/json').success(function(data){
+				if(data.mygood == 1){
+					$scope.tagTAL[$index].like = false;
+					$scope.tagTAL[$index].cancellike = true;
+					$scope.tagTAL[$index].dislike = false;
+					$scope.tagTAL[$index].canceldislike = false;
+					$scope.tagTAL[$index].good = data.good;
+					$scope.tagTAL[$index].bad = data.bad;
+				}
+				else if(data.mygood == 0){
+					$scope.tagTAL[$index].like = true;
+					$scope.tagTAL[$index].cancellike = false;
+					$scope.tagTAL[$index].dislike = true;
+					$scope.tagTAL[$index].canceldislike = false;
+					$scope.tagTAL[$index].good = data.good;
+					$scope.tagTAL[$index].bad = data.bad;
+				}
+				else if(data.mygood == -1){
+					$scope.tagTAL[$index].like = false;
+					$scope.tagTAL[$index].cancellike = false;
+					$scope.tagTAL[$index].dislike = false;
+					$scope.tagTAL[$index].canceldislike = true;
+					$scope.tagTAL[$index].good = data.good;
+					$scope.tagTAL[$index].bad = data.bad;
+				}
+			});
+		}
+
+
 	}]);
 
 mainControllers.controller('peopleCtrl',['$scope','$http','$routeParams','peopleFactory','$location','$modal',
@@ -418,6 +570,11 @@ mainControllers.controller('peopleCtrl',['$scope','$http','$routeParams','people
 		$scope.send.Show = false;
 		$scope.transfer = {};
 		$scope.transfer.uid = $scope.uid;
+		$scope.more = {};
+		$scope.more.myq = true;
+		$scope.more.mya = true;
+		$scope.more.myf = true;
+		var limit = 3;
 
 		$scope.peoplePathRecord.currentPath = $location.path();
 		var renew = false;
@@ -447,19 +604,43 @@ mainControllers.controller('peopleCtrl',['$scope','$http','$routeParams','people
 
 		var updateMyQ = function(){
 			peopleFactory.refreshQList($scope.uid,renew).then(function(){
+				var oldLength = $scope.myquestion.length;
 				$scope.myquestion = peopleFactory.getQlist();
+				var newLength = $scope.myquestion.length;
+				if ((newLength - oldLength)<limit){
+					$scope.more.myq = false;
+				}
+				else{
+					$scope.more.myq = true;
+				}
 			})
 		};
 
 		var updateMyA = function(){
 			peopleFactory.refreshAList($scope.uid).then(function(){
+				var oldLength = $scope.myanswer.length;
 				$scope.myanswer = peopleFactory.getAlist();
+				var newLength = $scope.myanswer.length;
+				if ((newLength - oldLength)<limit){
+					$scope.more.mya = false;
+				}
+				else{
+					$scope.more.mya = true;
+				}
 			})
 		}
 
 		var updateMyF = function(){
 			peopleFactory.refreshFList($scope.uid).then(function(){
+				var oldLength = $scope.myfollow.length;				
 				$scope.myfollow = peopleFactory.getFlist();
+				var newLength = $scope.myfollow.length;
+				if ((newLength - oldLength)<limit){
+					$scope.more.myf = false;
+				}
+				else{
+					$scope.more.myf = true;
+				}
 			})
 		}
 
@@ -574,24 +755,6 @@ mainControllers.controller('peopleCtrl',['$scope','$http','$routeParams','people
 		    });
 	  	}
 
-	  	// $scope.modifyAnswerOpen = function(size,$index){
-
-	  	// 	var modalInstance = $modal.open({
-	  	// 		templateUrl: 'modifyAnswer.html',
-	  	// 		controller: ModalInstanceCtrlA,
-	  	// 		size: size,
-	  	// 		resolve: {
-	  	// 			a_original:function(){
-	  	// 				return $scope.myanswer[$index];
-	  	// 			}
-	  	// 		}
-	  	// 	});
-
-	  	// 	modalInstance.result.then(function () {
-		  //     console.log('Modal dismissed at: ' + new Date());
-		  //   });
-	  	// }
-
 	  	var ModalInstanceCtrlQ = function ($scope, $modalInstance,q_original) {
 
 	  	  $scope.alert = {};
@@ -649,43 +812,6 @@ mainControllers.controller('peopleCtrl',['$scope','$http','$routeParams','people
 		    $modalInstance.dismiss('cancel');
 		  };
 		};
-
-		// var ModalInstanceCtrlA = function ($scope, $modalInstance,a_original) {
-
-	 //  	$scope.alert = {};
-		// $scope.alert.contentLength = false;
-
-		// $scope.modifyA={};
-	 //  	$scope.qid_original = a_original.qid;
-	 //  	$scope.modifyA.aid = a_original.id;
-	 //  	$scope.modifyA.content = a_original.content;
-	 //  	$scope.title_original = a_original.title;
-
-		// $scope.answerquestion = function(modifyA){
-		// 	$scope.alert.contentLength = false;
-		// 	modifyA.aid = $scope.modifyA.aid;
-		// 	var url = '../CI/index.php/qa_center/question_answer/'+$scope.qid_original+'/format/json/';
-		// 	$http({
-		// 		method: 'POST',
-		// 		url: url,
-		// 		data: modifyA,
-		// 	}).success(function(response){
-  //               if(response.state == "success")
-  //               {
-  //               	window.location.reload();
-  //               }
-  //               else{
-  //               	$scope.alert.contentLength = true;
-  //               }
-  //           }).error(function(response){
-  //               alert("Error!");
-  //           });
-		// }
-
-		//   $scope.cancel = function () {
-		//     $modalInstance.dismiss('cancel');
-		//   };
-		// };
 
 	}]);
 
@@ -754,10 +880,6 @@ mainControllers.controller('talkCtrl',['$scope','$http','$routeParams',
 
 mainControllers.controller('settingCtrl',['$scope','$http',
 	function($scope,$http){
-		// $scope.uid = $routeParams.uid;
-		// $http.get('../CI/index.php/public_function/uidrealname/'+ $scope.uid +'/format/json').success(function(data){
-		// 		$scope.realname = data.uidrealname;
-		// 	});
 	}]);
 
 mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aListFactory','$location','publicFactory',
@@ -766,9 +888,14 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aLis
 		$scope.answers = [];
 		$scope.qid = $routeParams.id;
 		$scope.myuid = publicFactory.getSelfid();
+		$scope.moreanswer = true;
+		var limit = 10;
 
 		aListFactory.refreshQuestion($scope.qid).then(function(){
 			$scope.question = aListFactory.getQuestion();
+			if (typeof $scope.question.tag == 'undefined'){
+        		$scope.question.tag = [];
+        	}
 		});
 
 		if($scope.question.answerdeny == 'Y'){
@@ -778,9 +905,30 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aLis
 
 		$scope.alert = {};
 		$scope.alert.contentLength = false;
+		$scope.alert.tagNum = false;
+
+		$scope.tag = {};
 
 		$scope.beginmodify = function(){
 			$scope.modifyAnswer = true;
+		}
+
+		$scope.beginmodifyTag = function(){
+			$scope.modifyTag = true;
+		}
+
+		$scope.follow = function(id){
+			$http.get('../CI/index.php/qa_center/question_follow/'+id+'/format/json').success(function(data){
+				if(data.follow == 'N')
+				{
+					$scope.question.follow = 'N';
+				}
+				else if (data.follow == 'Y')
+				{
+					$scope.question.follow = 'Y';
+				}
+				$scope.question.follow_num = data.follow_num;
+			});
 		}
 
 		var updateAnswer = function(){
@@ -792,7 +940,15 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aLis
 				renew = true;
 			}
 			aListFactory.refreshAnswer($scope.qid,renew).then(function(){
+				var oldLength = $scope.answers.length;
 				$scope.answers = aListFactory.getAnswers();
+				var newLength = $scope.answers.length;
+				if ((newLength - oldLength)<limit){
+					$scope.moreanswer = false;
+				}
+				else{
+					$scope.moreanswer = true;
+				}
 			})
 		}
 
@@ -860,7 +1016,7 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aLis
 		}
 
 
-		$scope.modifyquestion = function(answer,id,qid){
+		$scope.modifyquestion = function(answer,id,qid,$index){
 			console.log("hahaha");
 			$scope.alert.contentLength = false;
 			var postData = {};
@@ -874,7 +1030,8 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aLis
 			}).success(function(response){
                 if(response.state == "success")
                 {
-                	window.location.reload();
+                	$scope.answers[$index].content = answer;
+                	$scope.modifyAnswer = false;
                 }
                 else{
                 	$scope.alert.contentLength = true;
@@ -883,6 +1040,67 @@ mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aLis
                 alert("Error!");
             });
         };
+
+        $scope.onmodifyTag = function($item, $model, $label){
+        	console.log(typeof $scope.question.tag);
+			if ($item.tagid == 0){
+				var temp = {};
+				temp.tagname = $item.tagValue;
+				temp.tagid = $item.tagid;
+				temp.tagabbr = pinyin.getFullChars(temp.tagname);
+				$scope.question.tag.push(temp);
+			}
+			else{
+				$item.tagabbr = pinyin.getFullChars($item.tagname);
+				$scope.question.tag.push($item);
+			}
+			$scope.tag.keyword = "";
+		}
+
+		$scope.getModifyTags = function($viewValue){
+			var val = {};
+			var url = "../CI/index.php/tag_system/tag_search/format/json";
+			val.keyword = $viewValue;
+			return $http({
+				method:'POST',
+				url:url,
+				data:val,
+			}).then(function(res){
+				var Results = res.data;
+				if(Results.length == 0){
+					var temp = {};
+					temp.tagname = "添加标签 " + $viewValue;
+					temp.tagValue = $viewValue;
+					temp.tagid = 0; 
+					Results.push(temp);
+				}
+
+				return Results;
+			})
+		}
+
+		$scope.modifyTagSubmit = function(){
+			var modifyTagPost = {};
+			modifyTagPost.qid = $scope.question.id;
+			modifyTagPost.tag = $scope.question.tag;
+			console.log(modifyTagPost);
+			var url = "../CI/index.php/tag_system/tag_modify/format/json";
+			if(modifyTagPost.tag.length == 0 || modifyTagPost.tag.length>5){
+				$scope.alert.tagNum = true;
+			}
+			else{
+				$http({
+					method:'POST',
+					url:url,
+					data:modifyTagPost,
+				}).then(function(response){
+					if(response.data.state == "success"){
+						$scope.modifyTag = false;
+					}
+				})
+			}
+		}
+
 	}]);
 
 mainControllers.controller('answerCtrl',['$scope','$http',
@@ -912,36 +1130,75 @@ mainControllers.controller('answerCtrl',['$scope','$http',
 		}
 	}]);
 
-mainControllers.controller('oqCtrl',['$scope','$http','qListFactory','publicFactory',
-	function($scope,$http,qListFactory,publicFactory,peopleFactory){
-		$scope.qList = {};
-		$scope.myPic = publicFactory.getSelfPicS();
+mainControllers.controller('oqCtrl',['$scope','$http','qListFactory',
+	function($scope,$http,qListFactory){
+		$scope.qListA = {};
+		$scope.qListT = {};
+		$scope.moreA = false;
+		$scope.moreT = false;
+		var limit = 10;
 
-		var updateList = function(){
-			qListFactory.getQuestion().then(function(){
-				$scope.qList = qListFactory.getList();
-				$scope.myPic = publicFactory.getSelfPicS();
+		var updateListA = function(){
+			qListFactory.getQuestiona().then(function(){
+				var oldLength = $scope.qListA.length;
+				$scope.qListA = qListFactory.getListA();
+				var newLength = $scope.qListA.length;
+				if ((newLength - oldLength) < limit || newLength<limit){
+					$scope.moreA = false;
+				}
+				else{
+					$scope.moreA = true;
+				}
 			});
 		}
-		
-		updateList();
 
-		$scope.update = updateList;
+		var updateListT = function(){
+			qListFactory.getQuestiont().then(function(){
+				var oldLength = $scope.qListT.length;
+				$scope.qListT = qListFactory.getListT();
+				var newLength = $scope.qListT.length;
+				if ((newLength - oldLength) < limit || newLength<limit){
+					$scope.moreT = false;
+				}
+				else{
+					$scope.moreT = true;
+				}
+			});
+		}
 
-		$scope.follow = function(id,$index){
+		updateListA();
+		updateListT();
+
+		$scope.updateA = updateListA;
+		$scope.updateT = updateListT;
+
+		$scope.followA = function(id,$index){
 			$http.get('../CI/index.php/qa_center/question_follow/'+id+'/format/json').success(function(data){
 				if(data.follow == 'N')
 				{
-					$scope.qList[$index].follow = 'N';
+					$scope.qListA[$index].follow = 'N';
 				}
 				else if (data.follow == 'Y')
 				{
-					$scope.qList[$index].follow = 'Y';
+					$scope.qListA[$index].follow = 'Y';
 				}
-				$scope.qList[$index].follow_num = data.follow_num;
+				$scope.qListA[$index].follow_num = data.follow_num;
 			});
 		}
 
+		$scope.followT = function(id,$index){
+			$http.get('../CI/index.php/qa_center/question_follow/'+id+'/format/json').success(function(data){
+				if(data.follow == 'N')
+				{
+					$scope.qListT[$index].follow = 'N';
+				}
+				else if (data.follow == 'Y')
+				{
+					$scope.qListT[$index].follow = 'Y';
+				}
+				$scope.qListT[$index].follow_num = data.follow_num;
+			});
+		}
 
 	}]);
 
@@ -979,6 +1236,167 @@ mainControllers.controller('notificationCtrl',['$scope','$http',
 		});
 
 	}]);
+
+mainControllers.controller('tagCtrl', ['$scope', '$http','$routeParams','tagPageFactory',
+	function($scope,$http,$routeParams,tagPageFactory){
+		$scope.tagid = $routeParams.tagid;
+		$scope.questionList = {};
+		$scope.answerList = {};
+		$scope.moreA = false;
+		$scope.moreQ = false;
+		var limit = 10;
+
+		var updateQlist = function(){
+			tagPageFactory.getQuestion($scope.tagid).then(function(){
+				var oldLength = $scope.questionList.length;
+				$scope.questionList = tagPageFactory.getQlist();
+				var newLength = $scope.questionList.length;
+				if ((newLength - oldLength)<limit || newLength<limit){
+					$scope.moreQ = false;
+				}
+				else{
+					$scope.moreQ = true;
+				}
+			});
+		}
+
+		var updateAlist = function(){
+			tagPageFactory.getAnswer($scope.tagid).then(function(){
+				var oldLength = $scope.answerList.length;
+				$scope.answerList = tagPageFactory.getAlist();
+				var newLength = $scope.answerList.length;
+				if ((newLength - oldLength)<limit || newLength<limit){
+					$scope.moreA = false;
+				}
+				else{
+					$scope.moreA = true;
+				}
+			});
+		}
+
+		$scope.updateQlist = updateQlist;
+		$scope.updateAlist = updateAlist;
+
+		$http.get("../CI/index.php/tag_system/tag_info/"+$scope.tagid+"/format/json")
+		.success(function(data){
+			$scope.tag = data;
+			if ($scope.tag.follow == 'Y'){
+				$scope.flipflop = false;
+			}
+			else if ($scope.tag.follow == 'N'){
+				$scope.flipflop = true;
+			}
+		});
+
+		updateQlist();
+		updateAlist();
+
+		$scope.tagfollow = function(){
+			var tagpost = {};
+			tagpost.tag = [];
+			tagpost.tag[0] = {};
+			tagpost.tag[0].tagname = $scope.tag.tagname;
+			tagpost.tag[0].tagid = $scope.tagid;
+			console.log(tagpost);
+			$http({
+				method:'POST',
+				url:"../CI/index.php/tag_system/user_set_tag/format/json",
+				data:tagpost,
+			}).then(function(response){
+				if(response.data.state == 'success'){
+					console.log(response);
+				}
+		})
+		}
+
+		$scope.follow = function(id,$index){
+			$http.get('../CI/index.php/qa_center/question_follow/'+id+'/format/json').success(function(data){
+				if(data.follow == 'N')
+				{
+					$scope.questionList[$index].follow = 'N';
+				}
+				else if (data.follow == 'Y')
+				{
+					$scope.questionList[$index].follow = 'Y';
+				}
+				$scope.questionList[$index].follow_num = data.follow_num;
+			});
+		}
+
+		$scope.afollow = function(id,$index){
+			$http.get('../CI/index.php/qa_center/question_follow/'+id+'/format/json').success(function(data){
+				if(data.follow == 'N')
+				{
+					$scope.answerList[$index].follow = 'N';
+				}
+				else if (data.follow == 'Y')
+				{
+					$scope.answerList[$index].follow = 'Y';
+				}
+			});
+		}
+
+		$scope.alike = function(qid,aid,$index){
+
+			$http.get('../CI/index.php/qa_center/good/'+qid+'/'+aid+'/format/json').success(function(data){
+				if(data.mygood == 1){
+					$scope.answerList[$index].like = false;
+					$scope.answerList[$index].cancellike = true;
+					$scope.answerList[$index].dislike = false;
+					$scope.answerList[$index].canceldislike = false;
+					$scope.answerList[$index].good = data.good;
+					$scope.answerList[$index].bad = data.bad;
+				}
+				else if(data.mygood == 0){
+					$scope.answerList[$index].like = true;
+					$scope.answerList[$index].cancellike = false;
+					$scope.answerList[$index].dislike = true;
+					$scope.answerList[$index].canceldislike = false;
+					$scope.answerList[$index].good = data.good;
+					$scope.answerList[$index].bad = data.bad;
+				}
+				else if(data.mygood == -1){
+					$scope.answerList[$index].like = false;
+					$scope.answerList[$index].cancellike = false;
+					$scope.answerList[$index].dislike = false;
+					$scope.answerList[$index].canceldislike = true;
+					$scope.answerList[$index].good = data.good;
+					$scope.answerList[$index].bad = data.bad;
+				}
+			});
+		}
+
+		$scope.adislike = function(qid,aid,$index){
+			$http.get('../CI/index.php/qa_center/bad/'+qid+'/'+aid+'/format/json').success(function(data){
+				if(data.mygood == 1){
+					$scope.answerList[$index].like = false;
+					$scope.answerList[$index].cancellike = true;
+					$scope.answerList[$index].dislike = false;
+					$scope.answerList[$index].canceldislike = false;
+					$scope.answerList[$index].good = data.good;
+					$scope.answerList[$index].bad = data.bad;
+				}
+				else if(data.mygood == 0){
+					$scope.answerList[$index].like = true;
+					$scope.answerList[$index].cancellike = false;
+					$scope.answerList[$index].dislike = true;
+					$scope.answerList[$index].canceldislike = false;
+					$scope.answerList[$index].good = data.good;
+					$scope.answerList[$index].bad = data.bad;
+				}
+				else if(data.mygood == -1){
+					$scope.answerList[$index].like = false;
+					$scope.answerList[$index].cancellike = false;
+					$scope.answerList[$index].dislike = false;
+					$scope.answerList[$index].canceldislike = true;
+					$scope.answerList[$index].good = data.good;
+					$scope.answerList[$index].bad = data.bad;
+				}
+			});
+		}
+
+
+}]);
 
 mainControllers.controller('FileController', ['$scope', 'FileUploader', function($scope, FileUploader) {
         var uploader = $scope.uploader = new FileUploader({

@@ -60,22 +60,23 @@ mainApp.factory('qListFactory', function($http, $q){
 	var questionFn = {};
 
 	var _limit = 10;
-	var _qList = [];
+	var _qListT = [];//tag
+	var _qListA = [];//all
 
-	questionFn.getQuestion = function(){
+	questionFn.getQuestiont = function(){
 		var offset = 0;
-		for(var q in _qList){
+		for(var q in _qListT){
 			offset++;
 		}
 		var deferred = $q.defer();
-		$http.get("../CI/index.php/home/question_hurry_list/"+_limit+"/"+offset+"/format/json")
+		$http.get("../CI/index.php/home/question_tag_list/"+_limit+"/"+offset+"/format/json")
 		.success(function(data){
 			if(data == "")
 			{
 				console.log("no more questions");
 			}
 			else{
-				_qList = _qList.concat(data);
+				_qListT = _qListT.concat(data);
 			}
 			
 			deferred.resolve();
@@ -86,11 +87,147 @@ mainApp.factory('qListFactory', function($http, $q){
 		return deferred.promise;
 	}
 
-	questionFn.getList = function(){
-		return _qList;
+	questionFn.getQuestiona = function(){
+		var offset = 0;
+		for(var q in _qListA){
+			offset++;
+		}
+		var deferred = $q.defer();
+		$http.get("../CI/index.php/home/question_date_list/"+_limit+"/"+offset+"/format/json")
+		.success(function(data){
+			if(data == "")
+			{
+				console.log("no more questions");
+			}
+			else{
+				_qListA = _qListA.concat(data);
+			}
+			
+			deferred.resolve();
+		}).error(function(){
+			deferred.reject("Error");
+		});
+
+		return deferred.promise;
+	}
+
+	questionFn.getListA = function(){
+		return _qListA;
+	}
+
+	questionFn.getListT = function(){
+		return _qListT;
 	}
 
 	return questionFn;
+});
+
+mainApp.factory('homeFeedFactory', function($http, $q){
+	var homeFeedFn = {};
+
+	var _limit = 10;
+	var _tagTAL = [];
+	var _allTAL = [];
+
+	homeFeedFn.getTagTAL = function(){
+		var offset = 0;
+		for(var q in _tagTAL){
+			offset ++;
+		}
+		var deferred = $q.defer();
+		$http.get("../CI/index.php/home/user_tag_list/"+_limit+"/"+offset+"/format/json")
+		.success(function(data){
+			if(data == ""){
+				console.log("H/UTL void");
+			}
+			else{
+				_tagTAL = _tagTAL.concat(data);
+			}
+
+			deferred.resolve();
+		}).error(function(){
+			deferred.reject("Error");
+		});
+
+		return deferred.promise;
+	}
+
+	homeFeedFn.getAllTAL = function(){
+		var offset = 0;
+		for(var q in _allTAL){
+			offset ++;
+		}
+		var deferred = $q.defer();
+		$http.get("../CI/index.php/home/question_hurry_list/"+_limit+"/"+offset+"/format/json")
+		.success(function(data){
+			if(data == ""){
+				console.log("H/UTL void");
+			}
+			else{
+				_allTAL = _allTAL.concat(data);
+			}
+
+			deferred.resolve();
+		}).error(function(){
+			deferred.reject("Error");
+		});
+
+		return deferred.promise;
+	}
+
+	homeFeedFn.tagTopAnswerList = function(){
+		for (var i=0; i<_tagTAL.length; i++){
+			if (_tagTAL[i].mygood == 1){
+				_tagTAL[i].like = false;
+				_tagTAL[i].cancellike = true;
+				_tagTAL[i].dislike = false;
+				_tagTAL[i].canceldislike = false;
+			}
+			else if (_tagTAL[i].mygood == 0)
+			{
+				_tagTAL[i].like = true;
+				_tagTAL[i].cancellike = false;
+				_tagTAL[i].dislike = true;
+				_tagTAL[i].canceldislike = false;
+			}
+			else if (_tagTAL[i].mygood == -1)
+			{
+				_tagTAL[i].like = false;
+				_tagTAL[i].cancellike = false;
+				_tagTAL[i].dislike = false;
+				_tagTAL[i].cancellike = true;
+			}
+		}
+		return _tagTAL;
+	}
+
+	homeFeedFn.allTopAnswerList = function(){
+		for (var i=0; i<_allTAL.length; i++){
+			if (_allTAL[i].mygood == 1){
+				_allTAL[i].like = false;
+				_allTAL[i].cancellike = true;
+				_allTAL[i].dislike = false;
+				_allTAL[i].canceldislike = false;
+			}
+			else if (_allTAL[i].mygood == 0)
+			{
+				_allTAL[i].like = true;
+				_allTAL[i].cancellike = false;
+				_allTAL[i].dislike = true;
+				_allTAL[i].canceldislike = false;
+			}
+			else if (_allTAL[i].mygood == -1)
+			{
+				_allTAL[i].like = false;
+				_allTAL[i].cancellike = false;
+				_allTAL[i].dislike = false;
+				_allTAL[i].cancellike = true;
+			}
+		}
+		return _allTAL;
+	}
+
+	return homeFeedFn;
 });
 
 mainApp.factory('aListFactory', function($http,$q){
@@ -440,4 +577,91 @@ mainApp.factory('msgFactory', function($http, $q){
 	}
 
 	return letterFn;
+});
+
+mainApp.factory('tagPageFactory', function($http, $q){
+	var tagFn = {};
+
+	var _limit = 10;
+	var _Qlist = [];
+	var _Alist = [];
+
+	tagFn.getQuestion = function(tagid){
+		var offset = 0;
+		for(var q in _Qlist){
+			offset++;
+		}
+		var deferred = $q.defer();
+		$http.get("../CI/index.php/tag_system/tag_question_list/"+tagid+"/"+_limit+"/"+offset+"/format/json")
+		.success(function(data){
+			if(typeof data == "string")
+			{
+				console.log("no more questions");
+			}
+			else{
+				_Qlist = _Qlist.concat(data);
+			}
+			
+			deferred.resolve();
+		}).error(function(){
+			deferred.reject("Error");
+		});
+
+		return deferred.promise;
+	}
+
+	tagFn.getQlist = function(){
+		return _Qlist;
+	}
+
+	tagFn.getAnswer = function(tagid){
+		var offset = 0;
+		for(var q in _Alist){
+			offset ++;
+		}
+		var deferred = $q.defer();
+		$http.get("../CI/index.php/tag_system/tag_hot_question_list/"+tagid+"/"+_limit+"/"+offset+"/format/json")
+		.success(function(data){
+			if(data == ""){
+				console.log("no more answers");
+			}
+			else{
+				_Alist = _Alist.concat(data);
+			}
+
+			deferred.resolve();
+		}).error(function(){
+			deferred.reject("Error");
+		});
+
+		return deferred.promise;
+	}
+
+	tagFn.getAlist = function(){
+		for (var i=0; i<_Alist.length; i++){
+			if (_Alist[i].mygood == 1){
+				_Alist[i].like = false;
+				_Alist[i].cancellike = true;
+				_Alist[i].dislike = false;
+				_Alist[i].canceldislike = false;
+			}
+			else if (_Alist[i].mygood == 0)
+			{
+				_Alist[i].like = true;
+				_Alist[i].cancellike = false;
+				_Alist[i].dislike = true;
+				_Alist[i].canceldislike = false;
+			}
+			else if (_Alist[i].mygood == -1)
+			{
+				_Alist[i].like = false;
+				_Alist[i].cancellike = false;
+				_Alist[i].dislike = false;
+				_Alist[i].cancellike = true;
+			}
+		}
+		return _Alist;
+	}
+
+	return tagFn;
 });

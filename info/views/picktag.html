@@ -1,0 +1,35 @@
+<div class="zy-info-position-wrap-tag">
+	<div class="zy-info-position-inner zy-info-color" id="zy-student-inner" ng-controller="picktagCtrl">
+   <div class="zy-tag-title">
+      有哪些你感兴趣的话题，愿与我们探讨？
+   </div>
+   <div class="zy-alert" role="alert" ng-show="alert.tagNum">亲，请至少选择三个感兴趣的标签</div>
+   <div class="zy-province-container">
+      <div ng-repeat="tag in tagList">
+         <div class="tagwrap" ng-init="btnShow=false" ng-mouseenter="btnShow=true" ng-mouseleave="btnShow=false">
+            <div class="tagimg">
+               <img ng-src={{tag.tagpic}} class="tagimgsrc">
+            </div>
+            <div class="taginfo">
+               <div class="tagtitle">{{tag.tagname}}</div>
+            
+               <div class="tag-btn-wrap" ng-show="btnShow" ng-init="flipflop=true">
+                  <span class="btn btn-success tag-btn" ng-show="flipflop" ng-click="flipflop = !flipflop; tagPush($index)">
+                     关注话题
+                  </span>
+                  <span class="btn btn-default tag-btn" ng-hide="flipflop" ng-click="flipflop = !flipflop; tagCancel($index)">
+                     取消关注
+                  </span>
+               </div>
+            </div>
+            <div class="tagChosen" ng-hide="flipflop">
+               <span class="glyphicon glyphicon-ok"></span>
+            </div>
+         </div>
+      </div>
+
+   		<button class="submit-btn" ng-click="finishSubmit()">完成</button>
+   	</div>
+
+	</div>
+</div>

@@ -203,4 +203,29 @@ class personal_center extends REST_Controller
             $this->response($message,200);
         }
   }
+
+  function change_password_post()
+  {
+     $status = $this->session->userdata('status');
+     if (isset($status) && $status === 'OK')
+     {
+         $message = '';
+         if (!$this->personal_center_model->change_password($message))
+         {
+            $message['state'] = "fail";
+            $this->response($message,200);
+         }
+         else
+         {
+            $message['state'] = "success";
+            $this->response($message,200);
+         }
+     }
+     else
+     {
+         $message['state'] = "fail";
+         $message['detail'] = "Unlogin";
+         $this->response($message,200);
+     }
+  }
 }

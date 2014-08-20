@@ -53,12 +53,12 @@ class Signup extends REST_Controller
           }
          else 
           { 
-            if ($this->input->post('CDK') != "0811")
-              {
-                $message['state'] = "fail";
-                $message['detail'] = "CDKInvalid";
-                $this->response($message,200);
-              }
+            // if ($this->input->post('CDK') != "0811")
+            //   {
+            //     $message['state'] = "fail";
+            //     $message['detail'] = "CDKInvalid";
+            //     $this->response($message,200);
+            //   }
              $email = $this->input->post('email');
              $password = $this->input->post('password');
              $lastname = $this->input->post('lastname');

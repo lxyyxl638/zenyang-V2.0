@@ -9,11 +9,108 @@
 			</tab-heading>
 			<div style="font-align:center; font-size:18px; padding: 5px 30px;">
 	      		小伙伴们，这里就是怎样的首页啦！<br/><br/>
-	      		作为一个面向在校学生和职场人士的问答平台，我们相信知识和经验的价值，希望提供一个自由提问、讨论、分享的地方，大到职业规划，行业选择，小到工作实习，面试技巧，在这里都可以找到知音和同伴，以及一个真诚的答案。<br/><br/>
+	      		怎样是一个实名制的问答平台，致力于搭建联系学弟学妹和学长学姐的桥梁，无论你在念书、实习或者工作，总可以在这里找到愿意提供帮助或者你可以帮到的人。我们相信知识和经验的价值，希望提供一个自由提问、讨论、分享的地方，大到职业规划，出国留学，小到工作实习，申请技巧，在这里都可以找到知音和同伴，以及一个真诚的回复。<br/><br/>
 				作为怎样第一批内测用户，还等什么，请戳顶部的提问按钮，提出任何关于专业学习或者职业发展的问题；请戳侧边栏的留言板，留下你对怎样的建议，想法，或者吐槽。让我们共同见证一个有效、有范、有情怀的产品，和怎样一起快快成长！<br/><br/>
 				怎样团队敬上
 			</div>
 			</tab>
+
+			<tab>
+				<tab-heading>话题动态</tab-heading>
+				
+				<div ng-repeat="q in tagTAL" class="zy-TA-list">
+					<div class="zy-TA-left">
+						<div class="zy-TA-avatar-wrap">
+							<a href="#/people/{{q.uid}}" target="_blank"><img ng-src={{q.location}} class="zy-TA-avatar"></a>
+						</div>
+						<div class="zy-TA-state-wrap">
+							<span class="zy-TA-good-count">
+								<span class="zy-TA-good-num">{{q.good}}</span>
+								<span class="zy-TA-good-type">膜拜</span>
+							</span>
+							<span class="zy-TA-bad-count">
+								<span class="zy-TA-bad-num">{{q.bad}}</span>
+							</span>
+						</div>
+					</div>
+					<div class="zy-TA-main">
+						<div class="zy-TA-top">
+							<a href="#people/{{q.uid}}" target="_blank">{{q.realname}}</a>回答了一个问题
+							<span class="zy-time">{{q.date}}</span>
+						</div>
+						<div class="zy-TA-title">
+							<a href="#/question/{{q.qid}}" class="zy-question-link" target="_blank">{{q.title}}</a>
+						</div>
+						<div class="zy-TA-content">
+							<div ta-bind ng-model="q.content"></div>
+						</div>
+						<div class="zy-TA-bottom-panel">
+							<span class="btn-primary zy-follow" ng-click="tfollow(q.qid,$index)"><span ng-hide="q.follow">关注问题</span><span ng-show="q.follow">取消关注</span></span>
+
+							<span class="btn-primary zy-like" ng-click="tlike(q.qid,q.id,$index)" ng-show="q.like">膜拜</span>
+							<span class="btn-primary zy-like" ng-click="tlike(q.qid,q.id,$index)" ng-show="q.cancellike">取消膜拜</span>
+
+							<span class="btn-default zy-like" ng-click="tdislike(q.qid,q.id,$index)" ng-show="q.dislike">呵呵...</span>
+							<span class="btn-default zy-like" ng-click="tdislike(q.qid,q.id,$index)" ng-show="q.canceldislike">取消呵呵</span>
+						</div>
+					</div>
+				</div>
+
+	      		<button class="btn btn-primary zy-qlist-btn-more" ng-click="updateTagTAL()" ng-show="viewmoreTag">
+  					加载更多
+				</button>
+				<span class="btn btn-default zy-qlist-btn-more" ng-hide="viewmoreTag">木有了……快去关注更多话题吧！</span>
+
+			</tab>
+
+			<tab>
+				<tab-heading>全部动态</tab-heading>
+
+				<div ng-repeat="q in allTAL" class="zy-TA-list">
+					<div class="zy-TA-left">
+						<div class="zy-TA-avatar-wrap">
+							<a href="#/people/{{q.uid}}" target="_blank"><img ng-src={{q.location}} class="zy-TA-avatar"></a>
+						</div>
+						<div class="zy-TA-state-wrap">
+							<span class="zy-TA-good-count">
+								<span class="zy-TA-good-num">{{q.good}}</span>
+								<span class="zy-TA-good-type">膜拜</span>
+							</span>
+							<span class="zy-TA-bad-count">
+								<span class="zy-TA-bad-num">{{q.bad}}</span>
+							</span>
+						</div>
+					</div>
+					<div class="zy-TA-main">
+						<div class="zy-TA-top">
+							<a href="#people/{{q.uid}}" target="_blank">{{q.realname}}</a>回答了一个问题
+							<span class="zy-time">{{q.date}}</span>
+						</div>
+						<div class="zy-TA-title">
+							<a href="#/question/{{q.qid}}" class="zy-question-link" target="_blank">{{q.title}}</a>
+						</div>
+						<div class="zy-TA-content">
+							<div ta-bind ng-model="q.content"></div>
+						</div>
+						<div class="zy-TA-bottom-panel">
+							<span class="btn-primary zy-follow" ng-click="afollow(q.qid,$index)"><span ng-hide="q.follow">关注问题</span><span ng-show="q.follow">取消关注</span></span>
+
+							<span class="btn-primary zy-like" ng-click="alike(q.qid,q.id,$index)" ng-show="q.like">膜拜</span>
+							<span class="btn-primary zy-like" ng-click="alike(q.qid,q.id,$index)" ng-show="q.cancellike">取消膜拜</span>
+
+							<span class="btn-default zy-like" ng-click="adislike(q.qid,q.id,$index)" ng-show="q.dislike">呵呵...</span>
+							<span class="btn-default zy-like" ng-click="adislike(q.qid,q.id,$index)" ng-show="q.canceldislike">取消呵呵</span>
+						</div>
+					</div>
+				</div>
+
+				<button class="btn btn-primary zy-qlist-btn-more" ng-click="updateAllTAL()" ng-show="viewmoreAll">
+  					加载更多
+				</button>
+				<span class="btn btn-default zy-qlist-btn-more" ng-hide="viewmoreAll">木有了……</span>
+
+			</tab>
+
 
 			</tabset>
 		</div>

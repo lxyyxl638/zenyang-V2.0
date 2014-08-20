@@ -31,181 +31,6 @@ class Notify extends REST_Controller
     }
 
   
-  
-
-  /*关注问题有了新回答*/
-  function follow_new_answer_get($limit = 5,$offset = 0)
-  {
-      $status = $this->session->userdata('status');
-        if (isset($status) && $status === 'OK')
-        {
-            $message = '';
-            $num_1 = 0;
-            if (!$this->notify_model->follow_new_answer($message,$num_1,$limit,$offset))
-            {
-              $message['state'] = "fail";
-              $this->response($message,200);
-            }
-            else
-            {
-              $this->response($message,200);
-            }
-        }
-        else
-        {
-          $message['state'] = "fail";
-          $message['detail'] = "Unlogin";
-          $this->response($message,200);
-        }
-  }
-
-  /*清空关注问题的回答提示*/
-  function follow_new_answer_flush_get($qid)
-  {
-        $status = $this->session->userdata('status');
-        if (isset($status) && $status === 'OK')
-        {
-            $message = '';
-            $uid = $this->session->userdata('uid');
-            $this->db->where('uid',$uid);
-            $this->db->where('qid',$qid);
-            $data = array( 
-                           'flushtime_of_new_answer' => date('Y-m-d H:i:s',time())
-                         );
-            $this->db->update('user_question',$data);
-            $this->response($message,200);
-        }
-        else
-        {
-          $message['state'] = "fail";
-          $message['detail'] = "Unlogin";
-          $this->response($message,200);
-        }  
-  }
-
-/*我的回答被赞了*/
-  function myanswer_get_good_get($limit = 5,$offset = 0)
-  {
-      $status = $this->session->userdata('status');
-        if (isset($status) && $status === 'OK')
-        {
-            $message = '';
-            $num_1 = 0;
-            if (!$this->notify_model->myanswer_get_good($message,$num_1,$limit,$offset))
-            {
-              $message['state'] = "fail";
-              $this->response($message,200);
-            }
-            else
-            {
-              $this->response($message,200);
-            }
-        }
-        else
-        {
-          $message['state'] = "fail";
-          $message['detail'] = "Unlogin";
-          $this->response($message,200);
-        }
-  }
-
-/*清空回答被点赞的提示*/
-  function myanswer_get_good_flush_get($qid)
-  {
-        $status = $this->session->userdata('status');
-        if (isset($status) && $status === 'OK')
-        {
-            $message ='';
-            $uid = $this->session->userdata('uid');
-            $this->db->where('uid',$uid);
-            $this->db->where('qid',$qid);
-            $data = array( 
-                          'flushtime_of_myanswer_get_good' => date('Y-m-d H:i:s',time())
-                        );
-            $this->db->update('q2a_answer',$data);
-            $this->response($message,200);
-        }
-        else
-        {
-          $message['state'] = "fail";
-          $message['detail'] = "Unlogin";
-          $this->response($message,200);
-        }  
-  }
-
-/*我的问题得到新回答*/
-  function myquestion_new_answer_get($limit = 5,$offset = 0)
-  {
-      $status = $this->session->userdata('status');
-        if (isset($status) && $status === 'OK')
-        {
-            $message = '';
-            $num_1 = 0;
-            if (!$this->notify_model->myquestion_new_answer($message,$num_1,$limit,$offset))
-            {
-              $message['state'] = "fail";
-              $this->response($message,200);
-            }
-            else
-            {
-              $this->response($message,200);
-            }
-        }
-        else
-        {
-          $message['state'] = "fail";
-          $message['detail'] = "Unlogin";
-          $this->response($message,200);
-        }
-  }
-/*清空我的问题得到回答提示*/
-  function myquestion_new_answer_flush_get($qid)
-  {
-       $status = $this->session->userdata('status');
-       if (isset($status) && $status === 'OK')
-       {
-           $message ='';
-           $uid = $this->session->userdata('uid');
-           $this->db->where('uid',$uid);
-           $this->db->where('id',$qid);
-           $data = array( 
-                         'flushtime_of_myquestion_new_answer' => date('Y-m-d H:i:s',time())
-                       );
-           $this->db->update('q2a_question',$data);
-           $this->response($message,200);
-       }
-       else
-       {
-         $message['state'] = "fail";
-         $message['detail'] = "Unlogin";
-         $this->response($message,200);
-       }  
-  }
-
-  function followed_get($limit = 5,$offset = 0)
-  {
-       $status = $this->session->userdata('status');
-        if (isset($status) && $status === 'OK')
-        {
-            $message = '';
-            $num_3 = 0;
-            if ($this->notify_model->followed($message,$num_3,$limit,$offset))
-            {
-              $this->response($message,200);
-            }  
-            else
-            {
-              $message['state'] = "fail";
-              $this->response($message,200);
-            }
-        }
-        else
-        {
-            $message['state'] = "fail";
-            $message['detail'] = "Unlogin";
-            $this->response($message,200);
-        }  
-  }
 
 /*新通知数*/
    function new_notification_get()
@@ -214,20 +39,10 @@ class Notify extends REST_Controller
         if (isset($status) && $status === 'OK')
         {
              $message = '';
-             $num = 0;
-             $num_1 = 0;
-             $num_2 = 0;
-             $num_3 = 0;
-             $this->notify_model->follow_new_answer($message,$num_1,0,0);
-             $this->notify_model->myquestion_new_answer($message,$num_1,0,0);
-             $this->notify_model->myanswer_get_good($message,$num_2,0,0);
-             //$this->notify_model->followed($message,$num_3,0,0);
-             $message = '';
-             $num = $num_1 + $num_2 + $num_3;
-             $message['num'] = $num;
-             $message['num_1'] = $num_1;
-             $message['num_2'] = $num_2;
-             $message['num_3'] = $num_3;
+             if (!$this->notify_model->new_notification($message))
+             {
+                $message['state'] = "fail";
+             }
              $this->response($message,200);
         }
         else
@@ -239,12 +54,12 @@ class Notify extends REST_Controller
    }
 
 /*通知历史*/
-  function notify_his($uid,$type,$limit,$offset)
+  function notify_his_get($type,$limit,$offset)
   {
      $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         {
-            if ($this->notify_model->notify_his($message,$uid,$type,$limit,$offset))
+            if ($this->notify_model->notify_his($message,$type,$limit,$offset))
             {
                 $this->response($message,200);  
             } 
@@ -255,5 +70,45 @@ class Notify extends REST_Controller
             $message['detail'] = "Unlogin";
             $this->response($message,200);
         }  
+  }
+
+  /*通知下拉框*/
+  function notify_show_get($limit,$offset)
+  {
+     $status = $this->session->userdata('status');
+     if (isset($status) && $status === 'OK')
+     {
+         $message ="";
+         if ($this->notify_model->notify_show($message,$limit,$offset))
+         {
+             $this->response($message,200);  
+         } 
+     }
+     else
+     {
+         $message['state'] = "fail";
+         $message['detail'] = "Unlogin";
+         $this->response($message,200);
+     }  
+  }
+
+  function notify_clear_get($type)
+  {
+     $status = $this->session->userdata('status');
+     if (isset($status) && $status === 'OK')
+     {
+         $message ="";
+         if ($this->notify_model->notify_clear($message,$type))
+         {
+             $message['state'] = "success";
+             $this->response($message,200);  
+         } 
+     }
+     else
+     {
+         $message['state'] = "fail";
+         $message['detail'] = "Unlogin";
+         $this->response($message,200);
+     }  
   }
 }

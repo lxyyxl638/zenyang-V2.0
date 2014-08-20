@@ -156,18 +156,5 @@ class Public_function extends REST_Controller
         }
    }
 
-   function tag_info_get($tagid)
-   {
-       if ($this->public_model->tag_info($message,$tagid))
-       {
-          $message['state'] = "success";
-          $this->response($message,200);
-       }
-       else
-       {
-          $message['state'] = "fail";
-          $this->response($message,200);
-       }
-   }
     
 }

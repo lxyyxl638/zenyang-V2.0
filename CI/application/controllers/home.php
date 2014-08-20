@@ -45,11 +45,22 @@ class home extends REST_Controller
            $this->response($message,200);
        }     
     }
-
+  function question_tag_list_get($limit = 10,$offset =0)
+  {
+      if (!$this->home_model->question_tag_list($message,$limit,$offset))
+       {
+           $message['state'] = "fail";
+           $this->response($message,200);
+       }
+       else
+       {
+           $this->response($message,200);
+       }
+  }
 /*显示用户关注的话题*/ 
   function user_tag_list_get($limit = 10,$offset = 0)  
     {    
-       if (!$this->home_model->question_focus_get($message,$limit,$offset))
+       if (!$this->home_model->user_tag_list($message,$limit,$offset))
        {
            $message['state'] = "fail";
            $this->response($message,200);
@@ -81,7 +92,7 @@ class home extends REST_Controller
 
         if (isset($status) && $status === 'OK')
         {
-           if (!$this->home_model->question_hurry_get($message,$limit,$offset))
+           if (!$this->home_model->question_hurry_list($message,$limit,$offset))
            {
                $message['state'] = "fail";
                $this->response($message,200);

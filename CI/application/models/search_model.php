@@ -57,15 +57,19 @@
    	  return TRUE;
    } 
 
-   function search_tag(&$message,$limit,$offset)
+   function search_tag(&$message)
    {
-   	  $keyword = $this->input->post('keyword');
-       $this->db->select('id,tag');
-       $this->db->like('tag',$keyword);
+   	   $keyword = $this->input->post('keyword');
+       $limit = $this->input->post('limit');
+       $offset = $this->input->post('offset');
+
+       $this->db->select('tagid,tagname');
+       $this->db->like('tagname',$keyword);
+       $this->db->or_like('tagabbr',$keyword);
        $this->db->limit($limit,$offset);
-      $query = $this->db->get('tag_type');
-      $message = $query->result_array();
-   	  return TRUE;
+       $query = $this->db->get('tag_type');
+       $message = $query->result_array();
+   	   return TRUE;
    } 
  } 
 ?>

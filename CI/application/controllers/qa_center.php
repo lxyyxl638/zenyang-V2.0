@@ -49,9 +49,8 @@ class qa_center extends REST_Controller
 
         if (isset($status) && $status === 'OK')
         {
-           $qid = 0;
            $message = '';
-           if ($this->qa_center_model->ask($message,$qid))
+           if ($this->qa_center_model->ask($message))
             {
                  $message['state'] = "success";
                  $this->response($message,200);

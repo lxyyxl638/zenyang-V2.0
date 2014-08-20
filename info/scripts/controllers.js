@@ -143,7 +143,7 @@ infoControllers.controller('studentCtrl',['$scope','$http',
 			}).success(function(response){
                 if(response.state == "success")
                 {
-					window.location.replace("../home");                	
+					window.location.replace("#/tag");                	
                 }
                 else if (response.state == "fail"){
                 	for (var al in alertMap){
@@ -239,7 +239,7 @@ infoControllers.controller('nonstudentCtrl',['$scope','$http',
 			}).success(function(response){
                 if(response.state == "success")
                 {
-					window.location.replace("../home");                	
+					window.location.replace("#/tag");                	
                 }
                 else if (response.state == "fail"){
                 	for (var al in alertMap){
@@ -254,3 +254,48 @@ infoControllers.controller('nonstudentCtrl',['$scope','$http',
             })
 		};
 	}]);
+
+
+infoControllers.controller('picktagCtrl', ['$scope','$http',
+ function($scope,$http){
+ 	$scope.tagSelected = [];
+ 	$scope.alert = {};
+ 	$scope.alert.tagNum = false;
+
+ 	$scope.tagPush = function(index){
+ 		$scope.tagSelected.push($scope.tagList[index]);
+ 		console.log($scope.tagSelected);
+ 	}
+
+ 	$scope.tagCancel = function(index){
+ 		for (var i=0; i<$scope.tagSelected.length; i++){
+ 			if ($scope.tagSelected[i].tagid == $scope.tagList[index].tagid){
+ 				$scope.tagSelected.splice(i,1);
+ 			}
+ 		}
+ 	}
+
+ 	$http.get("../CI/index.php/tag_system/tag_show/format/json")
+ 	.success(function(data){
+ 		$scope.tagList = data;
+ 	})
+
+	$scope.finishSubmit = function(){
+		var tagpost = {};
+		if ($scope.tagSelected.length < 3){
+			$scope.alert.tagNum = true;
+		}
+		else{
+			tagpost.tag = $scope.tagSelected;
+			$http({
+				method:'POST',
+				url:"../CI/index.php/tag_system/user_set_tag/format/json",
+				data:tagpost,
+			}).then(function(response){
+				if(response.data.state == 'success'){
+					window.location.replace("../home");
+				}
+			})
+		}
+	}
+}]);

@@ -1,0 +1,107 @@
+<div ng-controller="tagCtrl">
+	<div class="col-md-9" role="main content">
+		<div>
+			<p><span class="fui-tag"></span> {{tag.tagname}}
+			<span class="btn btn-primary tag-btn" ng-show="flipflop" ng-click="flipflop = !flipflop; tagfollow()">
+                关注话题
+            </span>
+            <span class="btn btn-default tag-btn" ng-hide="flipflop" ng-click="flipflop = !flipflop; tagfollow()">
+                取消关注
+            </span>
+            </p>
+			<hr/>
+			<tabset>
+			<tab>
+			<tab-heading>
+				精彩问答
+			</tab-heading>
+	      		
+	      		<div ng-repeat="q in answerList" class="zy-TA-list">
+					<div class="zy-TA-left">
+						<div class="zy-TA-avatar-wrap">
+							<a href="#/people/{{q.uid}}" target="_blank"><img ng-src={{q.location}} class="zy-TA-avatar"></a>
+						</div>
+						<div class="zy-TA-state-wrap">
+							<span class="zy-TA-good-count">
+								<span class="zy-TA-good-num">{{q.good}}</span>
+								<span class="zy-TA-good-type">膜拜</span>
+							</span>
+							<span class="zy-TA-bad-count">
+								<span class="zy-TA-bad-num">{{q.bad}}</span>
+							</span>
+						</div>
+					</div>
+					<div class="zy-TA-main">
+						<div class="zy-TA-top">
+							<a href="#people/{{q.uid}}" target="_blank">{{q.realname}}</a>回答了一个问题
+							<span class="zy-time">{{q.date}}</span>
+						</div>
+						<div class="zy-TA-title">
+							<a href="#/question/{{q.qid}}" class="zy-question-link" target="_blank">{{q.title}}</a>
+						</div>
+						<div class="zy-TA-content">
+							<div ta-bind ng-model="q.content"></div>
+						</div>
+						<div class="zy-TA-bottom-panel">
+							<span class="btn-primary zy-follow" ng-click="afollow(q.qid,$index)"><span ng-hide="q.follow">关注问题</span><span ng-show="q.follow">取消关注</span></span>
+
+							<span class="btn-primary zy-like" ng-click="alike(q.qid,q.id,$index)" ng-show="q.like">膜拜</span>
+							<span class="btn-primary zy-like" ng-click="alike(q.qid,q.id,$index)" ng-show="q.cancellike">取消膜拜</span>
+
+							<span class="btn-default zy-like" ng-click="adislike(q.qid,q.id,$index)" ng-show="q.dislike">呵呵...</span>
+							<span class="btn-default zy-like" ng-click="adislike(q.qid,q.id,$index)" ng-show="q.canceldislike">取消呵呵</span>
+						</div>
+					</div>
+				</div>
+
+				<button class="btn btn-primary zy-qlist-btn-more" ng-click="updateAlist()" ng-show="moreA">
+  					加载更多
+				</button>
+				<span class="btn btn-default zy-qlist-btn-more" ng-hide="moreA">木有了……</span>
+
+			</tab>
+			<tab>
+			<tab-heading>
+				全部问题
+			</tab-heading>
+	      		<div ng-repeat="q in questionList" class="zy-question-list">
+	      			<div class="zy-qlist zy-qlist-top">
+	      				<div class="avatar-tiny">
+	      					<a href="#/people/{{q.uid}}" target="_blank"><img ng-src={{q.location}} class="zy-qlist-avatar-tiny"></a>
+	      				</div>
+	      				<div class="title-beside-avatar">
+	      					<a href="#/people/{{q.uid}}" target="_blank">{{q.realname}} </a>提了一个问题
+	      					<span class="zy-time">{{q.date}}</span>
+	      				</div>
+	      			</div>
+	      			<div class="zy-qlist zy-qlist-title">
+	      				<a href="#/question/{{q.id}}" target="_blank" class="zy-question-link">{{q.title}}</a>
+	      			</div>
+	      			<div class="zy-qlist zy-qlist-content">
+	      				{{q.content}}
+	      			</div>
+	      			<div class="zy-qlist zy-qlist-bottom">
+	      				<span class="btn-primary zy-follow" ng-click="follow(q.id,$index)"><span ng-hide="q.follow">关注问题</span><span ng-show="q.follow">取消关注</span></span>
+	      				<a class="btn-success zy-follow btn-wait" href="#/question/{{q.id}}">{{q.follow_num}}人等待你的回答</a>
+	      				<span class="bottom-state">
+	      					<span class="zy-follow btn-default">{{q.view_num}} 浏览</span>
+	      					<span class="zy-follow btn-default">{{q.answer_num}} 回答</span>
+	      				</span>
+	      			</div>
+	      		</div>
+
+	      		<button class="btn btn-primary zy-qlist-btn-more" ng-click="updateQlist()" ng-show="moreQ">
+  					加载更多
+				</button>
+				<span class="btn btn-default zy-qlist-btn-more" ng-hide="moreQ">木有了……</span>
+
+			</tab>
+
+			</tabset>
+		</div>
+	</div>
+	<div class="col-md-1">
+	</div>
+	<div class="col-md-2" role="side bar">
+	</div>
+</div>

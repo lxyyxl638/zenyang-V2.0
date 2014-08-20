@@ -128,7 +128,7 @@ class Log extends REST_Controller
        $this->response($message,200);
     }
 
-    function forget_pwd_post()
+    function password_reset_post()
     {
         $email = $this->input->post('email');
         $randpwd = '';

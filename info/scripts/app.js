@@ -60,15 +60,15 @@ infoApp.config(['$routeProvider',
 		}).
     when('/info',{
       templateUrl:'views/info.html',
-      controller:'infoCtrl'
     }).
 		when('/student',{
 			templateUrl:'views/student.html',
-			controller:'studentCtrl'
 		}).
     when('/non-student',{
       templateUrl:'views/non-student.html',
-      controller:'nonstudentCtrl'
+    }).
+    when('/tag',{
+      templateUrl:'views/picktag.html',
     }).
 		otherwise({
 			redirectTo: '/'
