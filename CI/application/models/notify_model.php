@@ -32,7 +32,7 @@
     function notify_his(&$message,$type,$limit,$offset) 
     {
         $uid = $this->session->userdata('uid');
-        $this->db->select('type,qid,title,uid,realname,read');
+        $this->db->select('type,jdid,qid,title,uid,realname,read');
         $this->db->where('myuid',$uid);
         $this->db->where('type',$type);
         $this->db->order_by('id','desc');
@@ -52,7 +52,7 @@
         $row = $query->row_array();
         $timepoint = $row['last_notify'];
 
-        $this->db->select('type,qid,title,uid,realname,read');
+        $this->db->select('type,jdid,qid,title,uid,realname,read');
         $this->db->where('myuid',$myuid);
         $this->db->where('date >',$timepoint);
         $this->db->where('read','0');
@@ -73,7 +73,7 @@
     function notify_clear(&$message,$type)
     {
        $myuid = $this->session->userdata('uid');
-       $this->db->where('uid',$myuid);
+       $this->db->where('myuid',$myuid);
        $this->db->where('type',$type);
        $data = array( 
                       'read' => 1

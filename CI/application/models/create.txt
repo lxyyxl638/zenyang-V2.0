@@ -1,3 +1,14 @@
+
+create table user_comment
+(
+  id int not null primary key auto_increment,
+  rece_id int not null default 0,
+  send_id int not null default 0,
+  qid int not null default 0,
+  aid int not null default 0,
+  date timestamp not null default current_timestamp
+) default charset utf8;
+
 create table notify_history
 (
   id int not null primary key auto_increment,

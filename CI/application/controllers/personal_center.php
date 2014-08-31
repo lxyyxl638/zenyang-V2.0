@@ -228,4 +228,56 @@ class personal_center extends REST_Controller
          $this->response($message,200);
      }
   }
+
+  /*我在JD的提问*/
+  function jd_my_question_get($uid,$limit = 10,$offset = 0)
+  {
+     $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->personal_center_model->jd_my_question($message,$uid,$limit,$offset))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+            else
+            {
+               $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "Unlogin";
+          $this->response($message,200);
+        }
+  }
+
+  /*我在JD的回答或者评论*/
+  function jd_my_answer_get($uid,$limit = 10,$offset = 0)
+  {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+            $message = '';
+            if (!$this->personal_center_model->jd_my_answer($message,$uid,$limit,$offset))
+            {
+              $message['state'] = "fail";
+              $this->response($message,200);
+            }
+            else
+            {
+               $this->response($message,200);
+            }
+        }
+        else
+        {
+          $message['state'] = "fail";
+          $message['detail'] = "Unlogin";
+          $this->response($message,200);
+        }
+  }
+
+
 }

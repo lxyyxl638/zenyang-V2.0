@@ -15,8 +15,8 @@
 
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 require APPPATH.'/libraries/REST_Controller.php';
-// require 'vendor/autoload.php';
-// use Mailgun\Mailgun;
+//require APPPATH.'/libraries/vendor/autoload.php';
+//use Mailgun\Mailgun;
 class Log extends REST_Controller
 {
     function __construct()
@@ -128,44 +128,60 @@ class Log extends REST_Controller
        $this->response($message,200);
     }
 
-    function password_reset_post()
+    function login_check_get()
     {
-        $email = $this->input->post('email');
-        $randpwd = '';
-        for ($i = 0; $i < 8; $i++) 
+        $status = $this->session->userdata('status');
+
+        if (isset($status) && $status === 'OK')
         {
-            $randpwd .= chr(mt_rand(97, 122));
+           $message['state'] = "success";
         }    
-        
-        $this->db->where('email',$email);
-        $this->db->from('user');
-        if ($this->db->count_all_results() > 0)
-        { 
-            $data = array(
-                          'password' => $this->encrypt->encode($randpwd)
-                         );
-            $this->db->where('email',$email);
-            $this->db->update('user',$data);
-            $mg = new Mailgun("key-e7b9c51f08cdfacaf18603c965990109");
-            $domain = "youzenyang.com";
-            
-            $letter = "您好：
-                       这是您的新密码 $randpwd,
-                       请妥善保管
-                       谢谢！";
-            # Now, compose and send your message.
-            $mg->sendMessage($domain, array('from'    => 'admin@youzenyang.com', 
-                                  'to'      => $email, 
-                                  'subject' => "'怎样'密码更改", 
-                                  'text'    => $letter));
-            $message['state'] = "success";
-            $this->response($message,200);
-        }
         else
-        { 
-            $message['state'] = "fail";
-            $message['detail'] = "emailNotExist";
-           $this->response($message,200);
+        {
+            $message['detail'] = "Unlogin";    
         }
+        
+        $this->response($message,200);
     }
+    // function password_reset_post()
+    // {
+    //     $email = $this->input->post('email');
+    //     $randpwd = '';
+    //     for ($i = 0; $i < 8; $i++) 
+    //     {
+    //         $randpwd .= chr(mt_rand(97, 122));
+    //     }    
+        
+    //     $this->db->where('email',$email);
+    //     $this->db->from('user');
+    //     if ($this->db->count_all_results() > 0)
+    //     { 
+    //         $data = array(
+    //                       'password' => $this->encrypt->encode($randpwd)
+    //                      );
+    //         $this->db->where('email',$email);
+    //         $this->db->update('user',$data);
+    //         $mg = new Mailgun("key-e7b9c51f08cdfacaf18603c965990109");
+    //         $domain = "youzenyang.com";
+            
+    //         $letter = "您好:
+    //         这是您的新密码 $randpwd:
+    //         请妥善保,
+    //         祝您在“怎样”中快乐成长！
+    //         谢谢！";
+    //         # Now, compose and send your message.
+    //         $mg->sendMessage($domain, array('from'    => 'admin@youzenyang.com', 
+    //                               'to'      => $email, 
+    //                               'subject' => "'怎样'密码更改", 
+    //                               'text'    => $letter));
+    //         $message['state'] = "success";
+    //         $this->response($message,200);
+    //     }
+    //     else
+    //     { 
+    //         $message['state'] = "fail";
+    //         $message['detail'] = "emailInvalid";
+    //        $this->response($message,200);
+    //     }
+    // }
 }

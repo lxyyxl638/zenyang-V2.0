@@ -320,8 +320,7 @@ class QA_center_model extends CI_Model
 		  	$data = array(
 		  		            'uid' => $uid,
 		  		            'qid' => $qid,
-		  		            'date' => date('Y-m-d H:i:s',time()),
-                      'flushtime_of_new_answer' => date('Y-m-d H:i:s',time())
+		  		            'date' => date('Y-m-d H:i:s',time())
 		  		         );
 		  	if (!$this->db->insert('user_question',$data))
 		  	{
@@ -376,7 +375,7 @@ class QA_center_model extends CI_Model
              }
              else
              {
-                $message['answerdengy'] = 'N';
+                $message['answerdeny'] = 'N';
              }
              return TRUE;
         }

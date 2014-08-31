@@ -70,6 +70,9 @@ infoApp.config(['$routeProvider',
     when('/tag',{
       templateUrl:'views/picktag.html',
     }).
+    when('/passwordreset',{
+      templateUrl:'views/passwordreset.html',
+    }).
 		otherwise({
 			redirectTo: '/'
 		});

@@ -1,0 +1,68 @@
+create table jd_user_jd(
+  id int not null primary key auto_increment,
+  uid int not null default 0,
+  jdid int not null default 0,
+  date timestamp not null default current_timestamp
+) default charset utf8;
+
+create table jd_jd(
+jdid int not null primary key auto_increment,
+title varchar(128) not null default "",
+content text not null,
+industry tinyint not null default 0,
+occupation tinyint not null default 0,
+company tinyint not null default 0,
+salary tinyint not null default 0,
+view_num int not null default 0,
+answer_num int not null default 0,
+follow_num int not null default 0,
+active enum('1','0') not null default 1,
+date timestamp not null default current_timestamp
+) default charset utf8;
+
+
+create table user_jd_tag(
+id int not null primary key auto_increment,
+uid int not null default 0,
+tagid tinyint not null default 0,
+index(tagid)
+)default charset utf8;
+
+
+create table jd_tag(
+tagid int not null primary key auto_increment,
+tagname varchar(64) not null default "",
+tagabbr varchar(64) not null default "",
+belong tinyint not null default 0,
+active enum('1','0') not null default '0'
+) default charset utf8;
+
+create table jd_belong_tag(
+id int not null primary key auto_increment,
+jdid int not null default 0,
+tagid int not null default 0,
+index(tagid)
+) default charset utf8;
+
+
+create table jd_question(
+qid int not null default 0,
+jdid int not null default 0,
+title varchar(255) not null default "",
+uid int not null default 0,
+view_num int not null default 0,
+answer_num int not null default 0,
+date timestamp not null default current_timestamp
+);
+
+create table jd_answer(
+aid int not null default 0,
+qid int not null default 0,
+jdid int not null default 0,
+uid int not null default 0,
+content text not null,
+comment_num int not null default 0,
+good int not null default 0,
+bad int not null default 0,
+date timestamp not null default current_timestamp
+);

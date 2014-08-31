@@ -299,3 +299,32 @@ infoControllers.controller('picktagCtrl', ['$scope','$http',
 		}
 	}
 }]);
+
+infoControllers.controller('resetCtrl',['$scope','$http',
+	function($scope,$http){
+		$scope.success = false;
+		$scope.alert = {};
+
+        $scope.alert.emailInvalid=false;
+
+
+		$scope.send = function(user){
+			var url = '../CI/index.php/log/password_reset/format/json';
+			$http({
+				method: 'POST',
+				url: url,
+				data: user,
+			}).success(function(response){
+				if(response.state == "success"){
+					$scope.success = true;
+					$scope.emailInvalid = false;
+				}
+				else if(response.state == "fail"){
+					$scope.emailInvalid = true;
+				}
+			}).error(function(response){
+				console.log(response);
+			})
+		};
+
+	}]);

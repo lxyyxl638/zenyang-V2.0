@@ -107,6 +107,7 @@
          $this->db->where('uid_1',$myuid);
          $this->db->or_where('uid_2',$myuid);
          $this->db->order_by('date','desc');
+         $this->db->limit($limit,$offset);
          $query = $this->db->get('user_message_date',$limit,$offset);
          $message = $query->result_array();
 
@@ -137,12 +138,13 @@
          return TRUE;
      }
 
-     function letter_talk(& $message,$uid)
+     function letter_talk(& $message,$uid,$limit,$offset)
      {
          $myuid = $this->session->userdata('uid');
          $where = "(rece_id ='$myuid' AND send_id = '$uid') OR (rece_id = '$uid' AND send_id = '$myuid')";
          $this->db->where($where);
          $this->db->order_by('date','desc');
+         $this->db->limit($limit,$offset);
          $query = $this->db->get('user_message');
          $result = $query -> result_array();
          foreach ($result as $key => $value)

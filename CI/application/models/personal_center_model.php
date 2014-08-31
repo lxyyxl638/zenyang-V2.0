@@ -9,6 +9,8 @@
      	$this->load->library('session');
         $this->load->model('public_model');
         $this->load->library('encrypt');
+        $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('','');
      }
      
      function profile_get(& $message,$uid)
@@ -94,8 +96,6 @@
         $userfile = 'userfile';
         if (!$this->upload->do_upload($userfile))
          {
-             $message['detail'] = $this->upload->display_errors;
-             return FALSE;
          }
          else
          {
@@ -140,7 +140,9 @@
         // $message = $query->row_array();
         return TRUE;
      }
-         /*我的提问*/
+    
+
+     /*我的提问*/
      function my_question(& $message,$uid,$limit = 10,$offset = 0)
      {
         $this->db->order_by('date','desc');
@@ -272,9 +274,9 @@
         $password = $row['password'];
         if ($oldpassword == $this->encrypt->decode($password))
         {
-            if (strlen($newpassword) < 6|| strlen($newpassword) >16)
+            if ($this->form_validation->run('change_password') === FALSE)
             {
-                $message['detail'] = "passwordLength";
+                $message['detail'] = form_error('newpassword');
                 return FALSE;
             }
             if ($newpassword == $passwordconf)
@@ -294,10 +296,39 @@
         }
         else
         {
-           $message['detail'] = "passwordInvalid";
+           $message['detail'] = "passwordWrong";
            return FALSE;
         }
     }
 
+    /*我在JD提的问题*/
+    function jd_my_question(&$message,$uid,$limit = 10,$offset = 0)
+     {
+        $this->db->order_by('date','desc');
+        $this->db->limit($limit,$offset);
+        $query = $this->db->get_where('jd_question',array('uid'=>$uid));
+        $message = $query->result_array();
+        return TRUE;
+     }
+   
+     /*我在JD的回答*/
+     function jd_my_answer(&$message,$uid,$limit = 10,$offset = 0)
+     {
+        $this->db->order_by('date','desc');
+        $this->db->where('uid',$uid);
+        $this->db->limit($limit,$offset);
+        $query = $this->db->get('jd_answer');
+        $result = $query->result_array();
+        foreach ($result as $key => $value)
+        {
+            $jdid = $value['jdid'];
+            $this->db->where('jdid',$jdid);
+            $query = $this->db->get('jd_jd');
+            $row = $query->row_array();
+            $value['title'] = $row['title'];
+            $message[$key] = $value;
+        }
+        return TRUE;
+     }
 };
 ?>

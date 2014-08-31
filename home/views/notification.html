@@ -7,53 +7,53 @@
 			<tab-heading>
 				<span class="fui-list-bulleted"></span>
 			</tab-heading>
-	      		
-				<div class="zy-message-list" ng-repeat="m in MQnew">
-					<div class="zy-alist-main">
-						<div class="zy-msg-list-title">
-						</div>
-						<div class="zy-msg-list-content">
-							您提的问题<a href="#/question/{{m.qid}}" class="zy-talk-link">{{m.title}}</a>有了新回答
-						</div>
-					</div>
-	      		 </div>
-
-	      		 <div class="zy-message-list" ng-repeat="f in FQnew">
-					<div class="zy-alist-main">
-						<div class="zy-msg-list-title">
-						</div>
-						<div class="zy-msg-list-content">
-							您关注的问题<a href="#/question/{{f.qid}}" class="zy-talk-link">{{f.title}}</a>有了新回答
-						</div>
-					</div>
-	      		 </div>
-
+	      		<div class="set-read-btn-wrap">
+	      			<span class="zy-grey" ng-if="history.myqAnswered.length==0">有人回答你的提问时会显示在这里</span>
+	      			<button class="btn btn-primary set-read-btn" ng-click="setRead('1')">全部设为已读</button>
+	      		</div>
+				<div class="notifyList" ng-repeat="n in history.myqAnswered" ng-class="{'notread':n.read==0}">
+					<a href="#people/{{n.uid}}" target="_blank" class="zy-notify-link">{{n.realname}}</a > 回答了你的问题 <a href="#/question/{{n.qid}}" class="zy-notify-link" target="_blank" ng-click="n.read=1">{{n.title}}</a>
+				</div>
+				<button class="btn btn-primary zy-qlist-btn-more" ng-click="updateHistory('1')" ng-show="more['1']">
+  					加载更多
+				</button>
 			</tab>
+
 			<tab>
-			<tab-heading>
-				<span class="fui-heart"></span>
-			</tab-heading>
-	      		
-	      		<div class="zy-message-list" ng-repeat="a in AGnew">
-					<div class="zy-alist-main">
-						<div class="zy-msg-list-title">
-						</div>
-						<div class="zy-msg-list-content">
-							您在问题<a href="#/question/{{a.qid}}" class="zy-talk-link">{{a.title}}</a>的回答获得了膜拜！
-						</div>
+				<tab-heading>
+					<span class="fui-list-numbered"></span>
+				</tab-heading>
+					<div class="set-read-btn-wrap">
+						<span class="zy-grey" ng-if="history.myfAnswered.length==0">有人回答你关注的问题时会显示在这里</span>
+	      				<button class="btn btn-primary set-read-btn" ng-click="setRead('2')">全部设为已读</button>
+	      			</div>
+	      			<div class="notifyList" ng-repeat="n in history.myfAnswered" ng-class="{'notread':n.read==0}">
+					<a href="#people/{{n.uid}}" target="_blank" class="zy-notify-link">{{n.realname}}</a> 回答了你关注的问题 <a href="#/question/{{n.qid}}" class="zy-notify-link" target="_blank" ng-click="n.read=1">{{n.title}}</a>
 					</div>
-	      		 </div>
-
-
+					<button class="btn btn-primary zy-qlist-btn-more" ng-click="updateHistory('2')" ng-show="more['2']">
+  					加载更多
+				</button>
 			</tab>
-<!-- 			<tab>
-			<tab-heading>
-				<span class="fui-myspace"></span>
-			</tab-heading>
-	      		Notifications for that i am followed.
+
+			<tab>
+				<tab-heading>
+					<span class="fui-heart"></span>
+				</tab-heading>
+					<div class="set-read-btn-wrap">
+		      			<span class="zy-grey" ng-if="history.mygood.length==0">你的答案收到膜拜时会显示在这里</span>
+	      				<button class="btn btn-primary set-read-btn" ng-click="setRead('3')">全部设为已读</button>
+	      			</div>
+	      			<div class="notifyList" ng-repeat="n in history.mygood" ng-class="{'notread':n.read==0}">
+					<a href="#people/{{n.uid}}" target="_blank" class="zy-notify-link">{{n.realname}}</a> 膜拜了你在问题 <a href="#/question/{{n.qid}}" class="zy-notify-link" target="_blank" ng-click="n.read=1">{{n.title}}</a> 中的回答
+					</div>
+					<button class="btn btn-primary zy-qlist-btn-more" ng-click="updateHistory('3')" ng-show="more['3']">
+  					加载更多
+					</button>
 			</tab>
- -->			</tabset>
+		
+			</tabset>
 		</div>
+
 	</div>
 	<div class="col-md-1">
 	</div>

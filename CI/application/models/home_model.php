@@ -12,8 +12,6 @@ class home_model extends CI_Model
      function question_date_get(& $message,$limit,$offset)
        {
           $this->db->select('id,title,uid,realname,follow_num,answer_num,view_num,date');
-          $this->db->order_by("follow_num","desc");
-          $this->db->order_by("answer_num","desc");
           $this->db->order_by("date","desc");
           $this->db->limit($limit,$offset);
           $query = $this->db->get('q2a_question');
@@ -62,10 +60,10 @@ class home_model extends CI_Model
     
      function question_day_get(& $message,$limit,$offset)
      {
-         $time_point = date('Y-m-d H:i:s',time() - 60*60*24);
+         $time_point = date('Y-m-d H:i:s',time() - 60*60*24*30);
          $this->db->select('id,title,uid,realname,follow_num,answer_num,view_num,date');
          $this->db->where('date >',$time_point);
-         $this->db->order_by("view_num","desc");
+         $this->db->order_by('date','desc');
          $this->db->limit($limit,$offset);
          $query = $this->db->get('q2a_question');
          $result = $query->result_array();

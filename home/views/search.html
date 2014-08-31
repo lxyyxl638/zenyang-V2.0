@@ -14,14 +14,6 @@
 	      		</div>
 			</tab>
 
-<!-- 			<tab>
-			<tab-heading>
-				<span class="fui-new"></span> 回答
-			</tab-heading>
-	      		
-	      		
-			</tab> -->
-
 			<tab>
 			<tab-heading>
 				<span class="fui-user"></span> 用户
@@ -33,24 +25,16 @@
 	      		</div>
 			</tab>
 			
-<!-- 			<tab>
+			<tab>
 			<tab-heading>
-				<span class="fui-tag"></span> 标签
+				<span class="fui-tag"></span> 话题
 			</tab-heading>
-	      		
-	      		<div class="zy-message-list" ng-repeat="a in AGnew">
-					<div class="zy-alist-main">
-						<div class="zy-msg-list-title">
-						</div>
-						<div class="zy-msg-list-content">
-							您在问题<a href="#/question/{{a.qid}}" class="zy-talk-link">{{a.title}}</a>的回答获得了膜拜！
-						</div>
-					</div>
-	      		 </div>
-
-			</tab> -->
-
-			
+	      		<div class="zy-message-list" ng-repeat="t in tagResult">
+	      			<div class="zy-alist-main">
+	      				<a href="#/tag/{{t.tagid}}" class="zy-question-link">{{t.tagname}}</a>
+	      			</div>
+	      		</div>
+			</tab>
 
 			</tabset>
 		</div>

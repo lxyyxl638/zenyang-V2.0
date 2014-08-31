@@ -517,6 +517,18 @@ mainApp.factory('peopleFactory', function($http,$q){
 mainApp.factory('notifyFactory', function($http,$q){
 	var notification = {};
 
+	var _notify = [];
+	var _history = {};
+
+	var typemap = {1:'myqAnswered', 2:'myfAnswered', 3:'mygood'};
+	
+	for (var i in typemap){
+		_history[typemap[i]] = [];
+	}
+
+
+	var _limit = 10;
+
 	notification.checkNew = function(){
 		var deferred = $q.defer();
 		$http.get("../CI/index.php/notify/new_notification/format/json")
@@ -529,7 +541,58 @@ mainApp.factory('notifyFactory', function($http,$q){
 		return deferred.promise;
 	}
 
+	notification.getNotify = function(){
+		var offset = 0;
+		// for (n in _notify){
+		// 	offset++;
+		// }
+		var deferred = $q.defer();
+		$http.get("../CI/index.php/notify/notify_show/"+_limit+"/"+offset+"/format/json")
+		.success(function(response){
+			_notify = response;
+			deferred.resolve();
+		}).error(function(){
+			deferred.reject("Error");
+		});
+
+		return deferred.promise;
+	}
 	
+	notification.getHistory = function(type){
+		var offset = 0;
+		for (var item in _history[typemap[type]]){
+			offset ++;
+		}
+		var deferred = $q.defer();
+		$http.get("../CI/index.php/notify/notify_his/"+type+"/"+_limit+"/"+offset+"/format/json")
+		.success(function(response){
+			if (response.length == 0){
+			}
+			else{
+				_history[typemap[type]] = _history[typemap[type]].concat(response);
+			}
+			deferred.resolve();
+		}).error(function(){
+			deferred.reject("Error");
+		});
+
+		return deferred.promise;
+	}
+
+	notification.notifyShow = function(){
+		return _notify;
+	}
+
+	notification.notifyHis = function(){
+		return _history;
+	}
+
+	notification.setRead = function(type){
+		$http.get("../CI/index.php/notify/notify_clear/"+type+"/format/json")
+		.success(function(response){
+			console.log(response);
+		})
+	}
 
 	return notification;
 });

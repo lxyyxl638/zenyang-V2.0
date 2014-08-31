@@ -19,6 +19,19 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 
 		$scope.msg = {};
 		$scope.msg.show = false;
+		$scope.msg.num = "";
+
+		$scope.status = {
+    		isopen: false
+  		};
+
+  		$scope.notifyMsg = [];
+  		$scope.notifyToggle = false;
+
+  		$scope.toggleDropdown = function($event) {
+    		$event.preventDefault();
+    		$scope.status.isopen = !$scope.status.isopen;
+  		};
 
 		var checkNotifyRoutine = function(){
 			notifyFactory.checkNew().then(function(response){
@@ -26,16 +39,10 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 					if(response.num == 0){
 						$scope.notify.show = false;
 						$scope.notify.totalNum = 0;
-						$scope.notify.answerNum = 0;
-						$scope.notify.goodNum = 0;
-						$scope.notify.followNum = 0;
 					}
 					else{
 						$scope.notify.show = true;
 						$scope.notify.totalNum = response.num;
-						$scope.notify.answerNum = response.num_1;
-						$scope.notify.goodNum = response.num_2;
-						$scope.notify.followNum = response.num_3;
 					}
 				}
 			})
@@ -46,10 +53,41 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 					}
 					else{
 						$scope.msg.show = true;
+						$scope.msg.num = response.sum;
 					}
 				}
 			})
 		};
+
+		// Notification dropdown
+
+		$scope.getNotifyMsg = function(){
+			if($scope.notifyToggle){
+				notifyFactory.getNotify().then(function(){
+					$scope.notifyMsg.length = 0;
+					var nmsg = notifyFactory.notifyShow();
+					for (var item in nmsg){
+						var temp = {};
+						if(nmsg[item].type == 1){
+							temp.disp = nmsg[item].realname + " 回答了你的提问 " + nmsg[item].title.slice(0,5) + "...";
+							temp.link = "#/question/"+nmsg[item].qid;
+						}
+						else if(nmsg[item].type == 2){
+							temp.disp = nmsg[item].realname + " 回答了你关注的问题 " + nmsg[item].title.slice(0,5) + "...";
+							temp.link = "#/question/"+nmsg[item].qid;
+						}
+						else if(nmsg[item].type == 3){
+							temp.disp = nmsg[item].realname + " 膜拜了你在问题 " + nmsg[item].title.slice(0,5) + "... 中的回答";
+							temp.link = "#/question/"+nmsg[item].qid;
+						}
+
+						$scope.notifyMsg.push(temp);
+					}
+				})
+			}
+			$scope.notifyToggle = !$scope.notifyToggle;
+		}
+
 
 		// Init user basic infomation
 		publicFactory.initMe().then(function(){
@@ -274,6 +312,9 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 			else if ($item.type == "question"){
 				window.location.assign("#/question/"+$item.id);
 			}
+			else if ($item.type == "tag"){
+				window.location.assign("#/tag/"+$item.id);
+			}
 			else if ($item.type == "more"){
 				window.location.assign("#/search");
 			}
@@ -297,20 +338,32 @@ mainControllers.controller('navCtrl',['$scope', '$interval','publicFactory','$ht
 
 				angular.forEach(user,function(u){
 					var temp = {};
-					temp.disp = u.realname + "（用户）";
+					temp.disp = u.realname + "(用户)";
 					temp.id = u.uid;
 					temp.type = 'user';
 					Results.push(temp);
 				});
 
+				angular.forEach(tag,function(t){
+					var temp = {};
+					temp.disp = t.tagname + "(话题)";
+					temp.id = t.tagid;
+					temp.type = 'tag';
+					Results.push(temp);
+				})
+
 				angular.forEach(question,function(q){
 					var temp = {};
-					temp.disp = q.title;
+					if (q.title.length<16){
+						temp.disp = q.title;
+					}
+					else{
+						temp.disp = q.title.slice(0,14) + "...";
+					}
 					temp.id = q.id;
 					temp.type = 'question';
 					Results.push(temp);
 				});
-
 				
 
 				// tag to be added
@@ -367,6 +420,18 @@ mainControllers.controller('searchCtrl', ['$scope','$http',
 	            }).error(function(response){
 	                alert("Error!");
 	            })
+
+	        var urlT = '../CI/index.php/search_system/search_tag/format/json/';
+				$http({
+					method: 'POST',
+					url: urlT,
+					data: postData,
+				}).success(function(response){
+	                $scope.tagResult = response;
+	            }).error(function(response){
+	                alert("Error!");
+	            })
+
 	        }
 
 }]);
@@ -880,6 +945,54 @@ mainControllers.controller('talkCtrl',['$scope','$http','$routeParams',
 
 mainControllers.controller('settingCtrl',['$scope','$http',
 	function($scope,$http){
+		$scope.success = false;
+		$scope.alert = {};
+
+        var alertMap=[
+        		"oldpasswordRequire",
+        		"newpasswordRequire",
+                "inconformity",
+                "newpasswordLength",
+                "newpasswordInvalid",
+                "passwordWrong"]
+
+        $scope.alert.oldpasswordRequire=false;
+        $scope.alert.newpasswordRequire=false;
+        $scope.alert.inconformity=false;
+        $scope.alert.newpasswordLength=false;
+        $scope.alert.newpasswordInvalid=false;
+        $scope.alert.passwordWrong=false;
+
+		$scope.modifyPSW = function(psw){
+			var url = '../CI/index.php/personal_center/change_password/format/json';
+			$http({
+				method: 'POST',
+				url: url,
+				data: psw,
+			}).success(function(response){
+				if(response.state == "success"){
+					$scope.success = true;
+					for (var al in alertMap){
+						$scope.alert[alertMap[al]] = false;
+					}
+					$scope.psw.oldpassword = "";
+					$scope.psw.newpassword = "";
+					$scope.psw.passwordconf = "";
+				}
+				else if(response.state == "fail"){
+					for (var al in alertMap){
+                        if (response.detail == alertMap[al])
+                            $scope.alert[alertMap[al]] = true;
+                        else
+                            $scope.alert[alertMap[al]] = false;
+                    }
+				}
+			}).error(function(response){
+				console.log(response);
+			})
+		};
+
+
 	}]);
 
 mainControllers.controller('questionCtrl',['$scope','$http','$routeParams','aListFactory','$location','publicFactory',
@@ -1202,38 +1315,48 @@ mainControllers.controller('oqCtrl',['$scope','$http','qListFactory',
 
 	}]);
 
-mainControllers.controller('notificationCtrl',['$scope','$http',
-	function($scope,$http){
-		
-		$http.get("../CI/index.php/notify/follow_new_answer/100/0")
-		.success(function(data){
-			if(typeof data == typeof ("string")){
-				$scope.FQnew = {};
-			}
-			else{
-				$scope.FQnew = data;
-			}
-		});
+mainControllers.controller('notificationCtrl',['$scope','$http','notifyFactory',
+	function($scope,$http,notifyFactory){
+		$scope.history = {};
+		var typemap = {1:'myqAnswered', 2:'myfAnswered', 3:'mygood'};
+		for (var i in typemap){
+			$scope.history[typemap[i]] = [];
+		}
+		$scope.more = {};
+		$scope.more['1']=false;
+		$scope.more['2']=false;
+		$scope.more['3']=false;
+		var limit = 10;
 
-		$http.get("../CI/index.php/notify/myquestion_new_answer/100/0")
-		.success(function(data){
-			if(typeof data == typeof ("string")){
-				$scope.MQnew = {};
-			}
-			else{				
-				$scope.MQnew = data;
-			}
-		});
+		var updateHistory = function(type){
+			notifyFactory.getHistory(type).then(function(){
+				var oldLength = $scope.history[typemap[type]].length;
+				$scope.history=notifyFactory.notifyHis();
+				var newLength = $scope.history[typemap[type]].length;
+				if((newLength - oldLength)<limit || newLength<limit){
+					$scope.more[type]=false;
+				}
+				else{
+					$scope.more[type]=true;
+				}
+			});
+		}
 
-		$http.get("../CI/index.php/notify/myanswer_get_good/100/0")
-		.success(function(data){
-			if(typeof data == typeof ("string")){
-				$scope.AGnew = {};
+		for (var i=1; i<=3; i++){
+			updateHistory(i);
+		}
+
+		$scope.updateHistory = updateHistory;
+
+		$scope.setRead = function(type){
+			console.log($scope.history[typemap[type]]);
+			notifyFactory.setRead(type);
+			for (var i=0 ; i<$scope.history[typemap[type]].length; i++){
+				$scope.history[typemap[type]][i].read = 1;
 			}
-			else{
-				$scope.AGnew = data;
-			}
-		});
+		}
+
+
 
 	}]);
 
@@ -1433,6 +1556,7 @@ mainControllers.controller('FileController', ['$scope', 'FileUploader', function
             //console.info('onProgressAll', progress);
         };
         uploader.onSuccessItem = function(fileItem, response, status, headers) {
+        	//window.location.reload();
             //console.info('onSuccessItem', fileItem, response, status, headers);
         };
         uploader.onErrorItem = function(fileItem, response, status, headers) {
@@ -1442,12 +1566,12 @@ mainControllers.controller('FileController', ['$scope', 'FileUploader', function
             //console.info('onCancelItem', fileItem, response, status, headers);
         };
         uploader.onCompleteItem = function(fileItem, response, status, headers) {
+
             //console.info('onCompleteItem', fileItem, response, status, headers);
         };
         uploader.onCompleteAll = function() {
+        	var t=setTimeout("window.location.reload()",800)
             //console.info('onCompleteAll');
         };
-
-        //console.info('uploader', uploader);
     }]);
 

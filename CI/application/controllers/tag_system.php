@@ -145,7 +145,8 @@ class tag_system extends REST_Controller
            $this->response($message,200); 
        }
     }
-
+   
+   /*修改问题标签*/
     function tag_modify_post()
     {
         $status = $this->session->userdata('status');
@@ -184,6 +185,20 @@ class tag_system extends REST_Controller
        }
     }
 
+    function jd_tag_info_get($tagid)
+    {
+       if ($this->tag_system_model->jd_tag_info($message,$tagid))
+       {
+          $message['state'] = "success";
+          $this->response($message,200);
+       }
+       else
+       {
+          $message['state'] = "fail";
+          $this->response($message,200);
+       }
+    }
+
     function tag_hot_question_list_get($tagid,$limit,$offset)
     {
        if ($this->tag_system_model->tag_hot_question_list($message,$tagid,$limit,$offset))
@@ -195,5 +210,28 @@ class tag_system extends REST_Controller
            $message['state'] = "fail";
            $this->response($message,200);
        }
+    }
+
+    function user_tag_get($uid)
+    {
+        $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+           if ($this->tag_system_model->user_tag_get($message,$uid))
+           {
+               $this->response($message,200);
+           }
+           else
+           {
+              $message['state'] = "fail";
+              $this->response($message,200);
+           }
+        }    
+        else
+        {
+            $message['state'] = "fail";
+            $message['detail'] = "Unlogin";
+            $this->response($message,200);    
+        }
     }
 }

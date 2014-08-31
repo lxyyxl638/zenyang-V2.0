@@ -15,6 +15,25 @@
   font-family: 'Helvetica Neue',Arial,'Liberation Sans',FreeSans,'Hiragino Sans GB',sans-serif;
 }
 
+.zy-sign-logo-wrapper{
+  width: 100%;
+  height: 24%;
+  padding: 6% 27% 0 33%;
+  margin-bottom: 80px;
+}
+
+.zy-sign-logo{
+  background-image: url(../../sign/images/logo.png);
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  color: #fff;
+  display: block;
+  width: 242px;
+  height: 130px;
+  background-position: 8px 0;
+  z-index: 100;
+}
+
 .zy-info-inner{
   width: 100%;
   min-height: 1080px;
@@ -245,4 +264,8 @@ a:link{
   width: 15px;
   height: 15px;
   float: left;
+}
+
+.btn-float-right{
+  float: right;
 }

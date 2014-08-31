@@ -34,6 +34,14 @@ blockquote p{
 	content: none;
 }
 
+.table > thead > tr > th{
+	padding: 0 0 0 20px;
+}
+
+.table > tbody > tr > td{
+	padding: 0 0 0 20px;
+}
+
 .zy-top-link-logo{
 	background-image: url(../images/logo.png);
 	background-repeat: no-repeat;
@@ -224,6 +232,11 @@ tab-heading{
 
 .zy-question-link{
 	color: #34495E;
+}
+
+.zy-notify-link{
+	color: #16A085;
+	font-weight: 700;
 }
 
 .zy-qlist-content{
@@ -511,6 +524,7 @@ tab-heading{
 
 .zy-table{
 	margin-bottom: 0;
+	font-size: 12px;
 }
 
 .send-message-dialog{
@@ -756,8 +770,10 @@ tab-heading{
 }
 
 .link-btn-wrap{
-	margin-top: 10px;
-	width: 100%;
+	position: absolute;
+	left: 550px;
+	top: 105px;
+	width: 60px;
 	height: 30px;
 }
 
@@ -898,4 +914,42 @@ tab-heading{
 
 .zy-float-right{
 	float: right;
+}
+
+.open > .dropdown-menu{
+	margin-top: 2px;
+}
+
+.btn-file{
+	width: 122px;
+}
+
+.set-read-btn-wrap{
+	height: 40px;
+	width: 100%;
+	padding: 2px 10px;
+	position: relative;
+	margin-bottom: 20px;
+}
+
+.set-read-btn{
+	float: right;
+}
+
+.notifyList{
+	position: relative;
+	width: 100%;
+	min-height: 30px;
+	border-top: 1px solid #ddd;
+	padding-left: 10px;
+	line-height: 3.5;
+}
+
+.notread{
+	background: rgba(233,187,0,0.2);
+}
+
+.zy-setting-container{
+	width: 100%;
+	min-height: 800px;
 }

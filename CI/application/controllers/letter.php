@@ -109,13 +109,13 @@ class Letter extends REST_Controller
   }
 
   /*聊天历史*/
-  function letter_talk_get($uid)
+  function letter_talk_get($uid,$limit = 10,$offset = 0)
   {
      $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         {
             $message = '';
-            if (!$this->letter_model->letter_talk($message,$uid))
+            if (!$this->letter_model->letter_talk($message,$uid,$limit,$offset))
             {
               $message['state'] = "fail";
               $this->response($message,200);

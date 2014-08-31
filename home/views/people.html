@@ -115,22 +115,25 @@
                                 照片可以直接拖到这里来哦
                         </div>
                     </div>
-                    <input type="file" nv-file-select="" uploader="uploader" name="userfile"/>
+                    <span class="btn btn-primary btn-embossed btn-file">
+                        <span class="fileinput-new"><span class="fui-image"></span> 选择头像</span>
+                        <input type="file" nv-file-select="" uploader="uploader" name="userfile"/>
+                    </span>
                 </div>
 
                 <div class="col-md-9">
                     <table class="table zy-table">
                         <thead>
                             <tr>
-                                <th width="50%">Name</th>
-                                <th ng-show="uploader.isHTML5">Size</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th width="50%">文件名</th>
+                                <th ng-show="uploader.isHTML5">大小</th>
+                                <th>状态</th>
+                                <th>操作</th>
                             </tr>
                         </thead>
                          <tbody>
                             <tr ng-repeat="item in uploader.queue">
-                                <td><strong>{{ item.file.name }}</strong></td>
+                                <td><strong>{{ item.file.name | limitTo:10}}</strong></td>
                                 <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
                                 <td class="text-center">
                                     <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
@@ -139,7 +142,7 @@
                                 </td>
                                 <td nowrap>
                                     <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                                        <span class="glyphicon glyphicon-upload"></span> Upload
+                                        <span class="glyphicon glyphicon-upload"></span> 上传
                                     </button>
                                 </td>
                             </tr>
@@ -195,7 +198,7 @@
                         </div>
                         <div class="zy-qlist zy-grey">
                             {{q.answer_num}}个回答 ∙ {{q.follow_num}}人关注
-                            <span class="zy-modify-question-btn" ng-click="modifyQuestionOpen('lg',$index)">
+                            <span class="zy-modify-question-btn" ng-click="modifyQuestionOpen('lg',$index)" ng-if="isME.Show">
                                 修改问题
                             </span>
                         </div>

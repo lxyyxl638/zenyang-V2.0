@@ -8,6 +8,25 @@
       $this->load->helper('url');
    }
    
+   
+  function get_jd_title($jdid)
+  {
+     $this->db->select('title');
+     $this->db->where('jdid',$jdid);
+     $query = $this->db->get('jd_jd');
+     $row = $query->row_array();
+     return $row['title'];
+  }  
+
+  function get_jd_qtitle($qid)
+  {
+      if ($qid == 0) return "";
+      $this->db->select('title');
+      $this->db->where('qid',$qid);
+      $query = $this->db->get('jd_question');
+      $row = $query->row_array();
+      return $row['title'];
+  }
 
    function set_notify_good($uid,$qid,$aid)
    {
@@ -24,10 +43,39 @@
       $this->db->insert('notify_history',$data);
       return TRUE;
    }
-   
+
+   function set_notify_jd_good($uid,$jdid,$aid)
+   {
+      $data = array(
+                      'jdid' =>$jdid,
+                      'type' => 8,
+                      'myuid' => $this->get_jd_aid_uid($aid),
+                      'qid' => 0,
+                      'title' => $this->get_jd_title($jdid),
+                      'uid' => $uid,
+                      'realname' => $this->get_realname($uid),
+                      'read' => 0,
+                      'date' => date('Y-m-d H:i:s',time())
+                   );
+      $this->db->insert('notify_history',$data);
+      return TRUE;
+   }
+  
+
+   function unset_notify_jd_good($uid,$jdid,$aid)
+   {
+      $notify_host = $this->get_jd_aid_uid($aid);
+      $this->db->where('uid',$uid);
+      $this->db->where('myuid',$notify_host);
+      $this->db->where('jdid',$jdid);
+      $this->db->where('type',8);
+      $this->db->delete('notify_history');
+      return TRUE;
+   }
+
    function unset_notify_good($uid,$qid,$aid)
    {
-      $notify_host = $this->get_aid_uid($aid);
+      $notify_host = $this->get_jd_aid_uid($aid);
       $this->db->where('uid',$uid);
       $this->db->where('myuid',$notify_host);
       $this->db->where('qid',$qid);
@@ -44,6 +92,16 @@
       $row = $query->row_array();
       return $row['uid'];
    }
+
+   function get_jd_aid_uid($aid)
+   {
+      $this->db->select('uid');
+      $this->db->where('aid',$aid);
+      $query = $this->db->get('jd_answer');
+      $row = $query->row_array();
+      return $row['uid'];
+   }
+
    function get_aid_realname($aid)
    {
       $this->db->select('realname');

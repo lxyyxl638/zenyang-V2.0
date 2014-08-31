@@ -73,21 +73,17 @@
 	    	          ),
         'change_password'=>array
                       (
-					     array(
-					        'field'=>'OldPassword',
-							'label'=>'OldPassword',
-							'rules'=>'required|min_length[6]|max_length[16]'
-					       ),
+                      	 array(
+                      	 	    'field' => 'oldpassword',
+                      	 	    'label' => 'oldpassword',
+                      	 	    'rules' => 'required'
+                      	 	  ),
+
                          array(
-					         'field'=>'NewPassword',
-							'label'=>'NewPassword',
-							'rules'=>'required|min_length[6]|max_length[16]'
-					        ),
-                         array(
-					         'field'=>'Passconf',
-							'label'=>'Passconf',
-							'rules'=>'required|matches[NewPassword]'
-					       )						   
+					         'field'=>'newpassword',
+							'label'=>'newpassword',
+							'rules'=>'required|min_length[6]|max_length[16]|alpha_dash'
+					        )					   
 					  ),
 		'letter_send' => array
 		          (
@@ -102,26 +98,55 @@
 		          		'rules' => 'required|max_length[400]'
 		          		),
 		          ),
-		       'ask' => array
-		          (
-		          	array(
-		          		   'field' => 'title',
-		          		   'label' => 'title',
-		          		   'rules' => 'required|min_length[6]|max_length[40]'
-		          		 ), 
-		          	array(
-		          		   'field' => 'content',
-		          		   'label' => 'content',
-		          		   'rules' => 'max_length[400]'
-		          		 )
-		          ),
-		       'answer' => array
-		          (
-		            array(
-		            	   'field' => 'content',
-		            	   'label' => 'content',
-		            	   'rules' => 'required|min_length[6]|max_length[4000]'
-		            	 )
-		          )		  						    
-               );			   
+	    'ask' => array
+	       (
+	       	array(
+	       		   'field' => 'title',
+	       		   'label' => 'title',
+	       		   'rules' => 'required|min_length[6]|max_length[40]'
+	       		 ), 
+	       	array(
+	       		   'field' => 'content',
+	       		   'label' => 'content',
+	       		   'rules' => 'max_length[400]'
+	       		 )
+	       ),
+	    'answer' => array
+	       (
+	         array(
+	         	   'field' => 'content',
+	         	   'label' => 'content',
+	         	   'rules' => 'required|min_length[6]|max_length[4000]'
+	         	 )
+	       ),
+
+		'comment' => array
+		    (
+		    	array(
+		    		   'field' => 'rece_id',
+		    		   'label' => 'rece_id',
+		    		   'rules' => 'required'
+		    		 ),
+		    	array(
+		    		   'field' => 'send_id',
+		    		   'label' => 'send_id',
+		    		   'rules' => 'required'
+		    		 ),
+		    	array(
+		    		   'field' => 'qid',
+		    		   'label' => 'qid',
+		    		   'rules' => 'required'
+		    		 ),
+		    	array(
+		    		   'field' => 'aid',
+		    		   'label' => 'aid',
+		    		   'rules' => 'required'
+		    		 ),
+		    	array(
+		    		    'field' => 'comment',
+		    		   'label' => 'comment',
+		    		   'rules' => 'required|min_length[6]|max_length[140]'
+		    		 )
+		     )         	  						    
+         );			   
 ?>

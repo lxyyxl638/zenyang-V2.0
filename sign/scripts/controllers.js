@@ -52,7 +52,7 @@ signControllers.controller('signupCtrl',['$scope','$http',
 						url: url,
 						data: user,
 					}).success(function(response){
-                		window.location.replace("/info");
+                		window.location.replace("/zenyang/info");
                 	})
                 }
                 else if(response.state == "fail")
@@ -84,10 +84,9 @@ signControllers.controller('signinCtrl',['$scope','$http',
 				url: url,
 				data: user,
 			}).success(function(response){
-                console.log(response);
                 if (response.state == "success")
                 {
-                	window.location.replace("/home");
+                	window.location.replace("/zenyang/home");
                 }
                 else if(response.state == "root")
                 {
@@ -95,7 +94,6 @@ signControllers.controller('signinCtrl',['$scope','$http',
                 }
                 else if(response.state == "fail")
                 {
-                    console.log(response.detail == "passwordRequire");
                     $scope.alert.emailNotExist = false;
                     $scope.alert.passwordWrong = false;
                     $scope.alert.wait15Min = false;

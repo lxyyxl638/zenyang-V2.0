@@ -33,7 +33,7 @@ class Search_system extends REST_Controller
    
    function search_post()
    {
-      $status = $this->session->userdata('status');
+        $status = $this->session->userdata('status');
         if (isset($status) && $status === 'OK')
         {
            $message = '';
@@ -110,6 +110,30 @@ class Search_system extends REST_Controller
         {
            $message = '';
            if ($this->search_model->search_tag($message))
+            {
+                $this->response($message,200);
+            }
+           else
+           {
+              $message['state'] = "fail";
+              $this->response($message,200);
+           }   
+        }    
+        else
+        {
+            $message['state'] = "fail";
+            $message['detail'] = "Unlogin";
+            $this->response($message,200);    
+        }
+   }
+
+   function search_jd_post()
+   {
+      $status = $this->session->userdata('status');
+        if (isset($status) && $status === 'OK')
+        {
+           $message = '';
+           if ($this->search_model->search_jd($message))
             {
                 $this->response($message,200);
             }

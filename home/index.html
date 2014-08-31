@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <!-- <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/> -->
   <meta name="description" content="挂科,失恋,求职无门,又怎样" />
   <meta name="keywords" content="怎样, 问答, 求职, 大学, 学生"/>
   <title>怎样</title>
@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.css" />
   <link rel="stylesheet" href="../vendor/bootstrap/css/prettify.css" />
   <link rel="stylesheet" href="../vendor/css/flat-ui.css" />
-  <link rel="stylesheet" href="styles/app.css">
+  <link rel="stylesheet" href="styles/app.css" />
 </head>
 <body ng-app="mainApp" ng-controller="navCtrl">
   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -21,9 +21,26 @@
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse-01">
       <ul class="nav navbar-nav">
+
         <li ng-class="{'active': nav.atHome}"><a href="#/"><i class="fui-home"></i> 首页</a></li>
+
         <li ng-class="{'active': nav.atQuestion}"><a href="#/open-question"><i class="fui-list-thumbnailed"></i> 问题</a></li>
-        <li ng-class="{'active': nav.atNotify}"><a href="#/notification"><i class="fui-mail"></i> 通知<span class="navbar-new" ng-show="notify.show">{{notify.totalNum}}</span></a></li>
+
+        <li ng-class="{'active': nav.atNotify}" class="dropdown" on-toggle="getNotifyMsg()">
+              <a class="dropdown-toggle">
+                <i class="fui-mail"></i> 通知<span class="navbar-new" ng-show="notify.show">{{notify.totalNum}}</span>
+              </a>
+              <ul class="dropdown-menu">
+                <li ng-repeat="msg in notifyMsg">
+                  <a href="{{msg.link}}" target="_blank">{{msg.disp}}</a>
+                </li>
+                <li ng-if="notifyMsg.length==0">
+                  <a href>有新通知时会显示在这里哦!</a>
+                </li>
+                <li><a href="#/notification">查看全部通知...</a></li>
+              </ul>
+        </li>
+
         <li>
         <form class="navbar-form navbar-right" action="#" role="search">
           <div class="form-group">
@@ -39,19 +56,22 @@
           <a ng-click="open()" id="nav-btn-link"><span class="btn btn-embossed btn-primary nav-btn"><img src="images/ask.png" class="nav-ask-icon">提问</span></a>
         </li>
       </ul>
+
       <ul class="nav navbar-nav navbar-right nav-dropdown">
-        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><img ng-src={{pic}} class="zy-nav-pic">{{realname}}<span class="navbar-unread" ng-show="msg.show"></span><b class="caret"></b></a><span class="dropdown-arrow"></span>
-        <ul class="dropdown-menu">
-          <li><a href="#/people/{{uid}}"><i class="fui-user"></i> 个人中心</a></li>
-          <li><a href="#/message"><i class="fui-chat"></i> 消息<span class="navbar-unread" ng-show="msg.show"></span></a></li>
-
-<!--           <li><a href="#/setting"><i class="fui-gear"></i> 设置</a></li> -->
-
-          <li class="divider"></li>
-          <li><a ng-click=logout()><i class="fui-power"></i> 退出</a></li>
-        </ul>
+        <li class="btn-group" dropdown is-open="status.isopen">
+          <button type="button" class="btn btn-inverse dropdown-toggle">
+              <img ng-src={{pic}} class="zy-nav-pic">{{realname}}<span class="caret"></span><span class="navbar-new" ng-show="msg.show">{{msg.num}}</span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#/people/{{uid}}"><i class="fui-user"></i> 个人中心</a></li>
+            <li><a href="#/message"><i class="fui-chat"></i> 消息</a></li>
+            <li><a href="#/setting"><i class="fui-gear"></i> 设置</a></li>
+            <li class="divider"></li>
+            <li><a ng-click=logout()><i class="fui-power"></i> 退出</a></li>
+          </ul>
         </li>
       </ul>
+
     </div>
   </nav>
 
@@ -69,10 +89,10 @@
       <div class="update-bar-title">
         「怎样」在成长
       </div>
-<!--       <div ng-repeat="update in updates" class="update-bar-content">
+      <div ng-repeat="update in updates" class="update-bar-content">
         <span class="update-bar-date">{{update.date}}</span><br/>
         <span class="update-bar-item">{{update.update}}<span>
-      </div> -->
+      </div>
     </div>
   </div>
 
