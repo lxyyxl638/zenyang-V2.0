@@ -36,11 +36,6 @@
         $query = $this->db->get('jd_jd');
         $message['jd'] = $query->result_array();
 
-        $this->db->select('tagid,tagname');
-        $this->db->like('tagname',$keyword);
-        $this->db->limit(3,0);
-        $query = $this->db->get('jd_tag');
-        $message['jd_tag'] = $query->result_array();
         return TRUE;      
    }
 

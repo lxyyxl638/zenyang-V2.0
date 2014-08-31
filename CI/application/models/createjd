@@ -1,3 +1,11 @@
+
+
+create table user_jd(
+ id int not null primary key auto_increment,
+ jdid int not null default 0,
+ uid int not null default 0
+) default charset utf8;
+
 create table jd_user_jd(
   id int not null primary key auto_increment,
   uid int not null default 0,
@@ -46,17 +54,17 @@ index(tagid)
 
 
 create table jd_question(
-qid int not null default 0,
+qid int not null primary key auto_increment,
 jdid int not null default 0,
 title varchar(255) not null default "",
 uid int not null default 0,
 view_num int not null default 0,
 answer_num int not null default 0,
 date timestamp not null default current_timestamp
-);
+) default charset utf8;
 
 create table jd_answer(
-aid int not null default 0,
+aid int not null primary key auto_increment,
 qid int not null default 0,
 jdid int not null default 0,
 uid int not null default 0,
@@ -65,4 +73,4 @@ comment_num int not null default 0,
 good int not null default 0,
 bad int not null default 0,
 date timestamp not null default current_timestamp
-);
+) default charset utf8;

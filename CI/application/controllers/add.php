@@ -88,7 +88,9 @@ class ADD extends CI_Controller
 	{
 		$this->load->view('add_tag');
 		$tagname = $this->input->post('tagname');
+    $belong = $this->input->post('belong');
 		$this->db->set('tagname',$tagname);
+    $this->db->set('belong',$belong);
 		$this->db->insert('jd_tag');
 		//$this->load->view('add_tag');
 	}

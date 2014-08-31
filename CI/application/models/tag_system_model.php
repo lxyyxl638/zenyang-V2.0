@@ -23,32 +23,17 @@ class tag_system_model extends CI_model
              $message['other'][$key] = $value;
           }
         
-        /*JD的tag*/
-        $this->db->select('tagname,tagid');
-        $this->db->where('belong',1);
-        $this->db->or_where('belong',2);
-        $this->db->or_where('belong',3);
-        $this->db->limit(6,0);
-        $this->db->where('active',1);
-        $query = $this->db->get('jd_tag');
-        $result = $query->result_array();
-        foreach ($result as $key => $value) 
-        {
-            $tmp = "jd_tagpic/".$value['tagid'].".jpg";
-            $value['tagpic'] = base_url($tmp);
-            $message['jd'][$key] = $value;
-        }
         return TRUE;
 	}
 
-    function tag_search(&$message)
-    {
-   	    $keyword = $this->input->post('keyword');
-   	    $query = "select tagid,tagname from tag_type where review = 'Y' AND (tagname like (\"%$keyword%\") OR tagabbr like (\"%$keyword%\"))";
-   	    $query = $this->db->query($query);
-   	    $message = $query->result_array();
-        return TRUE;      
-   }
+   //  function tag_search(&$message)
+   //  {
+   // 	    $keyword = $this->input->post('keyword');
+   // 	    $query = "select tagid,tagname from tag_type where review = 'Y' AND (tagname like (\"%$keyword%\") OR tagabbr like (\"%$keyword%\"))";
+   // 	    $query = $this->db->query($query);
+   // 	    $message = $query->result_array();
+   //      return TRUE;      
+   // }
 
 	function user_set_tag(&$message)
 	{
@@ -80,33 +65,6 @@ class tag_system_model extends CI_model
               }
            }
       
-      /*JD的tag选择*/
-      $tag = $this->input->post('jd_tag');
-      $uid = $this->session->userdata('uid');
-      foreach ($tag as $key => $value)
-        {
-            $tagname = $tag[$key]['tagname'];
-            $tagid = $tag[$key]['tagid'];
-
-              $this->db->where('uid',$uid);
-              $this->db->where('tagid',$tagid);
-              $this->db->from('jd_user_tag');
-              if ($this->db->count_all_results() > 0)
-              {
-                  $this->db->where('uid',$uid);
-                  $this->db->where('tagid',$tagid);
-                  $this->db->delete('jd_user_tag');
-              }
-              else
-              {
-                $tmp = array(
-                             'uid' => $uid,
-                             'tagid' => $tagid,
-                             'tagname' => $tagname
-                          );
-                $this->db->insert('jd_user_tag',$tmp);
-              }
-          }     
 		  return TRUE;
 	}
 

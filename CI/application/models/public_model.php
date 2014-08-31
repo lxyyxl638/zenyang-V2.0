@@ -18,15 +18,6 @@
      return $row['title'];
   }  
 
-  function get_jd_qtitle($qid)
-  {
-      if ($qid == 0) return "";
-      $this->db->select('title');
-      $this->db->where('qid',$qid);
-      $query = $this->db->get('jd_question');
-      $row = $query->row_array();
-      return $row['title'];
-  }
 
    function set_notify_good($uid,$qid,$aid)
    {
@@ -48,7 +39,7 @@
    {
       $data = array(
                       'jdid' =>$jdid,
-                      'type' => 8,
+                      'type' => 6,
                       'myuid' => $this->get_jd_aid_uid($aid),
                       'qid' => 0,
                       'title' => $this->get_jd_title($jdid),
@@ -68,7 +59,7 @@
       $this->db->where('uid',$uid);
       $this->db->where('myuid',$notify_host);
       $this->db->where('jdid',$jdid);
-      $this->db->where('type',8);
+      $this->db->where('type',6);
       $this->db->delete('notify_history');
       return TRUE;
    }

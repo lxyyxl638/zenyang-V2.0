@@ -81,6 +81,9 @@ class Jd_home_model extends CI_Model
            {
                 $this->db->where_in('jdid',$tmp);
            }
+        $limit = $this->input->post('limit');
+        $offset = $this->input->post('offset');
+        $this->db->limit($limit,$offset);   
         $query = $this->db->get('jd_jd');
         $message = $query->result_array();
         foreach ($message as $key => $value)
@@ -91,25 +94,42 @@ class Jd_home_model extends CI_Model
              unset($message[$key]['salary']);
              unset($message[$key]['active']);
          }
-        return TRUE;
-     }
 
-     function tag_jd_list(&$message,$limit,$offset)
-     {
-         $uid = $this->session->userdata('uid');
-         $query = "select * from jd_jd where jdid in (select distinct jdid from jd_tag where tagid in (select tagid from user_jd_tag where uid = $uid)) order by date desc limit $offset,$limit";
-         $query = $this->db->query($query);
-         if ($query->num_rows() > 0)
-         {
-            $message = $query->result_array();      
-         }
-         else
-         {
+        if (empty($_POST['industry']) && empty($_POST['company']) && empty($_POST['occupation'])
+            && empty($_POST['salary']) && empty($_POST['place']))
+        {
+            $this->db->order_by('jdid','desc');
             $this->db->limit($limit,$offset);
             $query = $this->db->get('jd_jd');
             $message = $query->result_array();
-         }
-         return TRUE;
-     } 
+            foreach ($message as $key => $value)
+            {
+                unset($message[$key]['industry']);
+                unset($message[$key]['company']);
+                unset($message[$key]['occupation']);
+                unset($message[$key]['salary']);
+                unset($message[$key]['active']);
+            }
+        }
+        return TRUE;
+     }
+
+     // function tag_jd_list(&$message,$limit,$offset)
+     // {
+     //     $uid = $this->session->userdata('uid');
+     //     $query = "select * from jd_jd where jdid in (select distinct jdid from jd_tag where tagid in (select tagid from user_jd_tag where uid = $uid)) order by date desc limit $offset,$limit";
+     //     $query = $this->db->query($query);
+     //     if ($query->num_rows() > 0)
+     //     {
+     //        $message = $query->result_array();      
+     //     }
+     //     else
+     //     {
+     //        $this->db->limit($limit,$offset);
+     //        $query = $this->db->get('jd_jd');
+     //        $message = $query->result_array();
+     //     }
+     //     return TRUE;
+     // } 
 }
 ?>

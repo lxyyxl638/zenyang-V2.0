@@ -59,27 +59,27 @@ class Jd_home extends REST_Controller
        }
    }
    
-   function tag_jd_list_get($limit,$offset)
-   {
-       $status = $this->session->userdata('status');
+   // function tag_jd_list_get($limit,$offset)
+   // {
+   //     $status = $this->session->userdata('status');
 
-        if (isset($status) && $status === 'OK')
-        {
-           if (!$this->jd_home_model->tag_jd_list($message,$limit,$offset))
-           {
-               $message['state'] = "fail";
-               $this->response($message,200);
-           }
-           else
-           {
-               $this->response($message,200);
-           }
-        }
-        else
-        {
-           $message['state'] = "fail";
-           $message['detail'] = "Unlogin";
-           $this->response($message,200);
-        }
-   }
+   //      if (isset($status) && $status === 'OK')
+   //      {
+   //         if (!$this->jd_home_model->tag_jd_list($message,$limit,$offset))
+   //         {
+   //             $message['state'] = "fail";
+   //             $this->response($message,200);
+   //         }
+   //         else
+   //         {
+   //             $this->response($message,200);
+   //         }
+   //      }
+   //      else
+   //      {
+   //         $message['state'] = "fail";
+   //         $message['detail'] = "Unlogin";
+   //         $this->response($message,200);
+   //      }
+   // }
 }

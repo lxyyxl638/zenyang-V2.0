@@ -31,30 +31,7 @@ class Jd_qa_center extends REST_Controller
         $this->form_validation->set_error_delimiters('','');
     }
    
-   function question_ask_post()
-   {
-      $status = $this->session->userdata('status');
-
-        if (isset($status) && $status === 'OK')
-        {
-           $message = "";
-           if (!$this->jd_qa_center_model->question_ask($message))
-           {
-               $message['state'] = "fail";
-               $this->response($message,200);
-           }
-           else
-           {
-               $this->response($message,200);
-           }
-        }
-        else
-        {
-           $message['state'] = "fail";
-           $message['detail'] = "Unlogin";
-           $this->response($message,200);
-        }
-   }
+   
 
   function jd_answer_post()
    {
@@ -97,13 +74,13 @@ class Jd_qa_center extends REST_Controller
     }
 
   /*查看JD回答*/
-  function view_jd_answer_get($jdid = 0,$aid = 0,$limit = 10,$offset = 0) 
+  function view_jd_answer_get($jdid = 0,$limit = 10,$offset = 0) 
     {
         $status = $this->session->userdata('status');
         $message = "";
         if (isset($status) && $status === 'OK')
         {
-           if ($this->jd_qa_center_model->view_jd_answer_get($message,$jdid,$aid,$limit,$offset))
+           if ($this->jd_qa_center_model->view_jd_answer_get($message,$jdid,$limit,$offset))
            {  
               $this->response($message,200);
            }
@@ -121,31 +98,7 @@ class Jd_qa_center extends REST_Controller
         }
     }
 
-  function mark_answer_get($jdid,$qid)
-   {
-        $status = $this->session->userdata('status');
-        $message = "";
-        if (isset($status) && $status === 'OK')
-        {
-           if ($this->jd_qa_center_model->mark_answer($message,$jdid,$qid))
-           {  
-              $this->response($message,200);
-           }
-           else
-           {
-              $message['state'] = "fail";
-              $this->response($message,200);
-           }
-        }
-        else
-        {
-           $message['state'] = "fail";
-           $message['detail'] = "Unlogin";
-           $this->response($message,200);
-        }
-    }  
-
-
+  
    function good_get($jdid,$aid)
   {
       $status = $this->session->userdata('status');
@@ -222,28 +175,75 @@ class Jd_qa_center extends REST_Controller
       }
   }
 
-/*（取消）关注某个问题*/
-  function jd_follow_get($jdid)
-  {
-      $message = '';
-      $status = $this->session->userdata('status');
-        if (isset($status) && $status === 'OK')
-        { 
-           if (!$this->jd_qa_center_model->jd_follow($message,$jdid))
-           {
-              $message['state'] = "fail";
-              $this->response($message,200);
-           }
-           else
-           {
-              $this->response($message,200);
-           }
-        }
-        else
-        {
-           $message['state'] = "fail";
-           $message['detail'] = "Unlogin";
-           $this->response($message,200);
-        }
-  }
+// function question_ask_post()
+//    {
+//       $status = $this->session->userdata('status');
+
+//         if (isset($status) && $status === 'OK')
+//         {
+//            $message = "";
+//            if (!$this->jd_qa_center_model->question_ask($message))
+//            {
+//                $message['state'] = "fail";
+//                $this->response($message,200);
+//            }
+//            else
+//            {
+//                $this->response($message,200);
+//            }
+//         }
+//         else
+//         {
+//            $message['state'] = "fail";
+//            $message['detail'] = "Unlogin";
+//            $this->response($message,200);
+//         }
+//    }
+// /*（取消）关注某个问题*/
+//   function jd_follow_get($jdid)
+//   {
+//       $message = '';
+//       $status = $this->session->userdata('status');
+//         if (isset($status) && $status === 'OK')
+//         { 
+//            if (!$this->jd_qa_center_model->jd_follow($message,$jdid))
+//            {
+//               $message['state'] = "fail";
+//               $this->response($message,200);
+//            }
+//            else
+//            {
+//               $this->response($message,200);
+//            }
+//         }
+//         else
+//         {
+//            $message['state'] = "fail";
+//            $message['detail'] = "Unlogin";
+//            $this->response($message,200);
+//         }
+//   }
+//   function mark_answer_get($jdid,$qid)
+//    {
+//         $status = $this->session->userdata('status');
+//         $message = "";
+//         if (isset($status) && $status === 'OK')
+//         {
+//            if ($this->jd_qa_center_model->mark_answer($message,$jdid,$qid))
+//            {  
+//               $this->response($message,200);
+//            }
+//            else
+//            {
+//               $message['state'] = "fail";
+//               $this->response($message,200);
+//            }
+//         }
+//         else
+//         {
+//            $message['state'] = "fail";
+//            $message['detail'] = "Unlogin";
+//            $this->response($message,200);
+//         }
+//     }  
 }

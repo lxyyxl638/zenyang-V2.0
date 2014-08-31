@@ -56,30 +56,30 @@ class tag_system extends REST_Controller
         }
     }
 
-    function tag_search_post()
-    {
-    	$status = $this->session->userdata('status');
+    // function tag_search_post()
+    // {
+    // 	$status = $this->session->userdata('status');
 
-        if (isset($status) && $status === 'OK')
-        {
-           $message = '';
-           if ($this->tag_system_model->tag_search($message))
-           {
-           	  $this->response($message,200);
-           }
-           else
-           {
-           	  $message['state'] = "fail";
-           	  $this->response($message,200);
-           }
-        }    
-        else
-        {
-            $message['state'] = "fail";
-            $message['detail'] = "Unlogin";
-            $this->response($message,200);    
-        }
-    }
+    //     if (isset($status) && $status === 'OK')
+    //     {
+    //        $message = '';
+    //        if ($this->tag_system_model->tag_search($message))
+    //        {
+    //        	  $this->response($message,200);
+    //        }
+    //        else
+    //        {
+    //        	  $message['state'] = "fail";
+    //        	  $this->response($message,200);
+    //        }
+    //     }    
+    //     else
+    //     {
+    //         $message['state'] = "fail";
+    //         $message['detail'] = "Unlogin";
+    //         $this->response($message,200);    
+    //     }
+    // }
 
     function user_set_tag_post()
     {

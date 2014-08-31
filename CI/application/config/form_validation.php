@@ -116,7 +116,7 @@
 	         array(
 	         	   'field' => 'content',
 	         	   'label' => 'content',
-	         	   'rules' => 'required|min_length[6]|max_length[4000]'
+	         	   'rules' => 'required'
 	         	 )
 	       ),
 
