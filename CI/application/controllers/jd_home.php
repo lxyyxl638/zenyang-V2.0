@@ -59,6 +59,19 @@ class Jd_home extends REST_Controller
        }
    }
    
+   function checkbox_choice_post()
+   {
+       $message = "";
+       if ($this->jd_home_model->checkbox_choice($message))
+       {
+          $this->response($message,200);
+       }
+       else
+       {
+          $message['state'] = "fail";
+          $this->response($message,200);
+       }
+   }
    // function tag_jd_list_get($limit,$offset)
    // {
    //     $status = $this->session->userdata('status');

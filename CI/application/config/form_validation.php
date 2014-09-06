@@ -147,6 +147,41 @@
 		    		   'label' => 'comment',
 		    		   'rules' => 'required|min_length[6]|max_length[140]'
 		    		 )
-		     )         	  						    
+		     ),
+		  'add_jd' => array 
+		    (
+		    	array(
+		    		   'field' => 'industry',
+		    		   'label' => 'industry',
+		    		   'rules' => 'required'
+		    		 ),
+		    	array(
+		    		   'field' => 'company',
+		    		   'label' => 'company',
+		    		   'rules' => 'required'
+		    		 ),
+		    	array(
+		    		   'field' => 'occupation',
+		    		   'label' => 'occupation',
+		    		   'rules' => 'required'
+		    		 ),
+		    	array(
+		    		   'field' => 'place',
+		    		   'label' => 'place',
+		    		   'rules' => 'required'
+		    		 ),
+		    	array(
+		    		    'field' => 'salary_up',
+		    		   'label' => 'salary_up',
+		    		   'rules' => 'required'
+		    		 ),
+		    	array(
+		    			'field' => 'salary_down',
+		    			'label' => 'salary_down',
+		    			'rules'=>'required'
+		    		)
+		    )
+
+
          );			   
 ?>

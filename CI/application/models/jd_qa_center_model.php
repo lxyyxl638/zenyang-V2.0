@@ -71,7 +71,13 @@ class Jd_qa_center_model extends CI_Model
         {
         	 /*取出JD内容*/
              $row = $query->row_array();
-             $message = $query->row_array();        
+             $message = $query->row_array(); 
+             $message['industry']=$this->get_jd_tag_name($message['industry']);
+             $message['company']=$this->get_jd_tag_name($message['company']);
+             $message['occupation']=$this->get_jd_tag_name($message['occupation']);
+             $message['salary']=$message['salary'];
+             unset($message['active']);
+                   
              return TRUE;
         }
         else
@@ -82,6 +88,21 @@ class Jd_qa_center_model extends CI_Model
        return TRUE;
     }
 
+    function get_jd_tag_name($tagid)
+       {
+         $this->db->select('tagname');
+         $this->db->where('tagid',$tagid);
+         $query = $this->db->get('jd_tag');
+         if ($query->num_rows() > 0)
+         {
+           $row =$query->row_array();
+           return $row['tagname'];
+         }
+         else
+         {
+           return "未填写";
+         }
+       }
     function view_jd_answer_get(&$message,$jdid = 1,$limit = 10,$offset = 0)
     {
         $this->db->order_by("good","desc");
